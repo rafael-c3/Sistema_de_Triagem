@@ -1,3 +1,45 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import Paciente
+from .forms import PacienteForm
 
-# Create your views here.
+def index_view(request):
+    return render(request, 'site/index.html')
+
+def create_view(request):
+    if request.method == 'GET':
+        form = PacienteForm()
+        return render(request, 'site/criar.html', {'form': form})
+    if request.method == 'POST':
+        form = PacienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('hosp:listar')
+        
+def list_view(request):
+    pacientes = Paciente.objects.all()
+    if pacientes:
+        return render(request, 'site/listar.html', {'pacientes': pacientes})
+    return render(request, 'site/listar.html')
+
+def detail_view(request, pk):
+    paciente = Paciente.objects.get(pk = pk)
+    if paciente:
+        return render(request, 'site/detalhes.html', {'paciente': paciente})
+
+def update_view(request, pk):
+    paciente = Paciente.objects.get(pk = pk)
+    if request.method == 'GET':
+        form = PacienteForm(instance=paciente)
+        return render(request, 'site/atualizar.html', {'paciente': paciente, 'form': form})
+    if request.method == 'POST':
+        form = PacienteForm(request.POST, instance=paciente)
+        if form.is_valid():
+            form.save()
+            return redirect('hosp:listar')
+        
+def delete_view(request, pk):
+    paciente = Paciente.objects.get(pk = pk)
+    if paciente:
+        paciente.delete()
+        request.status_code = 204
+        return redirect('hosp:listar')

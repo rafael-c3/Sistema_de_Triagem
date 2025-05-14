@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Paciente {{ paciente.nome }}</h2>
+    <div>
+        <p><b>Nome:</b> {{ paciente.nome }}</p>
+        <p><b>Sexo:</b> {{ paciente.sexo }}</p>
+        <p><b>CPF:</b> {{ paciente.cpf }}</p>
+        <p><b>Prioridade:</b> {{ paciente.prioridade }}</p>
+        <p><b>Status:</b> {{ paciente.status_atendimento }}</p>
+    </div>
+    <br><br><a class="link" href="{% url 'hosp:listar' %}">Voltar</a>
+    <br><br><a class="link" href="{% url 'hosp:atualizar' paciente.id %}">Atualizar</a>
+</body>
+</html>
