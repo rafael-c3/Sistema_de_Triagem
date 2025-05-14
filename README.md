@@ -1,16 +1,16 @@
 # Sistema de Triagem de Pacientes (Versão Protótipada)
 
-(Sem descrição por enquanto)
+- (Sem descrição por enquanto)
 
 ## Rodar o Projeto
 
 ### Criando a VENV
-```venv/Scripts/activate```
-```pip install -r requirements.txt```
+- ```venv/Scripts/activate```
+- ```pip install -r requirements.txt```
 
 ### Rodando o BACK
-```python manage.py migrate```
-```python manage.py runserver```
+- ```python manage.py migrate```
+- ```python manage.py runserver```
 
 #### Mensagem para o DEV FRONT
 
