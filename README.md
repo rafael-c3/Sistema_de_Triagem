@@ -4,6 +4,9 @@
 
 ## Rodar o Projeto
 
+### Puxar o código do GIT para o dispositivo local
+- ```git clone https://github.com/rafael-c3/Sistema_de_Triagem.git```
+
 ### Criando a VENV
 - ```venv/Scripts/activate```
 - ```pip install -r requirements.txt```
