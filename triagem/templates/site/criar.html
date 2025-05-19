@@ -11,13 +11,32 @@
     <h2>Adicionar Paciente</h2>
     <form class="form" action="{% url 'hosp:criar' %}" method="post">
         {% csrf_token %}
-        {% for field in form %}
-            <br>
-            {{ field.label_tag }}
+        <label for="{{ form.nome.id_for_label }}">Nome:</label>
+            {{ form.nome }}
+        <br>
 
-            {{ field }}
-            <br>
-        {% endfor %}
+        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+            {{ form.data_nascimento }}
+        <br>
+        <label for="{{ form.nome.id_for_label }}">Nome:</label>
+            {{ form.sexo }}
+        <br>
+
+        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+            {{ form.cpf }}
+        <br>
+        <label for="{{ form.nome.id_for_label }}">Nome:</label>
+            {{ form.data_chegada }}
+        <br>
+
+        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+            {{ form.prioridade }}
+        <br>
+
+        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+            {{ form.status_atendimento }}
+        <br>
+
         <br>
         <button class="link" type="submit">Adicionar</button>
     </form><br>

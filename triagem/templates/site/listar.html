@@ -5,38 +5,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pacientes</title>
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
     <link rel="stylesheet" href="{% static 'front/css/listar.css' %}?v=2">
 </head>
 <body>
-    {% if pacientes %}
-        <h2>Pacientes</h2>
-        <table>
-            <tr>
-                <th>Nome</th>
-                <th>Sexo</th>
-                <th>Prioridade</th>
-                <th>Status</th>
-            </tr>
-            {% for paciente in pacientes %}
+    <header>
+        <h1>Sistema de Triagem para Hospitais</h1>
+
+    </header>
+    <main>
+
+    
+
+        {% if pacientes %}
+            <h2>Pacientes</h2>
+            <table>
                 <tr>
-                    <td>{{ paciente.nome }}</td>
-                    <td>{{ paciente.sexo }}</td>
-                    <td>{{ paciente.prioridade }}</td>
-                    <td>{{ paciente.status_atendimento }}</td>
-                    <td>
-                        <a class="link" href="{% url 'hosp:mostrar' paciente.id %}">Acessar ficha</a>
-                        <a class="link" href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza disso?')">Remover</a>
-                    </td>
+                    <th>Nome</th>
+                    <th>Sexo</th>
+                    <th>Prioridade</th>
+                    <th>Status</th>
                 </tr>
-            {% endfor %}
-        </table>
-        <br>
-        <a class="link" href="{% url 'hosp:index' %}">Voltar</a>
-        <a class="link" href="{% url 'hosp:criar' %}" class="link">Criar Novo</a><br>
-    {% else %}
-        <h2>Sem personagens criados</h2>
-        <a class="link" href="{% url 'hosp:criar' %}">Criar Novo</a>
-        <a class="link" href="{% url 'hosp:index' %}">Voltar</a>
-    {% endif %}
+                {% for paciente in pacientes %}
+                    <tr>
+                        <td>{{ paciente.nome }}</td>
+                        <td>{{ paciente.sexo }}</td>
+                        <td>{{ paciente.prioridade }}</td>
+                        <td>{{ paciente.status_atendimento }}</td>
+                        <td>
+                            <a class="link" href="{% url 'hosp:mostrar' paciente.id %}">Acessar ficha</a>
+                            <a class="link" href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza disso?')">Remover</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <br>
+            <a class="link" href="{% url 'hosp:index' %}">Voltar</a>
+            <a class="link" href="{% url 'hosp:criar' %}" class="link">Criar Novo</a><br>
+        {% else %}
+            <h2>Sem personagens criados</h2>
+            <a class="link" href="{% url 'hosp:criar' %}">Criar Novo</a>
+            <a class="link" href="{% url 'hosp:index' %}">Voltar</a>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>© 2025 Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
+
+    </footer>
 </body>
 </html>

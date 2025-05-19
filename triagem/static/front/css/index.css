@@ -1,0 +1,38 @@
+
+
+header h1{
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+
+
+
+.grid{
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)) ;
+    gap: 2rem;
+}
+
+
+.card{
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.card h2{
+    margin: 0.5rem 0;
+}
+
+
+

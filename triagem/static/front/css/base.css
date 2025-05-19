@@ -1,0 +1,44 @@
+/* base.css */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6fa;
+    color: #333;
+}
+
+header {
+    background-color: #2f80ed;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+main {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.BemVindo {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+
+footer {
+    text-align: center;
+    color: #999;
+    margin-top: 4rem;
+    padding: 1rem;
+}
+
+
+

@@ -1,17 +1,49 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Início</title>
-    <link rel="stylesheet" href="{% static 'front/css/index.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'front/css/index.css' %}?v=2"> 
 </head>
 <body>
-    <h2>Sistema de Triagem para Hospitais</h2>
-    <a href="{% url 'hosp:criar' %}" class="link">Adicionar novo Paciente</a>
-    <a href="{% url 'hosp:listar' %}" class="link">Mostrar Lista</a>
-    <hr>
-    <br>
+    <header>
+        <h1>Sistema de Triagem para Hospitais</h1>
+
+    </header>
+
+    <main>
+
+        <div class="BemVindo">
+        <h3>Bem-vindo! Selecione uma das opções abaixo:</h3>
+        </div>
+        <div class="grid">
+        <a href="{% url 'hosp:criar' %}" class="card">
+            <h2>Nova Triagem</h2>
+            <p>Iniciar Triagem de um novo paciente.</p>
+        </a>
+        <a href="{% url 'hosp:listar' %}" class="card">
+            <h2>Pacientes</h2>
+            <p>Ver a lista de pacientes triados</p>
+        </a>
+        
+        
+
+
+
+        </div>
+        
+
+    </main>
+
+    <footer>
+        <p>© 2025 Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
+
+    </footer>
+
+
+    
 </body>
 </html>
