@@ -1,38 +1,92 @@
-
-
-header h1{
-    margin: 0;
-    font-size: 1.5rem;
+.intro {
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
-
-
-
-.grid{
-    display: grid;
-    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)) ;
-    gap: 2rem;
+.intro h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    
 }
 
+.intro p {
+    color: #555;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    font-size: 18px;
+}
 
-.card{
-    background-color: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-decoration: none;
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn {
+    background-color: #eee;
     color: #333;
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
-.card:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+.btn.green {
+    background-color: #00a86b;
+    color: white;
 }
 
-.card h2{
+.btn:hover {
+    opacity: 0.9;
+}
+
+.resumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.card {
+    background-color: white;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    margin: 1.5rem;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.card .valor {
+    font-size: 1.5rem;
+    font-weight: bold;
     margin: 0.5rem 0;
 }
 
+.recursos {
+    text-align: center;
+}
+
+.cards-recursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    margin: 1.5rem;
+}
+
+.card-recurso {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: left;
+}
 
 

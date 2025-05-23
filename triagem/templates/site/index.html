@@ -10,40 +10,77 @@
 </head>
 <body>
     <header>
-        <h1>Sistema de Triagem para Hospitais</h1>
+        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
 
+        <nav class="menu-links">
+            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
+            <a href="{% url 'hosp:criar' %}" ><p>Dashboard</p></a>
+            <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
+            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
+            
+        </nav>
+
+         <div class="entrar">
+            <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
+        </div>
     </header>
 
     <main>
 
-        <div class="BemVindo">
-        <h3>Bem-vindo! Selecione uma das opções abaixo:</h3>
-        </div>
-        <div class="grid">
-        <a href="{% url 'hosp:criar' %}" class="card">
-            <h2>Nova Triagem</h2>
-            <p>Iniciar Triagem de um novo paciente.</p>
-        </a>
-        <a href="{% url 'hosp:listar' %}" class="card">
-            <h2>Pacientes</h2>
-            <p>Ver a lista de pacientes triados</p>
-        </a>
-        
-        
+        <section class="intro">
+            <h2>Sistema de Triagem</h2>
+            <p>Plataforma completa para gerenciamento de triagem de pacientes em ambientes hospitalares e clínicos. 
+            Otimize o fluxo de atendimento e priorize casos conforme a necessidade.
+            </p>
+            <div class="actions">
+                <a href="#" class="btn green">Iniciar Triagem</a>
+                <a href ="#" class="btn">Ver Pacientes</a>
+            </div>
+        </section>
 
-
-
-        </div>
-        
-
+        <section class="resumo">
+            <div class="card">
+                <h3>Pacientes em espera</h3>
+                <p class="valor">12</p>
+                <small>4 em estado critico</small>
+            </div>
+            <div class="card">
+                <h3>Tempo Médio de espera</h3>
+                <p class="valor">24 min</p>
+                <small>↓ 12% em estado critico</small>
+            </div>
+            <div class="card">
+                <h3>Triagens Hoje</h3>
+                <p class="valor">50</p>
+                <small>↑ 13% em relação a ontem</small>
+            </div>
+            <div class="card">
+                <h3>Eficiência</h3>
+                <p class="valor">80%</p>
+                <small>↑ 5% em relação a semana passada</small>
+            </div>
+        </section>
+        <section class="recursos">
+            <h2>Recursos do Sistema</h2>
+            <div class="cards-recursos">
+                <div class="card-recurso">
+                    <h2>Registro de Pacientes</h2>
+                    <p>Cadastro rápido e eficiente de novos pacientes com suporte a documentos e histórico médico.</p>
+                </div>
+                <div class="card-recurso">
+                    <h2>Avaliação de Triagem</h2>
+                    <p>Sistema de classificação por cores seguindo protocolos internacionais de triagem, com suporte para sinais vitais e sintomas.</p>
+                </div>
+                <div class="card-recurso">
+                    <h2>Monitoramento em tempo real</h2>
+                    <p>Dashboard com atualizações em tempo real sobre status dos pacientes e filas de espera.</p>
+                </div>
+            </div>
+        </section>   
     </main>
 
     <footer>
         <p>© 2025 Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
-
     </footer>
-
-
-    
 </body>
 </html>

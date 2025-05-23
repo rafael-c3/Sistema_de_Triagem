@@ -2,7 +2,7 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6fa;
+    background-color: #ffffff;
     color: #333;
 }
 
@@ -10,27 +10,70 @@ header {
     background-color: #2f80ed;
     color: white;
     padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
+    position:relative;
 }
+header a {
+  text-decoration: none;  
+  color: inherit;         
+}
+
+
+
 
 header h1 {
     margin: 0;
     font-size: 1.5rem;
+    grid-column: 1;
 }
-
 main {
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    text-align: center;
+    background-color: #ffffff;
 }
 
-.BemVindo {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
+
+.menu-links{
+    display:flex;
+    justify-content: center;
+    gap: 1.5em;
+    grid-column: 2;
 }
+
+.menu-links a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: opacity 0.2s;
+
+}
+
+.menu-links a:hover{
+    opacity: 0.8;
+}
+
+.entrar {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-entrar {
+    background-color: white;
+    color: #2f80ed;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-entrar:hover {
+    background-color: #dbe9ff;
+    color: #1a5dcc;
+}
+
+
 
 
 footer {
@@ -38,6 +81,7 @@ footer {
     color: #999;
     margin-top: 4rem;
     padding: 1rem;
+    background-color: #f9fafb;
 }
 
 

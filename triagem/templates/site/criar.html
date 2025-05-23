@@ -5,41 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Paciente</title>
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
     <link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=2">
 </head>
 <body>
-    <h2>Adicionar Paciente</h2>
-    <form class="form" action="{% url 'hosp:criar' %}" method="post">
-        {% csrf_token %}
-        <label for="{{ form.nome.id_for_label }}">Nome:</label>
-            {{ form.nome }}
-        <br>
 
-        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
-            {{ form.data_nascimento }}
-        <br>
-        <label for="{{ form.nome.id_for_label }}">Nome:</label>
-            {{ form.sexo }}
-        <br>
+    <header>
+        <a href="{% url 'hosp:index' %}"><h1>MedTriagem</h1></a>
 
-        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
-            {{ form.cpf }}
-        <br>
-        <label for="{{ form.nome.id_for_label }}">Nome:</label>
-            {{ form.data_chegada }}
-        <br>
+        <nav class="menu-links">
+            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
+            <a href="{% url 'hosp:criar' %}" ><p>Dashboard</p></a>
+            <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
+            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
+            
+        </nav>
 
-        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
-            {{ form.prioridade }}
-        <br>
+         <div class="entrar">
+            <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
+        </div>
+    </header>
+    <main>
 
-        <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
-            {{ form.status_atendimento }}
-        <br>
+        <h2>Adicionar Paciente</h2>
+        <form class="form" action="{% url 'hosp:criar' %}" method="post">
+            {% csrf_token %}
+            <label for="{{ form.nome.id_for_label }}">Nome:</label>
+                {{ form.nome }}
+            <br>
 
-        <br>
-        <button class="link" type="submit">Adicionar</button>
-    </form><br>
-    <a class="link" href="{% url 'hosp:index' %}">Voltar</a>
+            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+                {{ form.data_nascimento }}
+            <br>
+            <label for="{{ form.nome.id_for_label }}">Nome:</label>
+                {{ form.sexo }}
+            <br>
+
+            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+                {{ form.cpf }}
+            <br>
+            <label for="{{ form.nome.id_for_label }}">Nome:</label>
+                {{ form.data_chegada }}
+            <br>
+
+            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+                {{ form.prioridade }}
+            <br>
+
+            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+                {{ form.status_atendimento }}
+            <br>
+
+            <br>
+            <button class="link" type="submit">Adicionar</button>
+        </form><br>
+        <a class="link" href="{% url 'hosp:index' %}">Voltar</a>
+    </main>
+
+
 </body>
 </html>
