@@ -33,33 +33,56 @@
             <label for="{{ form.nome.id_for_label }}">Nome:</label>
                 {{ form.nome }}
             <br>
-
-            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
-                {{ form.data_nascimento }}
+            <label for="{{ form.tipo.id_for_label }}">Idade::</label>
+                {{ form.idade }}
             <br>
-            <label for="{{ form.nome.id_for_label }}">Nome:</label>
+            <label for="{{ form.nome.id_for_label }}">Gênero:</label>
                 {{ form.sexo }}
             <br>
-
-            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+            <label for="{{ form.tipo.id_for_label }}">CPF:</label>
                 {{ form.cpf }}
             <br>
-            <label for="{{ form.nome.id_for_label }}">Nome:</label>
-                {{ form.data_chegada }}
+            <label for="{{ form.nome.id_for_label }}">Convênio:</label>
+                {{ form.convenio }}
             <br>
-
-            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
-                {{ form.prioridade }}
+            <label for="{{ form.tipo.id_for_label }}">Horario de Chegada:</label>
+                {{ form.hora_chegada }}
             <br>
-
-            <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+            <label for="{{ form.tipo.id_for_label }}">Temperatura:</label>
+                {{ form.temperatura }}
+            <br>
+            <label for="{{ form.tipo.id_for_label }}">Pulso:</label>
+                {{ form.pulso }}
+            <br>
+            <label for="{{ form.tipo.id_for_label }}">Queixa:</label>
+                {{ form.queixa }}
+            <br>
+            <label for="{{ form.tipo.id_for_label }}">dor:</label>
+                {{ form.dor }}
+            <br>
+            <label for="{{ form.tipo.id_for_label }}">Inicio dos Sintomas:</label>
+                {{ form.inicio_sintomas }}
+            <br>
+            <label for="{{ form.tipo.id_for_label }}">Sintomas Associados:</label>
+                {{ form.sintomas_associados }}
+            <br>
+            <label for="{{ form.tipo.id_for_label }}">Temperatura:</label>
+                {{ form.temperatura }}
+            <br>
+            <label for="{{ form.tipo.id_for_label }}">Observações:</label>
+                {{ form.observacoes }}
+            <br>
+                        <label for="{{ form.tipo.id_for_label }}">Classificação:</label>
+                {{ form.classificacao }}
+            <br>
+                        <label for="{{ form.tipo.id_for_label }}">Status de Atendimento:</label>
                 {{ form.status_atendimento }}
             <br>
+
 
             <br>
             <button class="link" type="submit">Adicionar</button>
         </form><br>
-        <a class="link" href="{% url 'hosp:index' %}">Voltar</a>
     </main>
 
 
