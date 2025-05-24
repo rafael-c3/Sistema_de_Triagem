@@ -11,10 +11,23 @@
     <h2>Paciente {{ paciente.nome }}</h2>
     <div>
         <p><b>Nome:</b> {{ paciente.nome }}</p>
+        <p><b>Idade:</b> {{ paciente.idade }}</p>
         <p><b>Sexo:</b> {{ paciente.sexo }}</p>
         <p><b>CPF:</b> {{ paciente.cpf }}</p>
-        <p><b>Prioridade:</b> {{ paciente.prioridade }}</p>
-        <p><b>Status:</b> {{ paciente.status_atendimento }}</p>
+        <p><b>Convênio:</b> {{ paciente.convenio }}</p>
+        <p><b>Hora de Chegada:</b> {{ paciente.hora_chegada }}</p>
+
+        <p><b>Temperatura:</b> {{ paciente.temperatura }}</p>
+        <p><b>Pulso:</b> {{ paciente.pulso }}</p>
+
+        <p><b>Queixa:</b> {{ paciente.queixa }}</p>
+        <p><b>Intensidade da Dor:</b> {{ paciente.dor }}</p>
+        <p><b>Inicio dos Sintomas:</b> {{ paciente.inicio_sintomas }}</p>
+        <p><b>Sintomas Associados:</b> {{ paciente.sintomas_associados }}</p>
+        <p><b>Observações:</b> {{ paciente.observacoes }}</p>
+
+        <p><b>Classificação:</b> {{ paciente.classificacao }}</p>
+        <p><b>Status de Atendimento:</b> {{ paciente.status_atendimento }}</p>
     </div>
     <br><br><a class="link" href="{% url 'hosp:listar' %}">Voltar</a>
     <br><br><a class="link" href="{% url 'hosp:atualizar' paciente.id %}">Atualizar</a>

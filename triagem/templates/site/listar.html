@@ -93,6 +93,15 @@
         </section>
     </main>
 
+    <h2>Total de Pacientes: {{ pacientes|length }}</h2>
+    <li>Crítico: {{ status_contagem.Crítico|default:0 }}</li>
+    <li>Urgente: {{ status_contagem.Urgente|default:0 }}</li>
+    <li>Normal: {{ status_contagem.Normal|default:0 }}</li>
+    </ul>
+
+    <a href="{% url 'hosp:criar' %}">Adicionar Paciente</a>
+
+
     <footer>
         <p>© 2025 Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
 

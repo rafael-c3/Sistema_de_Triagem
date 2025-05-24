@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import list_view, index_view, create_view, delete_view, detail_view, update_view
+from .views import list_view, index_view, create_view, delete_view, detail_view, update_view, triagem_view, dashboard_view
 
 app_name = 'hosp'
 urlpatterns = [
@@ -9,4 +9,6 @@ urlpatterns = [
     path('detail/<int:pk>', detail_view, name='mostrar'),
     path('atualizar/<int:pk>', update_view, name='atualizar'),
     path('deletar/<int:pk>', delete_view, name='deletar'),
+    path('dashboard/', dashboard_view, name='dashboard'),
+    path('triagem/', triagem_view, name='triagem'),
 ]

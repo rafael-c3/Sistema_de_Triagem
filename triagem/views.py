@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 from .models import Paciente
 from .forms import PacienteForm
+from collections import Counter
 
 def index_view(request):
     return render(request, 'site/index.html')
@@ -17,10 +18,13 @@ def create_view(request):
         
 def list_view(request):
     pacientes = Paciente.objects.all()
-    if pacientes:
-        return render(request, 'site/listar.html', {'pacientes': pacientes})
 
-    return render(request, 'site/listar.html')
+    status_contagem = Counter(p.status for p in pacientes)
+
+    return render(request, 'site/listar.html', {
+        'pacientes': pacientes,
+        'status_contagem': status_contagem
+    })
 
 def detail_view(request, pk):
     paciente = Paciente.objects.get(pk = pk)
@@ -44,3 +48,9 @@ def delete_view(request, pk):
         paciente.delete()
         request.status_code = 204
         return redirect('hosp:listar')
+    
+def dashboard_view(request):
+    return render(request, 'site/dashboard.html')
+
+def triagem_view(request):
+    return render(request, 'site/triagem.html')

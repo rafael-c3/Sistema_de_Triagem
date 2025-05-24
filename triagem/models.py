@@ -58,6 +58,14 @@ class Paciente(models.Model):
     classificacao = models.CharField(choices=Risco)
     status_atendimento = models.CharField(max_length=20, choices=Status, default='Esperando')
 
+    @property
+    def status(self):
+        if self.classificacao == 'Vermelho':
+            return 'Crítico'
+        elif self.classificacao in ['Laranja', 'Amarelo']:
+            return 'Urgente'
+        else:
+            return 'Normal'
 
     def __str__(self):
         return self.nome
