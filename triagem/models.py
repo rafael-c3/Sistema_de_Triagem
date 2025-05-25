@@ -41,9 +41,9 @@ class Paciente(models.Model):
 
     nome = models.CharField(max_length=100)
     idade = models.CharField(max_length=3)
-    sexo = models.CharField(choices=Sexualidade)
+    sexo = models.CharField(choices=Sexualidade, max_length=50)
     cpf = models.CharField(max_length=11)
-    convenio = models.CharField(choices=Convenios)
+    convenio = models.CharField(choices=Convenios, max_length=50)
     hora_chegada = models.TimeField(blank=True, null=True)
 
     temperatura = models.CharField(max_length=2)
@@ -52,10 +52,10 @@ class Paciente(models.Model):
     queixa = models.CharField(max_length=1000)
     dor = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
     inicio_sintomas = models.DateField(blank=True, null=True)
-    sintomas_associados = models.CharField(choices=Sintomas)
+    sintomas_associados = models.CharField(choices=Sintomas, max_length=50)
     observacoes = models.CharField(blank=True, null=True, max_length=1000)
 
-    classificacao = models.CharField(choices=Risco)
+    classificacao = models.CharField(choices=Risco, max_length=50)
     status_atendimento = models.CharField(max_length=20, choices=Status, default='Esperando')
 
     @property
