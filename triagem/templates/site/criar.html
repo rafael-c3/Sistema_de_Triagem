@@ -1,90 +1,136 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novo Paciente</title>
+    <title>Triagem</title>
     <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
-    <link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=3">
 </head>
 <body>
 
-    <header>
-        <a href="{% url 'hosp:index' %}"><h1>MedTriagem</h1></a>
+<header>
+    <a href="{% url 'hosp:index' %}"><h1>MedTriagem</h1></a>
+    <nav class="menu-links">
+        <a href="{% url 'hosp:index' %}"><p>Home</p></a>
+        <a href="{% url 'hosp:listar' %}"><p>Dashboard</p></a>
+        <a href="{% url 'hosp:criar' %}"><p>Triagem</p></a>
+        <a href="{% url 'hosp:listar' %}"><p>Pacientes</p></a>
+    </nav>
+    <div class="entrar">
+        <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
+    </div>
+</header>
 
-        <nav class="menu-links">
-            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <a href="{% url 'hosp:criar' %}" ><p>Dashboard</p></a>
-            <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
-            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
-            
-        </nav>
-
-         <div class="entrar">
-            <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
-        </div>
-    </header>
-    <main>
-
-        <h2>Adicionar Paciente</h2>
-        <form class="form" action="{% url 'hosp:criar' %}" method="post">
-            {% csrf_token %}
-            <label for="{{ form.nome.id_for_label }}">Nome:</label>
+<main class="triagem-container">
+    <h2>Avaliação de Triagem</h2>
+    <form class="form-triagem" action="{% url 'hosp:criar' %}" method="post">
+        {% csrf_token %}
+        <div class="form-section-wrapper">
+            <section class="form-box">
+                <h2>Dados do Paciente</h2>
+                <label for="{{ form.nome.id_for_label }}">Nome:</label>
                 {{ form.nome }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Idade::</label>
-                {{ form.idade }}
-            <br>
-            <label for="{{ form.nome.id_for_label }}">Gênero:</label>
-                {{ form.sexo }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">CPF:</label>
+                <div class="form-row">
+                    <div>
+                        <label for="{{ form.idade.id_for_label }}">Idade:</label>
+                        {{ form.idade }}
+                    </div>
+                    <div>
+                        <label for="{{ form.sexo.id_for_label }}">Gênero:</label>
+                        {{ form.sexo }}
+                    </div>
+                </div>
+                <label for="{{ form.cpf.id_for_label }}">CPF:</label>
                 {{ form.cpf }}
-            <br>
-            <label for="{{ form.nome.id_for_label }}">Convênio:</label>
+                <label for="{{ form.convenio.id_for_label }}">Convênio:</label>
                 {{ form.convenio }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Horario de Chegada:</label>
+                <label for="{{ form.hora_chegada.id_for_label }}">Horário de Chegada:</label>
                 {{ form.hora_chegada }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Temperatura:</label>
-                {{ form.temperatura }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Pulso:</label>
-                {{ form.pulso }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Queixa:</label>
-                {{ form.queixa }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">dor:</label>
-                {{ form.dor }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Inicio dos Sintomas:</label>
-                {{ form.inicio_sintomas }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Sintomas Associados:</label>
-                {{ form.sintomas_associados }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Temperatura:</label>
-                {{ form.temperatura }}
-            <br>
-            <label for="{{ form.tipo.id_for_label }}">Observações:</label>
-                {{ form.observacoes }}
-            <br>
-                        <label for="{{ form.tipo.id_for_label }}">Classificação:</label>
-                {{ form.classificacao }}
-            <br>
-                        <label for="{{ form.tipo.id_for_label }}">Status de Atendimento:</label>
-                {{ form.status_atendimento }}
-            <br>
+            </section>
+            <section class="form-box">
+                <h2>Avaliação Clínica</h2>
+
+                <div class="tabs">
+                    <button type="button" class="tab-button active" onclick="openTab(event, 'sinais')">Sinais Vitais</button>
+                    <button type="button" class="tab-button" onclick="openTab(event, 'queixa')">Queixa Principal</button>
+                    <button type="button" class="tab-button" onclick="openTab(event, 'avaliacao')">Avaliação</button>
+                </div>
+
+                
+                <section class="tab-content active" id="sinais">
+                    <div class="form-row">
+                        <div>
+                            <label for="{{ form.temperatura.id_for_label }}">Temperatura:</label>
+                            {{ form.temperatura }}
+                        </div>
+                        <div>
+                            <label for="{{ form.pulso.id_for_label }}">Pulso:</label>
+                            {{ form.pulso }}
+                        </div>
+                    </div>
+                </section>
+
+                
+                <section class="tab-content" id="queixa">
+                    <label for="{{ form.queixa.id_for_label }}">Queixa:</label>
+                    {{ form.queixa }}
+
+                    <label for="{{ form.dor.id_for_label }}">Dor:</label>
+                    {{ form.dor }}
+
+                    <label for="{{ form.inicio_sintomas.id_for_label }}">Início dos Sintomas:</label>
+                    {{ form.inicio_sintomas }}
+
+                    <label for="{{ form.sintomas_associados.id_for_label }}">Sintomas Associados:</label>
+                    {{ form.sintomas_associados }}
+                </section>
+
+                
+                <section class="tab-content" id="avaliacao">
+                    <label for="{{ form.observacoes.id_for_label }}">Observações:</label>
+                    {{ form.observacoes }}
+
+                    <div class="form-row">
+                        <div>
+                            <label for="{{ form.classificacao.id_for_label }}">Classificação:</label>
+                            {{ form.classificacao }}
+                        </div>
+                        <div>
+                            <label for="{{ form.status_atendimento.id_for_label }}">Status de Atendimento:</label>
+                            {{ form.status_atendimento }}
+                        </div>
+                    </div>
+                </section>
+            </section>
 
 
-            <br>
-            <button class="link" type="submit">Adicionar</button>
-        </form><br>
-    </main>
+            
+        </div>
 
+        <div class="botoes">
+            <button type="submit" class="btn-enviar">Finalizar Triagem</button>
+        </div>
+    </form>
+</main>
+
+<script>
+function openTab(evt, tabId) {
+  // Esconde todas as seções
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => tab.classList.remove('active'));
+
+  // Desativa todos os botões
+  const buttons = document.querySelectorAll('.tab-button');
+  buttons.forEach(btn => btn.classList.remove('active'));
+
+  // Ativa a aba clicada
+  document.getElementById(tabId).classList.add('active');
+  evt.currentTarget.classList.add('active');
+}
+
+</script>
 
 </body>
 </html>

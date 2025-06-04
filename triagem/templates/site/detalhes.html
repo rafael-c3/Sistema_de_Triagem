@@ -5,9 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paciente {{paciente.nome}}</title>
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
     <link rel="stylesheet" href="{% static 'front/css/detalhes.css' %}?v=2">
+
 </head>
 <body>
+    <header>
+        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
+
+        <nav class="menu-links">
+            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
+            <a href="{% url 'hosp:listar' %}" ><p>Dashboard</p></a>
+            <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
+            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
+            
+        </nav>
+
+         <div class="entrar">
+            <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
+        </div>
+    </header>
+
+
     <h2>Paciente {{ paciente.nome }}</h2>
     <div>
         <p><b>Nome:</b> {{ paciente.nome }}</p>
