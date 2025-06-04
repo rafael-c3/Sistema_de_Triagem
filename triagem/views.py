@@ -18,9 +18,7 @@ def create_view(request):
         
 def list_view(request):
     pacientes = Paciente.objects.all()
-
     status_contagem = Counter(p.status for p in pacientes)
-
     return render(request, 'site/listar.html', {
         'pacientes': pacientes,
         'status_contagem': status_contagem
@@ -50,7 +48,13 @@ def delete_view(request, pk):
         return redirect('hosp:listar')
     
 def dashboard_view(request):
-    return render(request, 'site/dashboard.html')
+    pacientes = Paciente.objects.all()
+    status_contagem = Counter(p.status for p in pacientes)
 
+    return render(request, 'site/dashboard.html', {
+        'pacientes': pacientes,
+        'status_contagem': status_contagem
+    })
+    
 def triagem_view(request):
     return render(request, 'site/triagem.html')
