@@ -15,7 +15,7 @@
 
         <nav class="menu-links">
             <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <a href="{% url 'hosp:listar' %}" ><p>Dashboard</p></a>
+            <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a>
             <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
             <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a> 
         </nav>
@@ -23,83 +23,52 @@
             <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
         </div>
     </header>
-    <main class="dashboard-container">
-        <section class="cards">
-            <div class="card">
-                <p>Total de Pacientes</p>
-                <h2>{{ pacientes|length }}</h2></h2>
-                <div class="prioridades">
-                    <p><span class="dot red"></span> Crítico: {{ total_critico}}</p>
-                    <p><span class="dot yellow"></span> Urgente: {{ total_urgente}}</p>
-                    <p><span class="dot green"></span> Normal: {{ total_normal}}</p>
-                </div>
-            </div>
-        </section>
+    <main class="pacientes-container">
+        <h2>Pacientes</h2>
 
         <div class="filtros">
-            <button class="filtro-btn ativo">Todos</button>
-            <button class="filtro-btn">Crítico</button>
-            <button class="filtro-btn">Urgente</button>
-            <button class="filtro-btn">Normal</button>
+            <input type="text" placeholder="🔍 Buscar pacientes..." class="busca-input">
+            <div class="filtros-status">
+                <button class="ativo">Todos</button>
+                <button>Em Atendimento</button>
+                <button>Aguardando</button>
+                <button>Concluídos</button>
+            </div>
+            <button class="btn-filtros">⚙️ Filtros</button>
         </div>
 
-        <section class="table-section">
-            <h2>Pacientes em espera</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Prioridade</th>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Sexo</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for paciente in pacientes %}
-                    <tr>
-                        <td>
-                            {% if paciente.prioridade|lower == "critico" %}
-                                <span class="dot critico"></span>
-                            {% elif paciente.prioridade|lower == "urgente" %}
-                                <span class="dot urgente"></span>
-                            {% else %}
-                                <span class="dot normal"></span>
-                            {% endif %}
-                        </td>
-                        <td>P-{{ paciente.id }}</td>
-                        <td>{{ paciente.nome }}</td>
-                        <td>{{ paciente.sexo }}</td>
-                        <td>
-                           {% if paciente.prioridade|lower == "critico" %}
-                                <span class="status-tag critico">Crítico</span>
-                            {% elif paciente.prioridade|lower == "urgente" %}
-                                <span class="status-tag urgente">Urgente</span>
-                            {% else %}
-                                <span class="status-tag normal">Normal</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{% url 'hosp:mostrar' paciente.id %}">Ficha</a>
-                            <a href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza disso?')">Remover</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
+        <div class="cards-pacientes">
+            {% for paciente in pacientes %}
+            <div class="card-paciente">
+                <div class="card-topo">
+                    <div class="bolinha">{{ paciente.nome|slice:":2"|upper }}</div>
+                    <div class="card-info">
+                        <strong>{{ paciente.nome }}</strong>
+                        <small>ID: P-{{ paciente.id }} • {{ paciente.idade }} anos</small>
+                        <small>{{ paciente.hora_chegada }} atrás</small>
+                    </div>
+                    <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
+                </div>
 
+                <p class="queixa">{{ paciente.queixa }}</p>
 
-            </table>
-        </section>
+                <div class="detalhes">
+                    <div><b>Pressão</b><br>{{ paciente.pressao }}</div>
+                    <div><b>Pulso</b><br>{{ paciente.pulso }} bpm</div>
+                    <div><b>Temperatura</b><br>{{ paciente.temperatura }} °C</div>
+                    <div><b>Saturação</b><br>{{ paciente.saturacao }}%</div>
+                </div>
+
+                <div class="card-actions">
+                    <button class="btn-prontuario">📄 Prontuário</button>
+                    <a href="#" class="btn-atender">Atender</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </main>
 
-    <h2>Total de Pacientes: {{ pacientes|length }}</h2>
-    <li>Crítico: {{ status_contagem.Crítico|default:0 }}</li>
-    <li>Urgente: {{ status_contagem.Urgente|default:0 }}</li>
-    <li>Normal: {{ status_contagem.Normal|default:0 }}</li>
-    </ul>
 
-    <a href="{% url 'hosp:criar' %}">Adicionar Paciente</a>
 
 
     <footer>

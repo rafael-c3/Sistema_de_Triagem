@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pacientes</title>
     <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
-    <link rel="stylesheet" href="{% static 'front/css/listar.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'front/css/dashboard.css' %}?v=2">
 </head>
 <body>
     <header>
@@ -15,7 +15,7 @@
 
         <nav class="menu-links">
             <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <a href="{% url 'hosp:listar' %}" ><p>Dashboard</p></a>
+            <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a>
             <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
             <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a> 
         </nav>
