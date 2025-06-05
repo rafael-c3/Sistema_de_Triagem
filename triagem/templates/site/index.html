@@ -32,8 +32,8 @@
             Otimize o fluxo de atendimento e priorize casos conforme a necessidade.
             </p>
             <div class="actions">
-                <a href="#" class="btn green">Iniciar Triagem</a>
-                <a href ="#" class="btn">Ver Pacientes</a>
+                <a href="{% url 'hosp:criar' %}" class="btn green">Iniciar Triagem</a>
+                <a href ="{% url 'hosp:listar' %}" class="btn">Ver Pacientes</a>
             </div>
         </section>
 
@@ -77,7 +77,7 @@
             </div>
         </section>   
     </main>
-    <a href="{% url 'hosp:criar' %}">Adicionar Paciente</a>
+    
 
 
     <footer>

@@ -45,15 +45,20 @@
                     <div class="card-info">
                         <strong>{{ paciente.nome }}</strong>
                         <small>ID: P-{{ paciente.id }} • {{ paciente.idade }} anos</small>
+                        <br>
                         <small>{{ paciente.hora_chegada }} atrás</small>
                     </div>
-                    <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
+                    <div class="topo-direita">
+                        <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
+                        <span class="encaminhamento">{{ paciente.encaminhamento }}</span>
+                    </div>
                 </div>
+
 
                 <p class="queixa">{{ paciente.queixa }}</p>
 
                 <div class="detalhes">
-                    <div><b>Pressão</b><br>{{ paciente.pressao }}</div>
+                    <div><b>Pressão</b><br>{{ paciente.pressaoArterial }} mmHg</div>
                     <div><b>Pulso</b><br>{{ paciente.pulso }} bpm</div>
                     <div><b>Temperatura</b><br>{{ paciente.temperatura }} °C</div>
                     <div><b>Saturação</b><br>{{ paciente.saturacao }}%</div>
