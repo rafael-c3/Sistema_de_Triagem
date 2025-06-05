@@ -66,8 +66,28 @@
                             {{ form.temperatura }}
                         </div>
                         <div>
+                            <label for="{{ form.pressaoArterial.id_for_label }}">Pressão Arterial:</label>
+                            {{ form.pressaoArterial }}
+                        </div>
+                        <div>
                             <label for="{{ form.pulso.id_for_label }}">Pulso:</label>
                             {{ form.pulso }}
+                        </div>
+                        <div>
+                            <label for="{{ form.frequenciaRespiratoria.id_for_label }}">Frequência Respiratória:</label>
+                            {{ form.frequenciaRespiratoria }}
+                        </div>
+                        <div>
+                            <label for="{{ form.saturacao.id_for_label }}">Saturação:</label>
+                            {{ form.saturacao }}
+                        </div>
+                        <div>
+                            <label for="{{ form.pulso.id_for_label }}">Glicemia:</label>
+                            {{ form.glicemia }}
+                        </div>
+                        <div>
+                            <label for="{{ form.dor.id_for_label }}">Dor:</label>
+                            {{ form.dor }}
                         </div>
                     </div>
                 </section>
@@ -77,20 +97,23 @@
                     <label for="{{ form.queixa.id_for_label }}">Queixa:</label>
                     {{ form.queixa }}
 
-                    <label for="{{ form.dor.id_for_label }}">Dor:</label>
-                    {{ form.dor }}
-
                     <label for="{{ form.inicio_sintomas.id_for_label }}">Início dos Sintomas:</label>
                     {{ form.inicio_sintomas }}
 
                     <label for="{{ form.sintomas_associados.id_for_label }}">Sintomas Associados:</label>
                     {{ form.sintomas_associados }}
+                    
+                    <label for="{{ form.observacoes.id_for_label }}">Observações:</label>
+                    {{ form.observacoes }}
                 </section>
 
                 
                 <section class="tab-content" id="avaliacao">
-                    <label for="{{ form.observacoes.id_for_label }}">Observações:</label>
-                    {{ form.observacoes }}
+                    <label for="{{ form.justificativa.id_for_label }}">Justificativa:</label>
+                    {{ form.justificativa }}
+
+                    <label for="{{ form.encaminhamento.id_for_label }}">Encaminhamento:</label>
+                    {{ form.encaminhamento }}
 
                     <div class="form-row">
                         <div>

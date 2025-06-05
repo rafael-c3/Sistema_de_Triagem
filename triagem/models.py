@@ -39,6 +39,14 @@ class Paciente(models.Model):
 
     ]
 
+    Profissionais = [
+        ('Clinica Medica', 'Clinica Medica'),
+        ('Ortopedia', 'Ortopedia'),
+        ('Pediatria', 'Pediatria'),
+        ('Cardiologia', 'Cardiologia'),
+        ('Neurologia', 'Neurologia'),
+    ]
+
     nome = models.CharField(max_length=100)
     idade = models.CharField(max_length=3)
     sexo = models.CharField(choices=Sexualidade, max_length=50)
@@ -47,15 +55,22 @@ class Paciente(models.Model):
     hora_chegada = models.TimeField(blank=True, null=True)
 
     temperatura = models.CharField(max_length=2)
+    pressaoArterial = models.CharField(max_length=3)
     pulso = models.CharField(max_length=2)
+    frequenciaRespiratoria = models.CharField(max_length=2)
+    saturacao = models.CharField(max_length=3)
+    glicemia = models.CharField(max_length=3)
+    dor = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     queixa = models.CharField(max_length=1000)
-    dor = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
     inicio_sintomas = models.DateField(blank=True, null=True)
     sintomas_associados = models.CharField(choices=Sintomas, max_length=50)
     observacoes = models.CharField(blank=True, null=True, max_length=1000)
 
     classificacao = models.CharField(choices=Risco, max_length=50)
+    justificativa = models.CharField(max_length=200)
+    encaminhamento = models.CharField(choices=Profissionais, max_length=50)
+
     status_atendimento = models.CharField(max_length=20, choices=Status, default='Esperando')
 
     @property
