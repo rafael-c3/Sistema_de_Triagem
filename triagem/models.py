@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from .ml.predict import predict_from_dict
 
 class Paciente(models.Model):
     Sexualidade = [
@@ -54,10 +55,10 @@ class Paciente(models.Model):
     convenio = models.CharField(choices=Convenios, max_length=50)
     hora_chegada = models.TimeField(blank=True, null=True)
 
-    temperatura = models.CharField(max_length=2)
+    temperatura = models.CharField(max_length=3)
     pressaoArterial = models.CharField(max_length=3)
-    pulso = models.CharField(max_length=2)
-    frequenciaRespiratoria = models.CharField(max_length=2)
+    pulso = models.CharField(max_length=3)
+    frequenciaRespiratoria = models.CharField(max_length=3)
     saturacao = models.CharField(max_length=3)
     glicemia = models.CharField(max_length=3)
     dor = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
@@ -67,12 +68,35 @@ class Paciente(models.Model):
     sintomas_associados = models.CharField(choices=Sintomas, max_length=50)
     observacoes = models.CharField(blank=True, null=True, max_length=1000)
 
-    classificacao = models.CharField(choices=Risco, max_length=50)
-    justificativa = models.CharField(max_length=200)
-    encaminhamento = models.CharField(choices=Profissionais, max_length=50)
+    classificacao = models.CharField(choices=Risco, max_length=50,blank=True, null=True)
+    justificativa = models.CharField(max_length=200,blank=True, null=True)
+    encaminhamento = models.CharField(choices=Profissionais, max_length=50,blank=True, null=True)
 
-    status_atendimento = models.CharField(max_length=20, choices=Status, default='Esperando')
+    status_atendimento = models.CharField(max_length=20, choices=Status, default='Esperando',blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        # se não tiver classificacao definida, predizer
+        if not self.classificacao:
+            data = {
+                'temperatura': self.temperatura,
+                'pressaoArterial': self.pressaoArterial,
+                'pulso': self.pulso,
+                'frequenciaRespiratoria': self.frequenciaRespiratoria,
+                'saturacao': self.saturacao,
+                'glicemia': self.glicemia,
+                'dor': self.dor,
+                'sintomas_associados': self.sintomas_associados,
+                'queixa': self.queixa,
+            }
+            try:
+                pred, probs = predict_from_dict(data)
+                self.classificacao = pred
+            except Exception as e:
+                # logar erro e prosseguir sem quebrar
+                import logging
+                logging.exception("Erro ao predizer classificação: %s", e)
+        super().save(*args, **kwargs)
+    
     @property
     def status(self):
         if self.classificacao == 'Vermelho':

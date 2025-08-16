@@ -1,0 +1,26 @@
+temperatura,pressaoArterial,pulso,frequenciaRespiratoria,saturacao,glicemia,dor,sintomas_associados,queixa,classificacao
+36.5,120,72,16,98,90,0,Nenhum,"Consulta de rotina",azul
+36.8,115,70,15,97,95,1,Leve cefaleia,"Dúvida sobre exame",azul
+36.7,110,68,14,99,100,0,Tosse leve,"Revisão de consulta",azul
+36.6,118,74,16,98,92,1,Rinite,"Resfriado leve",azul
+36.9,122,76,17,97,88,0,Nenhum,"Vacinação",azul
+37.2,125,78,18,98,105,2,Tosse seca,"Dor de garganta",verde
+37.5,118,80,18,96,110,3,Náusea,"Dor abdominal leve",verde
+37.0,116,85,20,97,108,2,Vertigem,"Tontura",verde
+37.3,119,79,17,98,95,2,Febre baixa,"Cefaleia",verde
+37.1,117,83,18,97,102,3,Dispneia leve,"Falta de ar leve",verde
+38.2,130,95,22,95,120,5,Dispneia moderada,"Febre e tosse",amarelo
+38.5,135,100,24,94,130,6,Dor abdominal,"Infecção urinária",amarelo
+38.7,140,98,23,93,140,5,Confusão mental leve,"Infecção respiratória",amarelo
+39.0,128,105,25,92,150,6,Dor intensa,"Dor torácica moderada",amarelo
+38.4,132,97,21,94,135,5,Vômito,"Infecção gastrointestinal",amarelo
+39.5,150,115,28,90,160,7,Dispneia grave,"Dor torácica",laranja
+39.8,155,120,30,89,180,8,Taquicardia intensa,"Falta de ar severa",laranja
+40.0,160,118,29,88,200,7,Confusão mental,"Sepsis suspeita",laranja
+39.6,148,112,27,90,170,8,Dor abdominal intensa,"Pancreatite aguda",laranja
+40.2,162,125,31,87,190,9,Convulsão,"Crise epiléptica",laranja
+41.0,180,140,35,82,250,10,Perda de consciência,"Parada cardiorrespiratória",vermelho
+40.8,175,138,34,84,230,10,Dor torácica intensa,"Infarto agudo do miocárdio",vermelho
+41.2,185,145,36,80,260,10,Dispneia extrema,"Edema agudo de pulmão",vermelho
+40.9,190,150,38,78,280,10,Hemorragia,"Hemorragia ativa",vermelho
+41.3,200,148,37,76,300,10,Choque séptico,"Sepse grave",vermelho

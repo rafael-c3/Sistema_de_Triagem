@@ -14,7 +14,7 @@ class PacienteForm(forms.ModelForm):
             'hora_chegada': 'Hora de Chegada',
 
             'temperatura': 'Temperatura',
-            'pressaoArterial': 'Pressão Arterial',
+            'pressaoArterial': 'pressaoArterial',
             'pulso': 'Pulso',
             'frequenciaRespiratoria': 'Frequencia Respiratória',
             'saturacao': 'Saturação',

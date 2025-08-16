@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404, redirect
 from .models import Paciente
 from .forms import PacienteForm
 from collections import Counter
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .ml.predict import predict_from_dict
 
 def index_view(request):
     return render(request, 'site/index.html')
@@ -15,6 +19,9 @@ def create_view(request):
         if form.is_valid():
             form.save()
             return redirect('hosp:listar')
+        else:
+            print("Erros de validação:", form.errors)
+            return render(request, 'site/criar.html', {'form': form})
         
 def list_view(request):
     pacientes = Paciente.objects.all()
@@ -58,3 +65,11 @@ def dashboard_view(request):
     
 def triagem_view(request):
     return render(request, 'site/triagem.html')
+
+@csrf_exempt
+def predict_view(request):
+    if request.method != 'POST':
+        return JsonResponse({'error':'Use POST'}, status=405)
+    data = json.loads(request.body)
+    pred, probs = predict_from_dict(data)
+    return JsonResponse({'classificacao': pred, 'probs': probs})
