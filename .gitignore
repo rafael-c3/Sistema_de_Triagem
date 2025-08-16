@@ -1,2 +1,72 @@
-venv
+# Arquivo gerado pelo https://www.toptal.com/developers/gitignore/api/django,python,visualstudiocode
+# Editado para clareza e adição de comentários em português
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
 db.sqlite3
+db.sqlite3-journal
+
+# Pasta de mídias (arquivos enviados por usuários)
+/media/
+
+# Pasta de arquivos estáticos coletados (gerada pelo comando collectstatic)
+/static/
+
+
+### Python ###
+# Ambientes Virtuais
+env/
+venv/
+.venv/
+ENV/
+.env
+
+# Arquivos de distribuição / empacotamento
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Instaladores Python
+*.manifest
+*.spec
+
+# Cache do PyBuilder
+target/
+
+# Cache do Mypy
+.mypy_cache/
+
+# Cache do pytest
+.pytest_cache/
+
+# Arquivos do PyCharm
+.idea/
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Arquivos de Sistema Operacional
+.DS_Store
+Thumbs.db

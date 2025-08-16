@@ -23,12 +23,28 @@ class Paciente(models.Model):
     ]
 
     Sintomas = [
-        ('Febre', 'Febre'),
-        ('Dor de Cabeça', 'Dor de Cabeça'),
-        ('Falta de Ar', 'Falta de Ar'),
-        ('Náusea/Vômito', 'Náusea/Vômito'),
-        ('Tontura', 'Tontura'),
-        ('Fraqueza', 'Fraqueza'),
+        # Sintomas Chave (Geralmente Indicam Urgência)
+        ('Dor_Toracica', 'Dor Torácica / Aperto no Peito'),
+        ('Falta_de_Ar', 'Falta de Ar / Dificuldade para Respirar'),
+        ('Alteracao_Neurologica_Grave', 'Alteração de Consciência / Convulsão / Confusão'),
+        ('Sangramento_Ativo', 'Sangramento Ativo / Vômito ou Fezes com Sangue'),
+
+        # Sintomas Comuns
+        ('Febre', 'Febre / Calafrios'),
+        ('Dor_de_Cabeca', 'Dor de Cabeça'),
+        ('Tontura_MalEstar', 'Tontura / Fraqueza / Mal-estar Geral'),
+        ('Sintomas_Respiratorios_Leves', 'Tosse / Espirros / Dor de Garganta'),
+        ('Dor_Abdominal', 'Dor Abdominal / Cólica'),
+        ('Sintomas_Gastrointestinais', 'Náusea / Vômito / Diarreia'),
+
+        # Sintomas Específicos
+        ('Lesao_Trauma', 'Lesão / Trauma / Queda Recente'),
+        ('Dor_Locomotora', 'Dor Muscular / Articular / Lombar'),
+        ('Reacao_Alergica_Pele', 'Reação Alérgica / Erupção na Pele / Inchaço'),
+        ('Queixa_Urinaria', 'Queixa Urinária (Dor ao urinar / Sangue na urina)'),
+
+        # Outros
+        ('Outro', 'Outro'),
     ]
 
     Risco = [
@@ -55,7 +71,7 @@ class Paciente(models.Model):
     convenio = models.CharField(choices=Convenios, max_length=50)
     hora_chegada = models.TimeField(blank=True, null=True)
 
-    temperatura = models.CharField(max_length=3)
+    temperatura = models.FloatField(max_length=3)
     pressaoArterial = models.CharField(max_length=3)
     pulso = models.CharField(max_length=3)
     frequenciaRespiratoria = models.CharField(max_length=3)
@@ -72,11 +88,22 @@ class Paciente(models.Model):
     justificativa = models.CharField(max_length=200,blank=True, null=True)
     encaminhamento = models.CharField(choices=Profissionais, max_length=50,blank=True, null=True)
 
-    status_atendimento = models.CharField(max_length=20, choices=Status, default='Esperando',blank=True, null=True)
+    status_atendimento = models.CharField(max_length=20, choices=Status, default='Aguardando',blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        campos_necessarios_ia = [
+            self.temperatura,
+            self.pressaoArterial,
+            self.pulso,
+            self.frequenciaRespiratoria,
+            self.saturacao,
+            self.glicemia,
+            self.dor,
+            self.sintomas_associados,
+            self.queixa
+        ]
         # se não tiver classificacao definida, predizer
-        if not self.classificacao:
+        if not self.classificacao and all(campo is not None and campo != '' for campo in campos_necessarios_ia):
             data = {
                 'temperatura': self.temperatura,
                 'pressaoArterial': self.pressaoArterial,

@@ -27,6 +27,7 @@
         <h2>Pacientes</h2>
 
         <div class="filtros">
+            <a href="{% url 'hosp:criar' %}"><button class="">+ Adicionar Paciente</button></a>
             <input type="text" placeholder="🔍 Buscar pacientes..." class="busca-input">
             <div class="filtros-status">
                 <button class="ativo">Todos</button>
@@ -65,7 +66,8 @@
                 </div>
 
                 <div class="card-actions">
-                    <button class="btn-prontuario">📄 Prontuário</button>
+                    <a href="{% url 'hosp:mostrar' paciente.id %}"><button class="btn-prontuario">📄 Prontuário</button></a>
+                    <a href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza disso?')"><button>Remover</button></a>
                     <a href="#" class="btn-atender">Atender</a>
                 </div>
             </div>
