@@ -75,6 +75,8 @@
     font-weight: bold;
 }
 
+
+
 .card-info {
     flex-grow: 1;
 }
@@ -134,4 +136,14 @@
     padding: 0.4rem 1rem;
     border-radius: 6px;
     text-decoration: none;
+}
+
+.encaminhamento {
+    background-color: #f4f4f4;
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
 }

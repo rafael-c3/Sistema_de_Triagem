@@ -29,9 +29,9 @@
                 <p>Total de Pacientes</p>
                 <h2>{{ pacientes|length }}</h2></h2>
                 <div class="prioridades">
-                    <p><span class="dot red"></span> Crítico: {{ total_critico}}</p>
-                    <p><span class="dot yellow"></span> Urgente: {{ total_urgente}}</p>
-                    <p><span class="dot green"></span> Normal: {{ total_normal}}</p>
+                    <p><span class="dot red"></span> Crítico: {{ status_contagem.Crítico|default:0 }}</p>
+                    <p><span class="dot yellow"></span> Urgente: {{ status_contagem.Urgente|default:0 }}</p>
+                    <p><span class="dot green"></span> Normal: {{ status_contagem.Normal|default:0 }}</p>
                 </div>
             </div>
         </section>
@@ -93,13 +93,9 @@
         </section>
     </main>
 
-    <h2>Total de Pacientes: {{ pacientes|length }}</h2>
-    <li>Crítico: {{ status_contagem.Crítico|default:0 }}</li>
-    <li>Urgente: {{ status_contagem.Urgente|default:0 }}</li>
-    <li>Normal: {{ status_contagem.Normal|default:0 }}</li>
-    </ul>
+   
 
-    <a href="{% url 'hosp:criar' %}">Adicionar Paciente</a>
+    
 
 
     <footer>
