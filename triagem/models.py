@@ -53,7 +53,6 @@ class Paciente(models.Model):
         ('Amarelo', 'Urgente'),
         ('Verde', 'Pouco Urgente'),
         ('Azul', 'Não Urgente'),
-
     ]
 
     Profissionais = [
@@ -88,7 +87,7 @@ class Paciente(models.Model):
     justificativa = models.CharField(max_length=200,blank=True, null=True)
     encaminhamento = models.CharField(choices=Profissionais, max_length=50,blank=True, null=True)
 
-    status_atendimento = models.CharField(max_length=20, choices=Status, default='Aguardando',blank=True, null=True)
+    status = models.CharField(max_length=20, choices=Status, default='Aguardando',blank=True, null=True)
 
     def save(self, *args, **kwargs):
         campos_necessarios_ia = [
@@ -125,7 +124,7 @@ class Paciente(models.Model):
         super().save(*args, **kwargs)
     
     @property
-    def status(self):
+    def status_risco(self):
         if self.classificacao == 'Vermelho':
             return 'Crítico'
         elif self.classificacao in ['Laranja', 'Amarelo']:
