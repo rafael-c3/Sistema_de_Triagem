@@ -1,5 +1,6 @@
 from django import forms
-from .models import Paciente
+from django.contrib.auth.forms import UserCreationForm
+from .models import Paciente, CustomUser
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -60,3 +61,7 @@ class PacienteForm(forms.ModelForm):
             'status_atendimento': forms.Select(attrs={'class': 'form-control'}),
         }
     
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = CustomUser
+        fields = ('username', 'nome_completo', 'email', 'cpf', 'tipo_usuario')

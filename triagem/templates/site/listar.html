@@ -14,22 +14,25 @@
         <nav class="menu-links">
             <a href="{% url 'hosp:index' %}">Home</a>
             <a href="{% url 'hosp:dashboard' %}">Dashboard</a>
+            {% if user.tipo_usuario != 'MEDICO' %}
             <a href="{% url 'hosp:criar' %}">Triagem</a>
+            {% endif %}
             <a href="{% url 'hosp:listar' %}">Pacientes</a> 
         </nav>
         <div class="entrar">
-            <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
+            <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>
         </div>
     </header>
 
     <main class="pacientes-container">
         <h2>Pacientes</h2>
-        
         <div class="filtros-container">
             <div class="filtros-principal">
+                {% if user.tipo_usuario != 'MEDICO' %}
                 <a href="{% url 'hosp:criar' %}">
                     <button class="btn-adicionar">+ Adicionar Paciente</button>
                 </a>
+                {% endif %}
                 <input type="text" id="busca-input" placeholder="🔍 Buscar por nome ou ID..." class="busca-input">
                 <button class="btn-filtros" id="toggle-filtros">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path></svg>

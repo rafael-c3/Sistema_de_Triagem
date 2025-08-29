@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import list_view, index_view, create_view, delete_view, detail_view, update_view, triagem_view, dashboard_view
+from .views import list_view, index_view, create_view, delete_view, detail_view, update_view, triagem_view, dashboard_view, registro_view, perfil_view
+from django.contrib.auth import views as auth_views
 
 app_name = 'hosp'
 urlpatterns = [
@@ -11,4 +12,9 @@ urlpatterns = [
     path('deletar/<int:pk>', delete_view, name='deletar'),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('triagem/', triagem_view, name='triagem'),
+
+    path('registro/', registro_view, name='registro'),
+    path('login/', auth_views.LoginView.as_view(template_name='site/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='hosp:login'), name='logout'),
+    path('perfil/', perfil_view, name='perfil'),
 ]

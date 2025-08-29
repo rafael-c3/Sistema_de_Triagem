@@ -1,6 +1,18 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from .ml.predict import predict_from_dict
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser # Importe o AbstractUser
+
+class CustomUser(AbstractUser):
+    class TipoUsuario(models.TextChoices):
+        ATENDENTE = 'ATENDENTE', 'Atendente'
+        MEDICO = 'MEDICO', 'Médico'
+        ADMIN = 'ADMIN', 'Admin'
+
+    nome_completo = models.CharField(max_length=255)
+    cpf = models.CharField(max_length=11, unique=True)
+    tipo_usuario = models.CharField(max_length=10, choices=TipoUsuario.choices, default=TipoUsuario.ATENDENTE)
 
 class Paciente(models.Model):
     Sexualidade = [
@@ -89,6 +101,8 @@ class Paciente(models.Model):
 
     status = models.CharField(max_length=20, choices=Status, default='Aguardando',blank=True, null=True)
 
+    atendente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='pacientes_criados')
+
     def save(self, *args, **kwargs):
         campos_necessarios_ia = [
             self.temperatura,
@@ -134,3 +148,11 @@ class Paciente(models.Model):
 
     def __str__(self):
         return self.nome
+    
+    atendente = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL, # Não deleta o paciente se o atendente for removido
+        null=True,
+        blank=True,
+        related_name='pacientes_criados'
+    )

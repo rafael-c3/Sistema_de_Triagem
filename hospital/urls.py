@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('master/', include('triagem.urls')),
-    path('', lambda request: redirect('master/home/')),
+    path('', lambda request: redirect('master/login/')),
 ]
 
 if settings.DEBUG:
