@@ -9,14 +9,15 @@
     <link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=3">
 </head>
 <body>
-
+{% if user.tipo_usuario != 'MEDICO' %}
 <header>
     <a href="{% url 'hosp:index' %}"><h1>MedTriagem</h1></a>
     <nav class="menu-links">
         <a href="{% url 'hosp:index' %}"><p>Home</p></a>
-        <a href="{% url 'hosp:dashboard' %}"><p>Dashboard</p></a>
+        <!--<a href="{% url 'hosp:dashboard' %}">Dashboard</a>-->
         <a href="{% url 'hosp:criar' %}"><p>Triagem</p></a>
         <a href="{% url 'hosp:listar' %}"><p>Pacientes</p></a>
+        <a class="nav-link" href="{% url 'hosp:lista_feedback' %}">Feedbacks</a>
     </nav>
     <div class="entrar">
         <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>
@@ -46,8 +47,19 @@
                 {{ form.cpf }}
                 <label for="{{ form.convenio.id_for_label }}">Convênio:</label>
                 {{ form.convenio }}
-                <label for="{{ form.hora_chegada.id_for_label }}">Horário de Chegada:</label>
-                {{ form.hora_chegada }}
+                <!--<label for="{{ form.hora_chegada.id_for_label }}">Horário de Chegada:</label>
+                {{ form.hora_chegada }}-->
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if form.non_field_errors %}
+                        <li>{{ form.non_field_errors|striptags }}</li>
+                    {% endif %}
+                {% endif %}
             </section>
             <section class="form-box">
                 <h2>Avaliação Clínica</h2>
@@ -66,8 +78,12 @@
                             {{ form.temperatura }}
                         </div>
                         <div>
-                            <label for="{{ form.pressaoArterial.id_for_label }}">Pressão Arterial:</label>
-                            {{ form.pressaoArterial }}
+                            <label for="{{ form.pressao_sistolica.id_for_label }}">Pressão Arterial Sistólica:</label>
+                            {{ form.pressao_sistolica }}
+                        </div>
+                        <div>
+                            <label for="{{ form.pressao_diastolica.id_for_label }}">Pressão Arterial Diastólica:</label>
+                            {{ form.pressao_diastolica }}
                         </div>
                         <div>
                             <label for="{{ form.pulso.id_for_label }}">Pulso:</label>
@@ -128,7 +144,6 @@
                 </section>-->
             </section>
 
-
             
         </div>
 
@@ -137,7 +152,7 @@
         </div>
     </form>
 </main>
-
+{% endif %}
 <script>
 function openTab(evt, tabId) {
   // Esconde todas as seções

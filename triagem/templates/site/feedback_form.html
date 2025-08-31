@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-4">
+    <h2>Feedback da Triagem para: {{ paciente.nome }}</h2>
+    <p>Classificação original do sistema: <strong>{{ paciente.get_classificacao_display }}</strong></p>
+    <hr>
+
+    <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+        <h4 style="margin-top: 0;">Resumo Clínico do Paciente</h4>
+        <p><strong>Queixa Principal:</strong> {{ paciente.queixa }}</p>
+        <p><strong>Início dos Sintomas:</strong> {{ paciente.inicio_sintomas|date:"d/m/Y" }}</p>
+        <p><strong>Sintomas Associados:</strong> {{ paciente.get_sintomas_associados_display }}</p>
+        
+        <h5 style="margin-top: 15px;">Sinais Vitais Registrados</h5>
+        <ul>
+            <li><strong>Temperatura:</strong> {{ paciente.temperatura }} °C</li>
+            <li><strong>Pressão Arterial:</strong> {{ paciente.pressao_arterial }} mmHg</li>
+            <li><strong>Pulso:</strong> {{ paciente.pulso }} bpm</li>
+            <li><strong>Frequencia Respiratória:</strong> {{ paciente.frequenciaRespiratoria }} bpm</li>
+            <li><strong>Saturação:</strong> {{ paciente.saturacao }}%</li>
+            <li><strong>Glicemia:</strong> {{ paciente.glicemia }} mg</li>
+            <li><strong>Nivel de dor:</strong> {{ paciente.dor }}</li>
+        </ul>
+    </div>
+
+    <h4>Avaliação do Profissional</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Enviar Feedback</button>
+        <a href="javascript:history.back()" class="btn btn-secondary mt-3">Cancelar</a>
+    </form>
+</div>
+</body>
+</html>

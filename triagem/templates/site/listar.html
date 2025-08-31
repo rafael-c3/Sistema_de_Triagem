@@ -13,11 +13,12 @@
         <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
         <nav class="menu-links">
             <a href="{% url 'hosp:index' %}">Home</a>
-            <a href="{% url 'hosp:dashboard' %}">Dashboard</a>
+            <!--<a href="{% url 'hosp:dashboard' %}">Dashboard</a>-->
             {% if user.tipo_usuario != 'MEDICO' %}
             <a href="{% url 'hosp:criar' %}">Triagem</a>
             {% endif %}
-            <a href="{% url 'hosp:listar' %}">Pacientes</a> 
+            <a href="{% url 'hosp:listar' %}">Pacientes</a>
+            <a href="{% url 'hosp:lista_feedback' %}">Feedbacks</a> 
         </nav>
         <div class="entrar">
             <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>
@@ -73,7 +74,7 @@
                         <br>
                         <small>ID: P-{{ paciente.id }} • {{ paciente.idade }} anos</small>
                         <br>
-                        <small>{{ paciente.hora_chegada }} | {{paciente.inicio_sintomas}}</small>
+                        <small>{{ paciente.hora_chegada }}</small>
                     </div>
                     <div class="topo-direita">
                         <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
@@ -84,7 +85,7 @@
                 <p class="queixa">Queixa Principal: {{ paciente.queixa }}</p>
 
                 <div class="detalhes">
-                    <div><b>Pressão</b><br>{{ paciente.pressaoArterial }} mmHg</div>
+                    <div><b>Pressão</b><br>{{ paciente.pressao_arterial }} mmHg</div>
                     <div><b>Pulso</b><br>{{ paciente.pulso }} bpm</div>
                     <div><b>Temperatura</b><br>{{ paciente.temperatura }} °C</div>
                     <div><b>Saturação</b><br>{{ paciente.saturacao }}%</div>
@@ -92,8 +93,24 @@
 
                 <div class="card-actions">
                     <a href="{% url 'hosp:mostrar' paciente.id %}"><button class="btn-prontuario">📄 Prontuário</button></a>
+                    {% if not paciente.feedbacktriagem %}
+                        <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn btn-secondary btn-sm mt-1">Dar Feedback</a>
+                    {% endif %}
+                    {% if user.tipo_usuario == 'ADMIN' %}
                     <a href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza que deseja remover este paciente?')"><button class="btn-remover">Remover</button></a>
-                    <button class="btn-atender" data-id="{{ paciente.id }}">Atender</button>
+                    {% endif %}
+                    {% if user.tipo_usuario == 'MEDICO' and paciente.status == 'Aguardando' %}
+                        <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-sm">Atender</button>
+                        </form>
+                    
+                    {% elif paciente.status == 'Em atendimento' and paciente.medico_responsavel %}
+                         Atendido por: {{ paciente.medico_responsavel.nome_completo }}
+                    
+                    {% else %}
+                        <button>Atendido</button>
+                    {% endif %}
                 </div>
             </div>
             

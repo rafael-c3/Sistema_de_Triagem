@@ -91,46 +91,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Adiciona o evento de 'click' para os botões de ATENDER
-    btnsAtender.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const botaoClicado = e.target;
-            const card = botaoClicado.closest('.card-paciente');
-            const statusSpan = card.querySelector('.status-paciente');
-            let statusAtual = card.dataset.status;
-
-            if (statusAtual === 'Aguardando') {
-                if (confirm('Deseja iniciar o atendimento para este paciente?')) {
-                    card.dataset.status = 'Em Atendimento';
-                    statusSpan.textContent = 'Em Atendimento';
-                    botaoClicado.textContent = 'Finalizar Atendimento';
-                }
-            } else if (statusAtual === 'Em Atendimento') {
-                if (confirm('Deseja marcar o atendimento como concluído?')) {
-                    card.dataset.status = 'Concluido';
-                    statusSpan.textContent = 'Concluído';
-                    botaoClicado.textContent = 'Concluído';
-                    botaoClicado.disabled = true;
-                }
-            }
-            
-            aplicarFiltros();
-        });
-    });
-
-    // Garante que o estado inicial dos botões "Atender" esteja correto
-    cardsPacientes.forEach(card => {
-        const status = card.dataset.status;
-        const btn = card.querySelector('.btn-atender');
-        // Adicionado um 'if (btn)' para evitar erros caso um card não tenha o botão
-        if (btn) { 
-            if (status === 'Em Atendimento') {
-                btn.textContent = 'Finalizar Atendimento';
-            } else if (status === 'Concluido') {
-                btn.textContent = 'Concluído';
-                btn.disabled = true;
-            }
-        }
-    });
-
 });

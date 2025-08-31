@@ -7,13 +7,14 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report
 import joblib
+import shap
 
 # 1. Carregar os dados
 print("Carregando dados...")
 df = pd.read_csv('dados_triagem.csv')
 
 # Definir as features (X) e o alvo (y)
-features = ['temperatura', 'pressaoArterial', 'pulso', 'frequenciaRespiratoria', 'saturacao', 'glicemia', 'dor', 'sintomas_associados', 'queixa']
+features = ['temperatura', 'pressao_sistolica', 'pressao_diastolica', 'pulso', 'frequenciaRespiratoria', 'saturacao', 'glicemia', 'dor', 'sintomas_associados', 'queixa']
 target = 'classificacao'
 
 X = df[features]
@@ -21,7 +22,7 @@ y = df[target]
 
 # 2. Definir o pré-processamento
 # Features numéricas que precisam ser escaladas
-numeric_features = ['temperatura', 'pressaoArterial', 'pulso', 'frequenciaRespiratoria', 'saturacao', 'glicemia', 'dor']
+numeric_features = ['temperatura', 'pressao_sistolica', 'pressao_diastolica', 'pulso', 'frequenciaRespiratoria', 'saturacao', 'glicemia', 'dor']
 
 # Feature categórica que precisa de One-Hot Encoding
 categorical_features = ['sintomas_associados']
@@ -60,9 +61,30 @@ print("Avaliando o modelo...")
 y_pred = model_pipeline.predict(X_test)
 print(classification_report(y_test, y_pred))
 
-# 7. Salvar o pipeline completo (pré-processador + modelo)
-model_filename = 'triage_model.joblib'
-print(f"Salvando o modelo em '{model_filename}'...")
-joblib.dump(model_pipeline, model_filename)
+# 7. Criar o explicador SHAP
+print("Criando o explicador SHAP...")
 
-print("Treinamento concluído e modelo salvo com sucesso!")
+# Transformamos os dados de treino
+processed_X_train = model_pipeline.named_steps['preprocessor'].transform(X_train)
+
+# --- A CORREÇÃO ESTÁ AQUI ---
+# Verificamos se a saída é uma matriz esparsa e a convertemos para um array denso
+if hasattr(processed_X_train, "toarray"):
+    processed_X_train_dense = processed_X_train.toarray()
+else:
+    processed_X_train_dense = processed_X_train
+# --- FIM DA CORREÇÃO ---
+
+# Criamos o explicador com os dados no formato denso e correto
+print("Criando o explicador SHAP (usando a abordagem robusta)...")
+explainer = shap.Explainer(
+    model_pipeline.named_steps['classifier'].predict_proba,
+    processed_X_train_dense
+)
+
+# 8. Salvar o modelo E o explicador juntos
+model_filename = 'triage_model_bundle.joblib'
+print(f"Salvando o modelo e o explicador em '{model_filename}'...")
+joblib.dump({'model': model_pipeline, 'explainer': explainer}, model_filename)
+
+print("Treinamento concluído e pacote (modelo + explicador) salvo com sucesso!")

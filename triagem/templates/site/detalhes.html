@@ -46,9 +46,60 @@
         <p><b>Observações:</b> {{ paciente.observacoes }}</p>
 
         <p><b>Classificação:</b> {{ paciente.classificacao }}</p>
-        <p><b>Status de Atendimento:</b> {{ paciente.status_atendimento }}</p>
+        <p><b>Responsável pela Triagem:</b> {{ paciente.atendente.nome_completo }}</p>
+        <p><b>Justificativa da IA (triagem):</b> {{ paciente.justificativa }}</p>
+
+        <div class="card-body">
+            <p><strong>Status Atual:</strong> {{ paciente.get_status_display }}</p>
+
+            {% if paciente.medico_responsavel %}
+                <p><strong>Médico Responsável:</strong> {{ paciente.medico_responsavel.nome_completo }}</p>
+            {% endif %}
+
+            {% if user.tipo_usuario == 'MEDICO' %}
+                <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post">
+                    {% csrf_token %}
+
+                    {% if paciente.status == 'Aguardando' %}
+                        <button type="submit" class="btn btn-primary">Iniciar Atendimento</button>
+                    
+                    {% elif paciente.status == 'Em atendimento' %}
+                        <button type="submit" class="btn btn-success">Finalizar Atendimento</button>
+                    
+                    {% elif paciente.status == 'Concluido' %}
+                        <p class="text-muted">Atendimento finalizado.</p>
+                    {% endif %}
+                </form>
+            {% endif %}
+
+            <h4>Linha do Tempo do Atendimento</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>Chegada:</strong> {{ paciente.hora_chegada|date:"d/m/Y H:i:s" }}
+                </li>
+
+                {% if paciente.hora_inicio_atendimento %}
+                <li class="list-group-item">
+                    <strong>Início do Atendimento:</strong> {{ paciente.hora_inicio_atendimento|date:"d/m/Y H:i:s" }}
+                    <br>
+                    <small class="text-muted">Tempo de espera: {{ paciente.tempo_de_espera }}</small>
+                </li>
+                {% endif %}
+                
+                {% if paciente.hora_fim_atendimento %}
+                <li class="list-group-item">
+                    <strong>Fim do Atendimento:</strong> {{ paciente.hora_fim_atendimento|date:"d/m/Y H:i:s" }}
+                    <br>
+                    <small class="text-muted">Duração do atendimento: {{ paciente.tempo_de_atendimento }}</small>
+                </li>
+                {% endif %}
+            </ul>
+
+            <hr>
+        </div>
+
     </div>
-    <br><br><a class="link" href="{% url 'hosp:listar' %}">Voltar</a>
+    <br><br><a class="btn btn-secondary" href="{{ voltar_para_url }}">Voltar</a>
     <br><br><a class="link" href="{% url 'hosp:atualizar' paciente.id %}">Atualizar</a>
 </body>
 </html>

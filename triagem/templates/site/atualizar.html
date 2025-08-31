@@ -8,16 +8,12 @@
     <link rel="stylesheet" href="{% static 'front/css/atualizar.css' %}?v=2">
 </head>
 <body>
-    <h2>Alterar ficha de {{ paciente.nome }}</h2>
+    <h2>Alterar prontuário de {{ paciente.nome }}</h2>
     <form class="form" action="{% url 'hosp:atualizar' paciente.id %}" method="post">
         {% csrf_token %}
-        {% for field in form %}
-            <br>
-            {{ field.label_tag }}
-            
-            {{ field }}
-            <br>
-        {% endfor %}
+        {{ form.idade.label_tag }}
+        {{ form.idade }}
+        <br>
         <br>
         <button class="link" type="submit">Alterar</button>
     </form><br>

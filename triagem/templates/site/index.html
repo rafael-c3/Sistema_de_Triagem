@@ -14,73 +14,124 @@
 
         <nav class="menu-links">
             <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a>
+            <!-- <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a> -->
             {% if user.tipo_usuario != 'MEDICO' %}
                 <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
             {% endif %}
             <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
+            <a href="{% url 'hosp:lista_feedback' %}">Feedbacks</a>
         </nav>
 
          <div class="entrar">
             <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>
         </div>
     </header>
-
-    <main>
-
-        <section class="intro">
-            <h2>Sistema de Triagem</h2>
-            <p>Plataforma completa para gerenciamento de triagem de pacientes em ambientes hospitalares e clínicos. 
-            Otimize o fluxo de atendimento e priorize casos conforme a necessidade.
+        <div style="margin-top: 40px; text-align: right;">
+            <p>
+                Usuário: {{ user.nome_completo }} | 
+                <a href="{% url 'hosp:perfil' %}">Meu Perfil</a> |
+                <form action="{% url 'hosp:logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type-="submit" style="background:none; border:none; color:#2980b9; cursor:pointer; text-decoration:underline;">Sair</button>
+                </form>
             </p>
-            <div class="actions">
-                <a href="{% url 'hosp:criar' %}" class="btn green">Iniciar Triagem</a>
-                <a href ="{% url 'hosp:listar' %}" class="btn">Ver Pacientes</a>
-            </div>
-        </section>
+        </div>
+<div class="container">
+                <h1>Painel de Controle</h1>
+        <div style="margin-bottom: 30px; padding: 15px; background-color: #eaf2f8; border-left: 5px solid #3498db; border-radius: 4px;">
+            <h3 style="margin-top: 0;">Bem-vindo(a) {{ user.username }} ao Sistema de Gestão de Triagem</h3>
+            <p>Esta ferramenta foi projetada para otimizar o fluxo de pacientes e garantir que os atendimentos sejam realizados com a máxima eficiência.</p>
+            <ul>
+                <li><strong>Resumo da Situação:</strong> Os cards acima mostram as métricas mais importantes do dia em tempo real.</li>
+                <li><strong>Fila de Atendimento:</strong> A tabela abaixo é sua principal ferramenta de trabalho. Ela exibe os pacientes ordenados por prioridade de risco (Vermelho sendo a mais alta) e, em seguida, por ordem de chegada.</li>
+            </ul>
+            <p style="margin-bottom: 0;">
+                <strong>Para Médicos:</strong> Utilize o botão "Atender" na coluna "Ação" para iniciar o atendimento de um paciente e vinculá-lo ao seu perfil.<br>
+                <strong>Para todos os usuários:</strong> Clique no nome de um paciente para acessar seu prontuário completo.
+            </p>
+        </div>
 
-        <section class="resumo">
-            <div class="card">
-                <h3>Pacientes em espera</h3>
-                <p class="valor">12</p>
-                <small>4 em estado critico</small>
+        <h2>Situação Atual e Resumo do Dia</h2>
+        <div class="summary-container">
+            <div class="summary-card">
+                <h3>Aguardando na Fila</h3>
+                <p class="count">{{ total_aguardando }}</p>
             </div>
-            <div class="card">
-                <h3>Tempo Médio de espera</h3>
-                <p class="valor">24 min</p>
-                <small>↓ 12% em estado critico</small>
+            <div class="summary-card" style="border-top: 5px solid #e74c3c;">
+                <h3>Prioridade Vermelha</h3>
+                <p class="count">{{ vermelhos_aguardando }}</p>
             </div>
-            <div class="card">
-                <h3>Triagens Hoje</h3>
-                <p class="valor">50</p>
-                <small>↑ 13% em relação a ontem</small>
+            <div class="summary-card" style="border-top: 5px solid #e67e22;">
+                <h3>Prioridade Laranja</h3>
+                <p class="count">{{ laranjas_aguardando }}</p>
             </div>
-            <div class="card">
-                <h3>Eficiência</h3>
-                <p class="valor">80%</p>
-                <small>↑ 5% em relação a semana passada</small>
+            <div class="summary-card">
+                <h3>Em Atendimento</h3>
+                <p class="count">{{ total_em_atendimento }}</p>
             </div>
-        </section>
-        <section class="recursos">
-            <h2>Recursos do Sistema</h2>
-            <div class="cards-recursos">
-                <div class="card-recurso">
-                    <h2>Registro de Pacientes</h2>
-                    <p>Cadastro rápido e eficiente de novos pacientes com suporte a documentos e histórico médico.</p>
-                </div>
-                <div class="card-recurso">
-                    <h2>Avaliação de Triagem</h2>
-                    <p>Sistema de classificação por cores seguindo protocolos internacionais de triagem, com suporte para sinais vitais e sintomas.</p>
-                </div>
-                <div class="card-recurso">
-                    <h2>Monitoramento em tempo real</h2>
-                    <p>Dashboard com atualizações em tempo real sobre status dos pacientes e filas de espera.</p>
-                </div>
+            <div class="summary-card">
+                <h3>Chegadas Hoje</h3>
+                <p class="count">{{ chegadas_hoje }}</p>
             </div>
-        </section>   
-    </main>
-    
+            <div class="summary-card">
+                <h3>Concluídos Hoje</h3>
+                <p class="count">{{ concluidos_hoje }}</p>
+            </div>
+            <div class="summary-card">
+                <h3>Tempo Médio de Espera (Hoje)</h3>
+                <p class="count" style="font-size: 1.8em;">{{ tempo_medio_espera }}</p>
+            </div>
+        </div>
 
+        <h2>Fila de Atendimento</h2>
+        <table class="patient-table">
+            <thead>
+                <tr>
+                    <th>Prioridade</th>
+                    <th>Nome do Paciente</th>
+                    <th>Hora da Chegada</th>
+                    <th>Triagem Por</th>
+                    <th>Médico Responsável</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
+                <tr>
+                    <td>
+                        <span class="badge {{ paciente.classificacao|lower }}">
+                            {{ paciente.get_classificacao_display }}
+                        </span>
+                    </td>
+                    <td><a href="{% url 'hosp:mostrar' pk=paciente.pk %}">{{ paciente.nome }}</a></td>
+                    <td>{{ paciente.hora_chegada|date:"H:i"|default:"--:--" }}</td>
+                    <td>{{ paciente.atendente.nome_completo|default:"N/A" }}</td>
+                    <td>
+                        {% if paciente.medico_responsavel %}
+                            {{ paciente.medico_responsavel.nome_completo }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.tipo_usuario == 'MEDICO' and paciente.status == 'Aguardando' %}
+                            <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button">Atender</button>
+                            </form>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">Nenhum paciente na fila.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <footer>
         <p>© 2025 Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>

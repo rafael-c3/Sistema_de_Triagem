@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-4">
+    <h2>Relatório de Feedbacks da Triagem</h2>
+    <p>Lista de todas as avaliações feitas pelos profissionais sobre o desempenho do sistema.</p>
+
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>ID Paciente</th>
+                <th>Nome do Paciente</th>
+                <th>Classificação Original</th>
+                <th>Avaliação do Profissional</th>
+                <th>Avaliador</th>
+                <th>Tipo de Usuário</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fb in feedbacks %}
+            <tr>
+                <td>{{ fb.paciente.id }}</td>
+                <td><a href="{% url 'hosp:mostrar' pk=fb.paciente.pk %}">{{ fb.paciente.nome }}</a></td>
+                <td>{{ fb.paciente.get_classificacao_display }}</td>
+                <td>
+                    {% if fb.triagem_correta %}
+                        <span class="text-success">Correta</span>
+                    {% else %}
+                        <span class="text-danger">Incorreta (Sugerido: {{ fb.get_classificacao_correta_display }})</span>
+                    {% endif %}
+                </td>
+                <td>{{ fb.usuario.nome_completo }}</td>
+                <td>{{ fb.usuario.get_tipo_usuario_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Nenhum feedback foi registrado ainda.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

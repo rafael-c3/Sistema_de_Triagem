@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -134,3 +134,10 @@ LOGIN_URL = 'hosp:login'
 LOGIN_REDIRECT_URL = 'hosp:index' # Ex: a lista de pacientes
 
 LOGOUT_REDIRECT_URL = reverse_lazy('hosp:login')
+
+# settings.py
+AUTHENTICATION_BACKENDS = [
+    # O caminho agora aponta para o arquivo models.py
+    'triagem.backends.EmailOrUsernameBackend', 
+    'django.contrib.auth.backends.ModelBackend',
+]

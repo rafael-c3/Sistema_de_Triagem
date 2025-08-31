@@ -1,101 +1,204 @@
-temperatura,pressaoArterial,pulso,frequenciaRespiratoria,saturacao,glicemia,dor,sintomas_associados,queixa,classificacao
-36.8,190,120,28,91,150,10,Dor_Toracica,"Dor muito forte no peito irradiando para o braço esquerdo, sinto que vou desmaiar.",Vermelho
-37.1,80,130,30,88,110,9,Falta_de_Ar,"Não consigo respirar direito, chiado no peito e lábios ficando azulados.",Vermelho
-36.5,200,115,26,93,180,10,Alteracao_Neurologica_Grave,"Perda súbita de força no lado direito do corpo e fala enrolada.",Vermelho
-35.9,75,140,32,89,90,8,Sangramento_Ativo,"Acidente de moto, com sangramento intenso na perna e muita tontura.",Vermelho
-38.0,90,125,29,90,550,7,Alteracao_Neurologica_Grave,"Muita sonolência, confusão mental e hálito com cheiro de fruta.",Vermelho
-37.2,180,110,25,92,130,9,Dor_de_Cabeca,"A pior dor de cabeça da minha vida, começou de repente, com vômito.",Vermelho
-38.5,85,135,30,89,120,8,Falta_de_Ar,"Criança com febre alta, muita dificuldade para respirar e apática.",Vermelho
-36.9,170,120,28,91,140,10,Dor_Abdominal,"Dor abdominal insuportável, abdômen duro como pedra.",Vermelho
-37.0,90,120,27,90,100,0,Reacao_Alergica_Pele,"Inchaço súbito no rosto e na língua após picada de abelha, com dificuldade para respirar.",Vermelho
-36.6,80,130,29,88,115,9,Lesao_Trauma,"Queda de altura, dor intensa na coluna e não sente as pernas.",Vermelho
-39.8,90,130,28,89,140,8,Febre,"Paciente idoso com febre, pressão muito baixa e confusão. Calafrios intensos.",Vermelho
-36.2,210,110,26,92,190,9,Alteracao_Neurologica_Grave,"Paciente acordou sem conseguir falar e com um lado do rosto caído.",Vermelho
-37.5,185,125,29,90,120,10,Dor_Toracica,"Dor súbita e aguda no peito, piora muito ao respirar, falta de ar intensa.",Vermelho
-38.2,95,125,28,91,110,9,Falta_de_Ar,"Criança pálida, sonolenta, com febre e respiração muito rápida e superficial.",Vermelho
-36.0,80,140,30,88,100,10,Sangramento_Ativo,"Vômito com grande quantidade de sangue vivo, paciente pálido e suando frio.",Vermelho
-37.3,170,50,22,94,130,9,Dor_Toracica,"Dor no peito com sensação de desmaio, pulso muito lento.",Vermelho
-36.6,85,130,29,89,25,8,Alteracao_Neurologica_Grave,"Paciente diabético encontrado desacordado, sudoreico, glicemia muito baixa.",Vermelho
-38.9,90,120,26,90,140,8,Dor_Abdominal,"Dor abdominal difusa e severa, paciente febril e com pressão caindo.",Vermelho
-37.0,100,110,25,92,110,0,Alteracao_Neurologica_Grave,"Paciente tendo uma crise convulsiva na sala de espera.",Vermelho
-36.5,190,115,27,91,150,10,Dor_de_Cabeca,"Dor de cabeça explosiva, descrita como um trovão, com rigidez de nuca.",Vermelho
-39.5,100,115,26,92,130,8,Febre,"Febre muito alta há 2 dias, calafrios e confusão mental.",Laranja
-37.5,150,110,24,93,120,9,Dor_Toracica,"Dor no peito que piora ao respirar fundo, com febre e tosse.",Laranja
-37.2,160,100,22,94,110,8,Dor_Abdominal,"Dor muito forte do lado direito da barriga, com febre e vômitos.",Laranja
-38.8,110,120,25,93,140,7,Falta_de_Ar,"Paciente com asma, usando a bombinha várias vezes sem melhora.",Laranja
-36.9,90,110,23,94,45,8,Tontura_MalEstar,"Paciente diabético, tomou insulina e não comeu. Suando frio e muito tonto.",Laranja
-38.2,105,115,24,93,125,9,Queixa_Urinaria,"Dor lombar intensa, febre e calafrios, não consegue ficar parado.",Laranja
-37.8,110,105,22,95,115,8,Sangramento_Ativo,"Sangramento vaginal intenso, com tontura e palidez.",Laranja
-37.0,140,95,20,96,280,0,Alteracao_Neurologica_Grave,"Visão turva e muita sede, glicemia muito alta no teste rápido.",Laranja
-39.1,120,110,22,95,120,7,Dor_de_Cabeca,"Dor de cabeça forte com rigidez na nuca e vômitos.",Laranja
-38.3,100,115,23,94,130,8,Lesao_Trauma,"Corte profundo no braço, sangramento parou mas o local está quente e vermelho.",Laranja
-39.0,125,120,25,93,135,7,Febre,"Febre persistente, tosse com catarro esverdeado e falta de ar moderada.",Laranja
-37.1,155,105,23,94,125,9,Dor_Abdominal,"Dor abdominal tipo cólica, muito intensa, com diarreia sanguinolenta.",Laranja
-38.5,115,110,24,93,115,8,Dor_Locomotora,"Perna inchada, vermelha e muito dolorida, com febre.",Laranja
-36.8,100,105,22,95,100,10,Dor_Locomotora,"Dor excruciante nos ossos, paciente com anemia falciforme.",Laranja
-37.4,145,90,21,96,110,8,Lesao_Trauma,"Pancada na cabeça com perda de consciência por 1 minuto, agora está vomitando.",Laranja
-38.0,120,115,23,94,120,7,Dor_Abdominal,"Dor intensa na parte superior do abdômen, irradiando para as costas, com náuseas.",Laranja
-37.2,165,100,22,95,130,9,Dor_Toracica,"Dor no peito atípica, mas paciente é diabético e hipertenso.",Laranja
-38.6,130,110,22,96,140,8,Queixa_Urinaria,"Idoso com febre, prostrado, e urina com cheiro muito forte.",Laranja
-37.0,100,100,20,97,90,0,Reacao_Alergica_Pele,"Urticária gigante por todo o corpo, com muito inchaço, mas respirando bem.",Laranja
-39.2,120,120,25,94,130,7,Febre,"Criança com febre alta persistente e muito irritada, chorando sem parar.",Laranja
-37.8,130,95,20,97,110,7,Sintomas_Gastrointestinais,"Vomitando sem parar há 24 horas, não consegue beber líquidos.",Amarelo
-37.2,125,90,18,98,100,6,Lesao_Trauma,"Torção no tornozelo, muito inchado e com dor ao tentar pisar.",Amarelo
-38.5,120,100,20,96,120,6,Febre,"Febre e dor no corpo há 3 dias, com manchas vermelhas na pele. Suspeita de dengue.",Amarelo
-37.1,140,85,18,97,105,7,Dor_Abdominal,"Cólica abdominal intensa que vai e volta, com diarreia.",Amarelo
-36.9,135,90,20,98,110,5,Dor_Locomotora,"Dor lombar que irradia para a perna, com dificuldade para andar.",Amarelo
-38.2,120,105,21,96,115,5,Sintomas_Respiratorios_Leves,"Tosse persistente com catarro amarelo há uma semana e febre baixa.",Amarelo
-37.5,110,95,19,97,100,6,Queixa_Urinaria,"Ardência ao urinar e vontade de ir ao banheiro a todo momento, com dor no pé da barriga.",Amarelo
-37.9,130,100,20,98,120,7,Dor_de_Cabeca,"Crise de enxaqueca forte, com sensibilidade à luz e náuseas.",Amarelo
-37.0,120,80,18,99,90,0,Reacao_Alergica_Pele,"Placas vermelhas e coceira pelo corpo após comer camarão, mas respirando bem.",Amarelo
-38.6,125,110,22,97,130,6,Febre,"Criança com febre, dor de garganta e recusa para comer.",Amarelo
-38.1,120,100,20,97,110,5,Febre,"Febre há 4 dias, dor de cabeça e dor atrás dos olhos.",Amarelo
-37.3,130,88,18,98,95,6,Dor_Abdominal,"Dor na boca do estômago que piora após comer.",Amarelo
-37.0,115,85,19,99,100,7,Lesao_Trauma,"Corte na mão que parece precisar de pontos, sangramento controlado.",Amarelo
-38.4,125,105,21,96,115,6,Tontura_MalEstar,"Tontura ao levantar, com sensação de quase desmaio, pressão um pouco baixa.",Amarelo
-37.6,130,90,20,97,105,5,Dor_Locomotora,"Dor intensa em uma articulação, com inchaço e vermelhidão.",Amarelo
-37.0,120,85,18,98,110,7,Dor_de_Cabeca,"Dor de cabeça tensional que não melhora com analgésicos comuns.",Amarelo
-38.9,130,110,22,96,125,4,Febre,"Paciente com suspeita de COVID, febre e perda de paladar.",Amarelo
-37.8,110,100,20,97,100,6,Sintomas_Gastrointestinais,"Diarreia e vômitos há 2 dias, começando a se sentir desidratado.",Amarelo
-37.5,140,95,20,98,120,7,Dor_Abdominal,"Dor pélvica e cólicas menstruais mais fortes que o normal.",Amarelo
-37.1,135,90,19,97,115,5,Lesao_Trauma,"Queda da própria altura, com dor no punho e inchaço.",Amarelo
-37.2,120,80,18,99,100,3,Sintomas_Respiratorios_Leves,"Tosse seca e coriza há 2 dias, sem febre.",Verde
-36.8,110,75,16,98,95,4,Dor_Locomotora,"Dor no ombro após esforço físico, piora com movimento.",Verde
-36.9,125,85,18,99,110,2,Queixa_Urinaria,"Leve desconforto ao urinar, sem febre ou outros sintomas.",Verde
-37.0,130,80,17,98,105,3,Sintomas_Gastrointestinais,"Diarreia leve, sem vômitos ou febre.",Verde
-36.7,115,70,16,99,90,4,Lesao_Trauma,"Pancada no joelho, mancando um pouco mas sem inchaço grande.",Verde
-37.1,120,78,18,98,98,2,Dor_de_Cabeca,"Dor de cabeça leve no final do dia.",Verde
-36.8,118,76,16,99,94,3,Reacao_Alergica_Pele,"Pequena reação alérgica a picada de inseto, apenas coceira local.",Verde
-37.0,122,82,18,98,102,1,Outro,"Preciso de um atestado médico para o trabalho por conta de um resfriado.",Verde
-36.9,120,80,18,99,100,3,Dor_Locomotora,"Dor muscular após iniciar academia.",Verde
-37.3,125,85,19,97,110,2,Sintomas_Respiratorios_Leves,"Congestão nasal e dor de garganta leve.",Verde
-36.8,115,70,16,99,90,4,Lesao_Trauma,"Arranhão superficial de gato, sangrou pouco e já parou.",Verde
-37.0,130,85,18,98,100,3,Sintomas_Respiratorios_Leves,"Crise de rinite alérgica, com muitos espirros.",Verde
-36.9,120,80,18,99,100,2,Queixa_Urinaria,"Sintomas de cistite recorrente, já sei qual remédio tomar.",Verde
-37.1,125,82,17,98,105,3,Dor_Locomotora,"Dor no pescoço após dormir de mau jeito (torcicolo).",Verde
-36.7,110,75,16,99,95,4,Reacao_Alergica_Pele,"Dermatite de contato, pele irritada após usar um produto novo.",Verde
-37.2,118,78,18,98,98,2,Dor_de_Cabeca,"Dor de cabeça após muito tempo no computador.",Verde
-36.8,122,80,18,99,101,3,Sintomas_Gastrointestinais,"Azia e má digestão após refeição pesada.",Verde
-37.0,120,80,18,99,100,1,Outro,"Unha encravada, com dor leve e sem pus.",Verde
-36.9,125,85,19,97,110,2,Sintomas_Respiratorios_Leves,"Gripe comum, já em melhora, apenas para avaliação.",Verde
-37.1,130,80,17,98,105,3,Dor_Locomotora,"Câimbra muscular na perna.",Verde
-36.8,120,80,18,99,95,0,Outro,"Preciso renovar a receita do meu remédio para pressão.",Azul
-36.7,110,75,16,98,90,1,Outro,"Gostaria de mostrar o resultado de um exame de sangue de rotina.",Azul
-37.0,125,85,18,99,105,0,Outro,"Retorno para reavaliação de uma condição crônica estável.",Azul
-36.9,115,78,17,98,99,0,Outro,"Preciso de um encaminhamento para um especialista.",Azul
-36.8,122,82,18,98,101,1,Dor_Locomotora,"Dor leve no pulso que sinto de vez em quando.",Azul
-37.0,120,80,18,99,100,0,Outro,"Solicitação de atestado para prática de atividades físicas.",Azul
-36.8,118,76,16,99,94,0,Reacao_Alergica_Pele,"Mancha na pele que não coça e não mudou de tamanho.",Azul
-36.9,121,81,17,98,103,1,Outro,"Preciso de orientação sobre vacinas.",Azul
-37.1,119,79,18,99,97,0,Outro,"Troca de receita de anticoncepcional.",Azul
-36.8,120,80,18,99,100,0,Outro,"Apenas tirar uma dúvida sobre um medicamento.",Azul
-37.0,123,83,18,99,102,0,Outro,"Vim fazer um curativo.",Azul
-36.9,118,77,17,98,96,0,Outro,"Medir a pressão arterial para controle de rotina.",Azul
-36.8,120,80,18,99,100,1,Dor_de_Cabeca,"Dor de cabeça muito fraca, já estou acostumado.",Azul
-37.1,115,75,16,99,92,0,Outro,"Pegar resultado de exame.",Azul
-36.7,125,85,18,98,105,0,Outro,"Consulta de rotina, sem queixas.",Azul
-36.8,120,80,18,99,100,0,Outro,"Agendar um procedimento eletivo.",Azul
-37.0,119,79,17,99,98,1,Sintomas_Respiratorios_Leves,"Espirros devido a alergia a poeira.",Azul
-36.9,122,81,18,98,101,0,Outro,"Remoção de pontos de uma cirurgia antiga.",Azul
-36.8,118,78,16,99,99,0,Outro,"Atestado de saúde para viagem.",Azul
-37.0,120,80,18,99,100,0,Outro,"Consulta para check-up anual.",Azul
+temperatura,pressao_sistolica,pressao_diastolica,pulso,frequenciaRespiratoria,saturacao,glicemia,dor,sintomas_associados,queixa,classificacao
+36.8,190,125,120,28,91,150,10,Dor_Toracica,"Dor muito forte no peito irradiando para o braço esquerdo, sinto que vou desmaiar.",Vermelho
+37.1,80,50,130,30,88,110,9,Falta_de_Ar,"Não consigo respirar direito, chiado no peito e lábios ficando azulados.",Vermelho
+36.5,200,130,115,26,93,180,10,Alteracao_Neurologica_Grave,"Perda súbita de força no lado direito do corpo e fala enrolada.",Vermelho
+35.9,75,45,140,32,89,90,8,Sangramento_Ativo,"Acidente de moto, com sangramento intenso na perna e muita tontura.",Vermelho
+38.0,90,60,125,29,90,550,7,Alteracao_Neurologica_Grave,"Muita sonolência, confusão mental e hálito com cheiro de fruta.",Vermelho
+37.2,180,115,110,25,92,130,9,Dor_de_Cabeca,"A pior dor de cabeça da minha vida, começou de repente, com vômito.",Vermelho
+38.5,85,55,135,30,89,120,8,Falta_de_Ar,"Criança com febre alta, muita dificuldade para respirar e apática.",Vermelho
+36.9,170,110,120,28,91,140,10,Dor_Abdominal,"Dor abdominal insuportável, abdômen duro como pedra.",Vermelho
+37.0,90,50,120,27,90,100,0,Reacao_Alergica_Pele,"Inchaço súbito no rosto e na língua após picada de abelha, com dificuldade para respirar.",Vermelho
+36.6,80,40,130,29,88,115,9,Lesao_Trauma,"Queda de altura, dor intensa na coluna e não sente as pernas.",Vermelho
+39.8,90,55,130,28,89,140,8,Febre,"Paciente idoso com febre, pressão muito baixa e confusão. Calafrios intensos.",Vermelho
+36.2,210,120,110,26,92,190,9,Alteracao_Neurologica_Grave,"Paciente acordou sem conseguir falar e com um lado do rosto caído.",Vermelho
+37.5,185,115,125,29,90,120,10,Dor_Toracica,"Dor súbita e aguda no peito, piora muito ao respirar, falta de ar intensa.",Vermelho
+38.2,95,60,125,28,91,110,9,Falta_de_Ar,"Criança pálida, sonolenta, com febre e respiração muito rápida e superficial.",Vermelho
+36.0,80,50,140,30,88,100,10,Sangramento_Ativo,"Vômito com grande quantidade de sangue vivo, paciente pálido e suando frio.",Vermelho
+37.3,170,60,50,22,94,130,9,Dor_Toracica,"Dor no peito com sensação de desmaio, pulso muito lento.",Vermelho
+36.6,85,50,130,29,89,25,8,Alteracao_Neurologica_Grave,"Paciente diabético encontrado desacordado, sudoreico, glicemia muito baixa.",Vermelho
+38.9,90,55,120,26,90,140,8,Dor_Abdominal,"Dor abdominal difusa e severa, paciente febril e com pressão caindo.",Vermelho
+37.0,100,70,110,25,92,110,0,Alteracao_Neurologica_Grave,"Paciente tendo uma crise convulsiva na sala de espera.",Vermelho
+36.5,190,125,115,27,91,150,10,Dor_de_Cabeca,"Dor de cabeça explosiva, descrita como um trovão, com rigidez de nuca.",Vermelho
+36.9,205,115,112,25,93,170,10,Alteracao_Neurologica_Grave,"Confusão e agitação súbitas, fala desconexa, pupilas de tamanhos diferentes.",Vermelho
+38.8,88,52,138,31,87,105,9,Sangramento_Ativo,"Trauma abdominal por faca, sangramento visível e palidez extrema.",Vermelho
+37.2,195,122,118,28,90,145,9,Dor_Toracica,"Dor no peito súbita com sensação de rasgo, irradiando para as costas.",Vermelho
+39.9,92,58,133,29,89,160,8,Febre,"Febre altíssima, manchas roxas pelo corpo, queda de pressão e sonolência.",Vermelho
+36.1,78,48,142,32,86,95,10,Lesao_Trauma,"Politrauma grave após colisão de carro, múltiplas fraturas e inconsciente.",Vermelho
+38.5,85,50,135,30,88,125,9,Falta_de_Ar,"Embolia pulmonar suspeita, dor aguda no peito, falta de ar súbita e tosse com sangue.",Vermelho
+36.4,220,130,120,26,92,185,10,Alteracao_Neurologica_Grave,"Hemorragia cerebral suspeita, perda de consciência e vômitos em jato.",Vermelho
+35.5,75,45,145,33,85,85,8,Sangramento_Ativo,"Hemorragia digestiva baixa, grande quantidade de sangue vivo nas fezes.",Vermelho
+39.6,90,55,130,28,89,135,8,Dor_Abdominal,"Perfuração intestinal suspeita, dor abdominal difusa e de forte intensidade.",Vermelho
+37.0,100,60,125,27,91,110,0,Reacao_Alergica_Pele,"Choque anafilático após medicação, com edema de glote e hipotensão.",Vermelho
+36.7,82,50,135,30,87,112,9,Lesao_Trauma,"Esmagamento de membro, dor insuportável e perda de pulso no local.",Vermelho
+38.0,175,112,115,27,91,148,10,Queixa_Urinaria,"Paciente renal crônico, não urina há dois dias, sonolento e com falta de ar.",Vermelho
+36.3,215,125,110,26,92,175,9,Dor_Toracica,"Infarto agudo do miocárdio com supra de ST confirmado, dor torácica refratária.",Vermelho
+39.7,94,56,132,29,89,155,8,Febre,"Meningite bacteriana suspeita, febre alta, rigidez de nuca e confusão.",Vermelho
+36.2,80,48,140,31,86,88,10,Lesao_Trauma,"Traumatismo cranioencefálico grave, pupilas não reagem à luz.",Vermelho
+38.6,88,54,136,30,87,128,9,Falta_de_Ar,"Pneumotórax hipertensivo, desvio de traqueia e ausência de som pulmonar.",Vermelho
+36.5,195,118,115,28,90,165,10,Alteracao_Neurologica_Grave,"AVC isquêmico em janela para trombólise, com déficits neurológicos claros.",Vermelho
+36.7,210,120,115,28,92,160,10,Alteracao_Neurologica_Grave,"Início súbito de fala pastosa e fraqueza no braço direito, não consegue sorrir direito.",Vermelho
+37.0,85,50,135,30,89,110,10,Dor_Toracica,"Dor no peito tipo facada, com falta de ar intensa e súbita, piora ao respirar.",Vermelho
+36.5,70,40,140,32,88,95,9,Sangramento_Ativo,"Vômito com grande quantidade de sangue após acidente de carro, pálido e sonolento.",Vermelho
+39.5,100,65,115,26,92,130,8,Febre,"Febre muito alta há 2 dias, calafrios e confusão mental.",Laranja
+37.5,150,95,110,24,93,120,9,Dor_Toracica,"Dor no peito que piora ao respirar fundo, com febre e tosse.",Laranja
+37.2,160,100,100,22,94,110,8,Dor_Abdominal,"Dor muito forte do lado direito da barriga, com febre e vômitos.",Laranja
+38.8,110,70,120,25,93,140,7,Falta_de_Ar,"Paciente com asma, usando a bombinha várias vezes sem melhora.",Laranja
+36.9,90,60,110,23,94,45,8,Tontura_MalEstar,"Paciente diabético, tomou insulina e não comeu. Suando frio e muito tonto.",Laranja
+38.2,105,75,115,24,93,125,9,Queixa_Urinaria,"Dor lombar intensa, febre e calafrios, não consegue ficar parado.",Laranja
+37.8,110,70,105,22,95,115,8,Sangramento_Ativo,"Sangramento vaginal intenso, com tontura e palidez.",Laranja
+37.0,140,90,95,20,96,280,0,Alteracao_Neurologica_Grave,"Visão turva e muita sede, glicemia muito alta no teste rápido.",Laranja
+39.1,120,80,110,22,95,120,7,Dor_de_Cabeca,"Dor de cabeça forte com rigidez na nuca e vômitos.",Laranja
+38.3,100,65,115,23,94,130,8,Lesao_Trauma,"Corte profundo no braço, sangramento parou mas o local está quente e vermelho.",Laranja
+39.0,125,85,120,25,93,135,7,Febre,"Febre persistente, tosse com catarro esverdeado e falta de ar moderada.",Laranja
+37.1,155,98,105,23,94,125,9,Dor_Abdominal,"Dor abdominal tipo cólica, muito intensa, com diarreia sanguinolenta.",Laranja
+38.5,115,75,110,24,93,115,8,Dor_Locomotora,"Perna inchada, vermelha e muito dolorida, com febre.",Laranja
+36.8,100,60,105,22,95,100,10,Dor_Locomotora,"Dor excruciante nos ossos, paciente com anemia falciforme.",Laranja
+37.4,145,92,90,21,96,110,8,Lesao_Trauma,"Pancada na cabeça com perda de consciência por 1 minuto, agora está vomitando.",Laranja
+38.0,120,80,115,23,94,120,7,Dor_Abdominal,"Dor intensa na parte superior do abdômen, irradiando para as costas, com náuseas.",Laranja
+37.2,165,105,100,22,95,130,9,Dor_Toracica,"Dor no peito atípica, mas paciente é diabético e hipertenso.",Laranja
+38.6,130,85,110,22,96,140,8,Queixa_Urinaria,"Idoso com febre, prostrado, e urina com cheiro muito forte.",Laranja
+37.0,100,65,100,20,97,90,0,Reacao_Alergica_Pele,"Urticária gigante por todo o corpo, com muito inchaço, mas respirando bem.",Laranja
+39.2,120,80,120,25,94,130,7,Febre,"Criança com febre alta persistent e e muito irritada, chorando sem parar.",Laranja
+37.8,150,95,105,23,94,120,8,Dor_Abdominal,"Dor em cólica em flanco, com sangue na urina, sugestivo de cálculo renal.",Laranja
+38.2,110,70,115,24,93,125,7,Falta_de_Ar,"DPOC exacerbado, com uso de musculatura acessória para respirar.",Laranja
+37.5,160,100,100,22,95,130,9,Dor_de_Cabeca,"Cefaleia súbita e intensa, com alterações visuais.",Laranja
+39.3,125,85,122,25,92,138,8,Febre,"Pneumonia comunitária, paciente idoso com comorbidades.",Laranja
+36.7,95,60,108,23,94,50,8,Tontura_MalEstar,"Hipoglicemia sintomática, paciente confuso e trêmulo.",Laranja
+38.0,115,75,112,24,93,118,9,Lesao_Trauma,"Fratura exposta de membro, com dor intensa e deformidade.",Laranja
+37.3,170,110,105,22,95,140,9,Dor_Toracica,"Angina instável, dor no peito em repouso com duração de 20 minutos.",Laranja
+38.7,130,88,118,25,93,142,8,Dor_Abdominal,"Apendicite aguda, dor que migrou para o quadrante inferior direito.",Laranja
+37.1,105,68,102,21,96,100,7,Sangramento_Ativo,"Episódio de sangramento nasal (epistaxe) que não cessa com compressão.",Laranja
+39.4,122,82,125,26,92,135,7,Febre,"Sepse de foco urinário, febre, taquicardia e taquipneia.",Laranja
+37.9,155,98,110,23,93,122,9,Dor_Toracica,"Dor torácica pleurítica, aguda e bem localizada, piora com inspiração profunda.",Laranja
+38.1,165,105,102,22,94,115,8,Dor_Abdominal,"Obstrução intestinal inicial, com vômitos e parada de eliminação de gases.",Laranja
+37.6,100,65,115,24,93,105,9,Lesao_Trauma,"Queimadura de segundo grau em uma área extensa como o antebraço.",Laranja
+38.4,118,78,112,23,94,128,7,Falta_de_Ar,"Crise asmática moderada, paciente consegue falar frases curtas.",Laranja
+37.2,98,62,108,22,95,60,8,Tontura_MalEstar,"Desidratação moderada, com mucosas secas e turgor cutâneo diminuído.",Laranja
+38.8,135,90,120,25,92,145,9,Febre,"Infecção de pele (celulite) se espalhando rapidamente, com febre e mal-estar.",Laranja
+37.3,148,94,98,21,96,110,8,Dor_de_Cabeca,"Enxaqueca com aura, com sintomas visuais e neurológicos associados.",Laranja
+38.2,128,86,115,24,93,130,9,Queixa_Urinaria,"Retenção urinária aguda, paciente com dor e incapacidade de urinar.",Laranja
+39.6,100,60,125,26,92,140,8,Febre,"Febre alta, calafrios e dor lombar intensa. Paciente parece confuso.",Laranja
+38.8,115,75,120,28,91,150,7,Falta_de_Ar,"Crise de asma grave, não melhora com a bombinha, com muita dificuldade para falar.",Laranja
+37.2,160,105,110,24,94,350,9,Dor_Abdominal,"Dor abdominal muito forte, com náuseas e vômitos persistentes, paciente diabético.",Laranja
+37.8,130,85,95,20,97,110,7,Sintomas_Gastrointestinais,"Vomitando sem parar há 24 horas, não consegue beber líquidos.",Amarelo
+37.2,125,80,90,18,98,100,6,Lesao_Trauma,"Torção no tornozelo, muito inchado e com dor ao tentar pisar.",Amarelo
+38.5,120,80,100,20,96,120,6,Febre,"Febre e dor no corpo há 3 dias, com manchas vermelhas na pele. Suspeita de dengue.",Amarelo
+37.1,140,90,85,18,97,105,7,Dor_Abdominal,"Cólica abdominal intensa que vai e volta, com diarreia.",Amarelo
+36.9,135,85,90,20,98,110,5,Dor_Locomotora,"Dor lombar que irradia para a perna, com dificuldade para andar.",Amarelo
+38.2,120,80,105,21,96,115,5,Sintomas_Respiratorios_Leves,"Tosse persistente com catarro amarelo há uma semana e febre baixa.",Amarelo
+37.5,110,70,95,19,97,100,6,Queixa_Urinaria,"Ardência ao urinar e vontade de ir ao banheiro a todo momento, com dor no pé da barriga.",Amarelo
+37.9,130,85,100,20,98,120,7,Dor_de_Cabeca,"Crise de enxaqueca forte, com sensibilidade à luz e náuseas.",Amarelo
+37.0,120,80,80,18,99,90,0,Reacao_Alergica_Pele,"Placas vermelhas e coceira pelo corpo após comer camarão, mas respirando bem.",Amarelo
+38.6,125,80,110,22,97,130,6,Febre,"Criança com febre, dor de garganta e recusa para comer.",Amarelo
+38.1,120,80,100,20,97,110,5,Febre,"Febre há 4 dias, dor de cabeça e dor atrás dos olhos.",Amarelo
+37.3,130,85,88,18,98,95,6,Dor_Abdominal,"Dor na boca do estômago que piora após comer.",Amarelo
+37.0,115,75,85,19,99,100,7,Lesao_Trauma,"Corte na mão que parece precisar de pontos, sangramento controlado.",Amarelo
+38.4,125,80,105,21,96,115,6,Tontura_MalEstar,"Tontura ao levantar, com sensação de quase desmaio, pressão um pouco baixa.",Amarelo
+37.6,130,85,90,20,97,105,5,Dor_Locomotora,"Dor intensa em uma articulação, com inchaço e vermelhidão.",Amarelo
+37.0,120,80,85,18,98,110,7,Dor_de_Cabeca,"Dor de cabeça tensional que não melhora com analgésicos comuns.",Amarelo
+38.9,130,85,110,22,96,125,4,Febre,"Paciente com suspeita de COVID, febre e perda de paladar.",Amarelo
+37.8,110,70,100,20,97,100,6,Sintomas_Gastrointestinais,"Diarreia e vômitos há 2 dias, começando a se sentir desidratado.",Amarelo
+37.5,140,90,95,20,98,120,7,Dor_Abdominal,"Dor pélvica e cólicas menstruais mais fortes que o normal.",Amarelo
+37.1,135,85,90,19,97,115,5,Lesao_Trauma,"Queda da própria altura, com dor no punho e inchaço.",Amarelo
+38.3,122,82,102,21,96,118,6,Febre,"Otite média aguda, com dor de ouvido intensa e febre.",Amarelo
+37.2,118,78,88,19,98,98,7,Lesao_Trauma,"Queimadura de segundo grau em pequena área do braço.",Amarelo
+37.9,132,86,108,22,95,122,7,Dor_de_Cabeca,"Sinusite aguda, com dor facial intensa, febre e secreção nasal.",Amarelo
+37.0,128,84,86,18,97,108,5,Dor_Locomotora,"Crise de gota no dedão do pé, com dor e inchaço.",Amarelo
+38.7,126,82,112,22,96,132,6,Febre,"Amigdalite com placas de pus, febre e dificuldade para engolir.",Amarelo
+37.4,112,72,92,19,97,102,7,Sintomas_Gastrointestinais,"Intoxicação alimentar, com vômitos, diarreia e cólicas fortes.",Amarelo
+37.6,138,88,94,20,98,118,7,Dor_Abdominal,"Dor abdominal persistente há 3 dias, sem melhora.",Amarelo
+38.0,124,84,104,21,96,124,5,Queixa_Urinaria,"Infecção urinária com febre baixa e dor lombar.",Amarelo
+37.3,116,76,84,18,99,94,6,Lesao_Trauma,"Ferimento no couro cabeludo após pancada, sangramento já contido.",Amarelo
+38.5,128,86,106,22,95,128,6,Febre,"Faringite viral com febre, dor de garganta e mal-estar.",Amarelo
+38.5,125,85,105,22,96,120,6,Febre,"Febre e dor no corpo, com dor de cabeça forte e manchas na pele.",Amarelo
+37.1,110,70,95,20,97,100,7,Sintomas_Gastrointestinais,"Vômitos e diarreia há 2 dias, sentindo muita fraqueza e tontura ao levantar.",Amarelo
+36.9,130,90,90,18,98,110,7,Lesao_Trauma,"Queda de bicicleta, com dor intensa no punho e deformidade aparente.",Amarelo
+37.5,140,88,100,20,97,115,8,Dor_Abdominal,"Dor que começou perto do umbigo e agora está forte do lado direito inferior da barriga.",Amarelo
+38.0,120,80,110,22,96,130,6,Queixa_Urinaria,"Infecção urinária com febre, dor nas costas e mal-estar geral.",Amarelo
+37.0,115,75,85,18,98,90,7,Lesao_Trauma,"Corte profundo na perna que precisa de pontos, sangramento controlado com curativo.",Amarelo
+37.8,125,80,100,20,97,105,8,Dor_de_Cabeca,"Enxaqueca muito forte, com vômitos e sensibilidade extrema à luz.",Amarelo
+38.2,130,85,105,22,95,120,5,Sintomas_Respiratorios_Leves,"Tosse com catarro há vários dias, com febre baixa e chiado no peito.",Amarelo
+37.1,150,95,90,20,98,130,7,Dor_Locomotora,"Dor súbita e intensa na região lombar após pegar peso, travou a coluna.",Amarelo
+38.9,120,80,115,22,97,125,6,Febre,"Criança com febre alta, dor de ouvido e muito chorosa.",Amarelo
+37.0,100,65,95,20,96,80,0,Reacao_Alergica_Pele,"Reação alérgica com placas vermelhas por todo o corpo e coceira intensa.",Amarelo
+37.2,120,80,80,18,99,100,3,Sintomas_Respiratorios_Leves,"Tosse seca e coriza há 2 dias, sem febre.",Verde
+36.8,110,75,75,16,98,95,4,Dor_Locomotora,"Dor no ombro após esforço físico, piora com movimento.",Verde
+36.9,125,85,85,18,99,110,2,Queixa_Urinaria,"Leve desconforto ao urinar, sem febre ou outros sintomas.",Verde
+37.0,130,80,80,17,98,105,3,Sintomas_Gastrointestinais,"Diarreia leve, sem vômitos ou febre.",Verde
+36.7,115,70,70,16,99,90,4,Lesao_Trauma,"Pancada no joelho, mancando um pouco mas sem inchaço grande.",Verde
+37.1,120,80,78,18,98,98,2,Dor_de_Cabeca,"Dor de cabeça leve no final do dia.",Verde
+36.8,118,76,76,16,99,94,3,Reacao_Alergica_Pele,"Pequena reação alérgica a picada de inseto, apenas coceira local.",Verde
+37.0,122,82,82,18,98,102,1,Outro,"Preciso de um atestado médico para o trabalho por conta de um resfriado.",Verde
+36.9,120,80,80,18,99,100,3,Dor_Locomotora,"Dor muscular após iniciar academia.",Verde
+37.3,125,85,85,19,97,110,2,Sintomas_Respiratorios_Leves,"Congestão nasal e dor de garganta leve.",Verde
+36.8,115,70,70,16,99,90,4,Lesao_Trauma,"Arranhão superficial de gato, sangrou pouco e já parou.",Verde
+37.0,130,85,85,18,98,100,3,Sintomas_Respiratorios_Leves,"Crise de rinite alérgica, com muitos espirros.",Verde
+36.9,120,80,80,18,99,100,2,Queixa_Urinaria,"Sintomas de cistite recorrente, já sei qual remédio tomar.",Verde
+37.1,125,82,82,17,98,105,3,Dor_Locomotora,"Dor no pescoço após dormir de mau jeito (torcicolo).",Verde
+36.7,110,75,75,16,99,95,4,Reacao_Alergica_Pele,"Dermatite de contato, pele irritada após usar um produto novo.",Verde
+37.2,118,78,78,18,98,98,2,Dor_de_Cabeca,"Dor de cabeça após muito tempo no computador.",Verde
+36.8,122,80,80,18,99,101,3,Sintomas_Gastrointestinais,"Azia e má digestão após refeição pesada.",Verde
+37.0,120,80,80,18,99,100,1,Outro,"Unha encravada, com dor leve e sem pus.",Verde
+36.9,125,85,85,19,97,110,2,Sintomas_Respiratorios_Leves,"Gripe comum, já em melhora, apenas para avaliação.",Verde
+37.1,130,80,80,17,98,105,3,Dor_Locomotora,"Câimbra muscular na perna.",Verde
+37.1,120,80,75,18,99,100,3,Sintomas_Respiratorios_Leves,"Tosse, coriza, dor de garganta, sem febre.",Verde
+36.8,115,75,70,16,98,95,4,Dor_Locomotora,"Dor nas costas após um dia de trabalho pesado.",Verde
+36.9,125,85,80,18,99,110,2,Queixa_Urinaria,"Ardência leve para urinar, sem outros sintomas.",Verde
+37.0,130,80,82,17,98,105,3,Sintomas_Gastrointestinais,"Diarreia leve após comer algo diferente, mas me sentindo bem.",Verde
+36.7,115,70,68,16,99,90,4,Lesao_Trauma,"Pancada leve no braço durante jogo, um pouco dolorido.",Verde
+37.1,120,80,78,18,98,98,2,Dor_de_Cabeca,"Dor de cabeça tensional no final da tarde.",Verde
+36.8,118,76,72,16,99,94,3,Reacao_Alergica_Pele,"Picada de inseto com vermelhidão e coceira apenas no local.",Verde
+37.3,125,85,88,19,97,110,2,Sintomas_Respiratorios_Leves,"Congestão nasal e espirros por conta de rinite.",Verde
+36.9,120,80,77,18,99,100,3,Dor_Locomotora,"Dor muscular leve após exercício físico.",Verde
+37.0,122,82,81,18,98,102,1,Outro,"Preciso de um atestado para a faculdade, estou resfriado.",Verde
+36.7,110,70,70,16,99,90,4,Lesao_Trauma,"Torci o dedo da mão, está um pouco inchado mas consigo mexer.",Verde
+37.2,118,78,79,18,98,98,2,Dor_de_Cabeca,"Dor de cabeça por não ter tomado café.",Verde
+36.8,122,80,80,18,99,101,3,Sintomas_Gastrointestinais,"Azia após comer muita fritura.",Verde
+37.0,120,80,76,18,99,100,1,Outro,"Terçol no olho, um pouco inchado e dolorido.",Verde
+36.9,125,85,85,19,97,110,2,Sintomas_Respiratorios_Leves,"Dor de garganta ao engolir, sem febre.",Verde
+37.1,130,80,80,17,98,105,3,Dor_Locomotora,"Câimbra na panturrilha que não passa.",Verde
+36.8,115,75,72,16,98,95,4,Dor_Locomotora,"Dor no joelho ao subir escadas.",Verde
+37.0,120,80,78,18,99,100,2,Queixa_Urinaria,"Aumento da frequência urinária, mas sem dor.",Verde
+36.9,125,85,81,18,99,110,3,Sintomas_Respiratorios_Leves,"Ouvido tampado após viagem de avião.",Verde
+36.7,110,70,68,16,99,90,4,Lesao_Trauma,"Pequeno corte no dedo ao cozinhar, já parou de sangrar.",Verde
+36.8,120,80,80,18,99,95,0,Outro,"Preciso renovar a receita do meu remédio para pressão.",Azul
+36.7,110,75,75,16,98,90,1,Outro,"Gostaria de mostrar o resultado de um exame de sangue de rotina.",Azul
+37.0,125,85,85,18,99,105,0,Outro,"Retorno para reavaliação de uma condição crônica estável.",Azul
+36.9,115,78,78,17,98,99,0,Outro,"Preciso de um encaminhamento para um especialista.",Azul
+36.8,122,82,82,18,98,101,1,Dor_Locomotora,"Dor leve no pulso que sinto de vez em quando.",Azul
+37.0,120,80,80,18,99,100,0,Outro,"Solicitação de atestado para prática de atividades físicas.",Azul
+36.8,118,76,76,16,99,94,0,Reacao_Alergica_Pele,"Mancha na pele que não coça e não mudou de tamanho.",Azul
+36.9,121,81,81,17,98,103,1,Outro,"Preciso de orientação sobre vacinas.",Azul
+37.1,119,79,79,18,99,97,0,Outro,"Troca de receita de anticoncepcional.",Azul
+36.8,120,80,80,18,99,100,0,Outro,"Apenas tirar uma dúvida sobre um medicamento.",Azul
+37.0,123,83,83,18,99,102,0,Outro,"Vim fazer um curativo.",Azul
+36.9,118,77,77,17,98,96,0,Outro,"Medir a pressão arterial para controle de rotina.",Azul
+36.8,120,80,80,18,99,100,1,Dor_de_Cabeca,"Dor de cabeça muito fraca, já estou acostumado.",Azul
+37.1,115,75,75,16,99,92,0,Outro,"Pegar resultado de exame.",Azul
+36.7,125,85,85,18,98,105,0,Outro,"Consulta de rotina, sem queixas.",Azul
+37.0,119,79,79,17,99,98,1,Sintomas_Respiratorios_Leves,"Espirros devido a alergia a poeira.",Azul
+36.9,122,81,81,18,98,101,0,Outro,"Remoção de pontos de uma cirurgia antiga.",Azul
+36.8,118,78,78,16,99,99,0,Outro,"Atestado de saúde para viagem.",Azul
+37.0,120,80,80,18,99,100,0,Outro,"Consulta para check-up anual.",Azul
+36.8,120,80,80,18,99,95,0,Outro,"Renovar receita de medicamento de uso contínuo.",Azul
+36.7,110,75,75,16,98,90,1,Outro,"Mostrar resultado de um exame de sangue para o médico.",Azul
+37.0,125,85,85,18,99,105,0,Outro,"Retorno para reavaliação de pressão alta, me sentindo bem.",Azul
+36.9,115,78,78,17,98,99,0,Outro,"Pegar um encaminhamento para nutricionista.",Azul
+36.8,122,82,82,18,98,101,1,Dor_Locomotora,"Dor no pulso que aparece de vez em quando ao usar o computador.",Azul
+37.0,120,80,80,18,99,100,0,Outro,"Atestado de saúde para a academia.",Azul
+36.8,118,76,76,16,99,94,0,Reacao_Alergica_Pele,"Pequena mancha na pele que não coça e não mudou.",Azul
+36.9,121,81,81,17,98,103,1,Outro,"Saber se posso tomar a vacina da gripe.",Azul
+37.1,119,79,79,18,99,97,0,Outro,"Trocar a receita do meu anticoncepcional.",Azul
+36.8,120,80,80,18,99,100,0,Outro,"Tirar uma dúvida sobre a dose de um remédio.",Azul
+37.0,123,83,83,18,99,102,0,Outro,"Fazer a troca de um curativo simples.",Azul
+36.9,118,77,77,17,98,96,0,Outro,"Medir a pressão para controle pessoal.",Azul
+36.8,120,80,80,18,99,100,1,Dor_de_Cabeca,"Dor de cabeça bem fraca, que já melhorou com analgésico.",Azul
+37.1,115,75,75,16,99,92,0,Outro,"Pegar o resultado de um raio-x.",Azul
+36.7,125,85,85,18,98,105,0,Outro,"Consulta de rotina, sem nenhuma queixa.",Azul
+36.8,120,80,80,18,99,100,0,Outro,"Agendar uma consulta com especialista.",Azul
+37.0,119,79,79,17,99,98,1,Sintomas_Respiratorios_Leves,"Espirros por causa do ar condicionado.",Azul
+36.9,122,81,81,18,98,101,0,Outro,"Remover os pontos de uma cirurgia cicatrizada.",Azul
+36.8,118,78,78,16,99,99,0,Outro,"Atestado de saúde para concurso público.",Azul
+37.0,120,80,80,18,99,100,0,Outro,"Check-up anual.",Azul
+37.1,122,81,80,18,98,103,0,Outro,"Relatório médico para o INSS.",Azul
+36.9,117,77,76,17,99,98,0,Outro,"Avaliação para liberar viagem de avião.",Azul

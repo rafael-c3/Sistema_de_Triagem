@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - Sistema Hospitalar</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'front/css/perfil.css' %}?v=3">
     <style>
         body { padding-top: 60px; } /* Evita que o conteúdo fique atrás da navegação fixa */
     </style>
@@ -50,6 +50,66 @@
                         <p><strong>CPF:</strong> {{ user.cpf }}</p>
                         <p><strong>Tipo de Conta:</strong> {{ user.get_tipo_usuario_display }}</p>
                         <hr>
+
+                        {% if historico_pacientes %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>{{ titulo_historico }}</h3>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Nome do Paciente</th>
+                                                <th>Hora da Chegada</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for paciente in historico_pacientes %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'hosp:mostrar' pk=paciente.pk %}">{{ paciente.nome }}</a>
+                                                </td>
+                                                <td>{{ paciente.hora_chegada|date:"d/m/Y" }}</td>
+                                                <td>{{ paciente.get_status_display }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            <table class="table table-striped mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Paciente</th>
+                                                        <th>Classificação Original</th>
+                                                        <th>Minha Avaliação</th>
+                                                        <th>Data</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for feedback in feedbacks_do_usuario %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{% url 'hosp:mostrar' pk=feedback.paciente.pk %}">{{ feedback.paciente.nome }}</a>
+                                                        </td>
+                                                        <td>{{ feedback.paciente.get_classificacao_display }}</td>
+                                                        <td>
+                                                            {% if feedback.triagem_correta %}
+                                                                <span class="text-success">Correta</span>
+                                                            {% else %}
+                                                                <span class="text-danger">Incorreta</span>
+                                                                <br>
+                                                                <small class="text-muted">Sugestão: {{ feedback.get_classificacao_correta_display }}</small>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>{{ feedback.data_criacao|date:"d/m/Y" }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
 
                         <form action="{% url 'hosp:logout' %}" method="post">
                             {% csrf_token %}
