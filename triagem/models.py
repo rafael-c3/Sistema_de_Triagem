@@ -210,7 +210,7 @@ class Paciente(models.Model):
     
 class FeedbackTriagem(models.Model):
     # Usamos OneToOneField para garantir que cada paciente só tenha UM feedback
-    paciente = models.OneToOneField(Paciente, on_delete=models.CASCADE)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     
     # Quem deu o feedback
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)

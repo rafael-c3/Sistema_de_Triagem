@@ -263,8 +263,8 @@ def feedback_view(request, pk):
     paciente = get_object_or_404(Paciente, pk=pk)
     
     # Impede que um feedback seja dado duas vezes para o mesmo paciente
-    if FeedbackTriagem.objects.filter(paciente=paciente).exists():
-        messages.error(request, 'Já existe um feedback para este paciente.')
+    if FeedbackTriagem.objects.filter(paciente=paciente, usuario=request.user).exists():
+        messages.error(request, 'Você já enviou um feedback para este paciente.')
         return redirect('hosp:listar')
 
     if request.method == 'POST':

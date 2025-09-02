@@ -2,11 +2,9 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import user_passes_test
 
 def admin_required(view_func):
-    """
-    Decorator que verifica se o usuário é um superusuário (admin).
-    """
     def _wrapped_view(request, *args, **kwargs):
-        if not request.user.is_superuser:
+        # Agora verifica se o usuário é superuser OU se tem o tipo de usuário 'ADMIN'
+        if not (request.user.is_superuser or (request.user.is_authenticated and request.user.tipo_usuario == 'ADMIN')):
             raise PermissionDenied
         return view_func(request, *args, **kwargs)
     return _wrapped_view

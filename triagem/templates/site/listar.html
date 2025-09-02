@@ -96,9 +96,7 @@
 
                 <div class="card-actions">
                     <a href="{% url 'hosp:mostrar' paciente.id %}"><button class="btn-prontuario">📄 Prontuário</button></a>
-                    {% if not paciente.feedbacktriagem %}
-                        <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn btn-secondary btn-sm mt-1">Dar Feedback</a>
-                    {% endif %}
+                    <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn btn-secondary btn-sm mt-1">Dar Feedback</a>
                     {% if user.tipo_usuario == 'ADMIN' %}
                     <a href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza que deseja remover este paciente?')"><button class="btn-remover">Remover</button></a>
                     {% endif %}
