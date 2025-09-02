@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <body>
+    <div class="container">
+        <h1>Painel de Gestão</h1>
+        <p>Área para gerenciamento completo de pacientes e usuários do sistema.</p>
+        <p><a href="{% url 'hosp:index' %}">Voltar para a Fila de Atendimento</a></p>
+
+        <h2>Pacientes ({{ pacientes_hoje }} cadastrados hoje)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Gênero</th>
+                    <th>Data de Nasc.</th>
+                    <th>Idade</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
+                <tr>
+                    <td>{{ paciente.id }}</td>
+                    <td>{{ paciente.nome }}</td>
+                    <td>{{ paciente.cpf }}</td>
+                    <td>{{ paciente.get_sexo_display }}</td>
+                    <td>{{ paciente.data_nascimento|date:"d/m/Y" }}</td>
+                    <td>{{ paciente.idade }} anos</td>
+                    <td>
+                        <a href="{% url 'hosp:mostrar' pk=paciente.pk %}">Ver Prontuário</a> |
+                        <form action="{% url 'hosp:deletar' pk=paciente.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover este paciente?');">
+                            {% csrf_token %}
+                            <button type="submit" class="button-delete">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" style="text-align: center;">Nenhum paciente cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Médicos (Total: {{ total_medicos }})</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Registro Prof.</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medico in medicos %}
+                <tr>
+                    <td>{{ medico.id }}</td>
+                    <td>{{ medico.username }}</td>
+                    <td>{{ medico.cpf }}</td>
+                    <td>{{ medico.email }}</td>
+                    <td>{{ medico.registro_profissional|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'admin:triagem_customuser_change' medico.pk %}">Ver Perfil / Editar</a> |
+                        <a href="{% url 'admin:triagem_customuser_delete' medico.pk %}">Remover</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" style="text-align: center;">Nenhum médico cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Atendentes (Total: {{ total_atendentes }})</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atendente in atendentes %}
+                <tr>
+                    <td>{{ atendente.id }}</td>
+                    <td>{{ atendente.username }}</td>
+                    <td>{{ atendente.cpf }}</td>
+                    <td>{{ atendente.email }}</td>
+                    <td>
+                        <a href="{% url 'admin:triagem_customuser_change' atendente.pk %}">Ver Perfil / Editar</a> |
+                        <a href="{% url 'admin:triagem_customuser_delete' atendente.pk %}">Remover</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align: center;">Nenhum atendente cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

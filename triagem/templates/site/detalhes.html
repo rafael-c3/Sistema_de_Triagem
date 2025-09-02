@@ -18,6 +18,9 @@
             <a href="{% url 'hosp:listar' %}" ><p>Dashboard</p></a>
             <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
             <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
+            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+                <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
+            {% endif %}
             
         </nav>
             
@@ -100,6 +103,8 @@
 
     </div>
     <br><br><a class="btn btn-secondary" href="{{ voltar_para_url }}">Voltar</a>
+    {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
     <br><br><a class="link" href="{% url 'hosp:atualizar' paciente.id %}">Atualizar</a>
+    {% endif %}
 </body>
 </html>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Paciente, FeedbackTriagem
+from .models import Paciente, FeedbackTriagem, CustomUser
 from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm
 from collections import Counter
 from django.http import JsonResponse
@@ -7,7 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 from .ml.predict import predict_from_dict
-from django.contrib.auth.decorators import login_required # Importe o login_required
+from django.contrib.auth.decorators import login_required
+from .decorators import admin_required, medico_required, atendente_required
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField
@@ -104,6 +105,7 @@ def index_view(request):
     
     return render(request, 'site/index.html', context)
 
+@atendente_required
 @login_required
 def create_view(request):
     if request.method == 'GET':
@@ -129,6 +131,7 @@ def list_view(request):
         'status_contagem': status_contagem
     })
 
+@login_required
 def detail_view(request, pk):
     paciente = get_object_or_404(Paciente, pk=pk)
     # NOVO: Lógica do botão "Voltar"
@@ -145,6 +148,7 @@ def detail_view(request, pk):
     
     return render(request, 'site/detalhes.html', context)
 
+@login_required
 def update_view(request, pk):
     paciente = get_object_or_404(Paciente, pk=pk)
     if request.method == 'GET':
@@ -156,6 +160,7 @@ def update_view(request, pk):
             form.save()
             return redirect('hosp:mostrar', pk=paciente.pk)
         
+@login_required
 def delete_view(request, pk):
     paciente = Paciente.objects.get(pk = pk)
     if paciente:
@@ -225,6 +230,7 @@ def perfil_view(request):
     # 2. RENDERIZA O TEMPLATE COM O CONTEXTO ATUALIZADO
     return render(request, 'site/perfil.html', context)
 
+@medico_required
 @require_POST # Garante que esta view só aceite requisições POST
 @login_required
 # @medico_required # Use seu decorador aqui
@@ -288,3 +294,30 @@ def lista_feedback_view(request):
         'feedbacks': todos_os_feedbacks
     }
     return render(request, 'site/lista_feedback.html', context)
+
+@login_required
+@admin_required # Garante que apenas usuários Admin possam acessar esta página
+def gestao_view(request):
+    hoje = timezone.now().date()
+
+    # 1. Dados dos Pacientes
+    todos_pacientes = Paciente.objects.all().order_by('-id')
+    pacientes_hoje = todos_pacientes.filter(hora_chegada__date=hoje).count()
+
+    # 2. Dados dos Médicos
+    todos_medicos = CustomUser.objects.filter(tipo_usuario='MEDICO').order_by('nome_completo')
+    total_medicos = todos_medicos.count()
+
+    # 3. Dados dos Atendentes
+    todos_atendentes = CustomUser.objects.filter(tipo_usuario='ATENDENTE').order_by('nome_completo')
+    total_atendentes = todos_atendentes.count()
+    
+    context = {
+        'pacientes': todos_pacientes,
+        'pacientes_hoje': pacientes_hoje,
+        'medicos': todos_medicos,
+        'total_medicos': total_medicos,
+        'atendentes': todos_atendentes,
+        'total_atendentes': total_atendentes,
+    }
+    return render(request, 'site/gestao.html', context)

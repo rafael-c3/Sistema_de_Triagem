@@ -18,6 +18,9 @@
         <a href="{% url 'hosp:criar' %}"><p>Triagem</p></a>
         <a href="{% url 'hosp:listar' %}"><p>Pacientes</p></a>
         <a class="nav-link" href="{% url 'hosp:lista_feedback' %}">Feedbacks</a>
+        {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+            <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
+        {% endif %}
     </nav>
     <div class="entrar">
         <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>

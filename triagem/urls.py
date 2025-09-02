@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import list_view, index_view, create_view, delete_view, detail_view, update_view, triagem_view, dashboard_view, registro_view, perfil_view, mudar_status_view, feedback_view, lista_feedback_view
+from .views import list_view, index_view, create_view, delete_view, detail_view, update_view, triagem_view, dashboard_view, registro_view, perfil_view, mudar_status_view, feedback_view, lista_feedback_view, gestao_view
 from django.contrib.auth import views as auth_views
 
 app_name = 'hosp'
@@ -21,5 +21,6 @@ urlpatterns = [
 
     path('paciente/<int:pk>/feedback/', feedback_view, name='dar_feedback'),
     path('feedback/lista/', lista_feedback_view, name='lista_feedback'),
+    path('gestao/', gestao_view, name='painel_gestao'),
 
 ]
