@@ -225,3 +225,23 @@ class FeedbackTriagem(models.Model):
 
     def __str__(self):
         return f"Feedback para {self.paciente.nome} por {self.usuario.username}"
+    
+class EntradaProntuario(models.Model):
+    # Relação com o Paciente. Se o paciente for deletado, as anotações vão junto.
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='historico_prontuario')
+    
+    # Relação com o profissional que escreveu a nota
+    autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    
+    # O conteúdo da anotação
+    texto = models.TextField(verbose_name="Descrição do Atendimento / Observação")
+    
+    # Data/hora em que a anotação foi criada
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Garante que as novas entradas sempre apareçam no topo
+        ordering = ['-data_criacao'] 
+
+    def __str__(self):
+        return f"Entrada em {self.data_criacao.strftime('%d/%m/%y %H:%M')} para {self.paciente.nome}"

@@ -97,8 +97,37 @@
                 </li>
                 {% endif %}
             </ul>
-
             <hr>
+
+            <h3>Histórico do Prontuário</h3>
+            {% if user.tipo_usuario != 'ATENDENTE' %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Adicionar Nova Observação</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form_prontuario.as_p }}
+                        <button type="submit" class="btn btn-primary">Adicionar ao Prontuário</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <h4>Observações Anteriores</h4>
+            {% for entrada in historico %}
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <strong>Data:</strong> {{ entrada.data_criacao|date:"d/m/Y H:i" }} | 
+                        <strong>Autor:</strong> {{ entrada.autor.nome_completo|default:"Profissional Removido" }}
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text" style="white-space: pre-wrap;">{{ entrada.texto }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">Nenhuma observação registrada no prontuário ainda.</p>
+            {% endfor %}
         </div>
 
     </div>

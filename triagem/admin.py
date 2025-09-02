@@ -42,7 +42,7 @@ class PacienteAdmin(admin.ModelAdmin):
     Configuração de administração para o modelo de Paciente.
     """
     # Define as colunas que aparecerão na lista de pacientes
-    list_display = ('nome', 'cpf', 'classificacao', 'status', 'hora_chegada_formatada', 'medico_responsavel')
+    list_display = ('nome', 'cpf', 'idade', 'classificacao', 'status', 'hora_chegada_formatada', 'medico_responsavel')
     
     # Adiciona uma barra de filtros à direita
     list_filter = ('status', 'classificacao', 'convenio')
@@ -51,7 +51,7 @@ class PacienteAdmin(admin.ModelAdmin):
     search_fields = ('nome', 'cpf')
     
     # Define campos que não podem ser editados diretamente no admin (são automáticos)
-    readonly_fields = ('hora_chegada', 'hora_inicio_atendimento', 'hora_fim_atendimento', 
+    readonly_fields = ('idade', 'hora_chegada', 'hora_inicio_atendimento', 'hora_fim_atendimento', 
                        'atendente', 'medico_responsavel', 'tempo_de_espera', 'tempo_de_atendimento')
 
     # Organiza a página de edição do paciente em seções lógicas
@@ -64,7 +64,7 @@ class PacienteAdmin(admin.ModelAdmin):
                        'tempo_de_espera', 'tempo_de_atendimento')
         }),
         ('Dados Pessoais do Paciente', {
-            'fields': ('nome', 'idade', 'sexo', 'cpf', 'convenio')
+            'fields': ('nome', 'data_nascimento', 'idade', 'sexo', 'cpf', 'convenio')
         }),
         ('Sinais Vitais e Triagem', {
             'fields': ('temperatura', 'pressao_sistolica', 'pressao_diastolica', 'pulso', 

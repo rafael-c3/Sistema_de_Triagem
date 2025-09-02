@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Paciente, FeedbackTriagem, CustomUser
-from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm
+from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario
+from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm
 from collections import Counter
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -134,16 +134,35 @@ def list_view(request):
 @login_required
 def detail_view(request, pk):
     paciente = get_object_or_404(Paciente, pk=pk)
-    # NOVO: Lógica do botão "Voltar"
-    # 1. Define uma URL padrão (fallback) caso a página anterior não seja identificada
+    
+    # Lógica para o botão "Voltar" que já tínhamos
     fallback_url = reverse('hosp:listar')
-    # 2. Tenta pegar a URL de onde o usuário veio (a página anterior)
     voltar_para_url = request.META.get('HTTP_REFERER', fallback_url)
+    
+    # Lógica para processar o formulário de nova entrada no prontuário
+    # Apenas aceita POST de um usuário Médico
+    if request.method == 'POST' and request.user.tipo_usuario != 'ATENDENTE':
+        form_prontuario = EntradaProntuarioForm(request.POST)
+        if form_prontuario.is_valid():
+            nova_entrada = form_prontuario.save(commit=False)
+            nova_entrada.paciente = paciente
+            nova_entrada.autor = request.user # Associa o médico logado
+            nova_entrada.save()
+            messages.success(request, 'Nova observação adicionada ao prontuário.')
+            # Redireciona para a mesma página para limpar o formulário e evitar reenvio
+            return redirect('hosp:mostrar', pk=paciente.pk)
+    else:
+        # Se for um GET, apenas mostra o formulário em branco
+        form_prontuario = EntradaProntuarioForm()
 
-    # NOVO: Prepara o contexto para enviar ao template
+    # Busca o histórico de prontuário do paciente usando o related_name
+    historico = paciente.historico_prontuario.all()
+
     context = {
         'paciente': paciente,
-        'voltar_para_url': voltar_para_url
+        'voltar_para_url': voltar_para_url,
+        'historico': historico,
+        'form_prontuario': form_prontuario,
     }
     
     return render(request, 'site/detalhes.html', context)

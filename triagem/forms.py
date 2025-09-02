@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Paciente, CustomUser, FeedbackTriagem
+from .models import Paciente, CustomUser, FeedbackTriagem, EntradaProntuario
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -112,3 +112,15 @@ class FeedbackTriagemForm(forms.ModelForm):
                 self.add_error('motivo', 'O motivo é obrigatório quando a classificação está incorreta.')
         
         return cleaned_data
+
+class EntradaProntuarioForm(forms.ModelForm):
+    class Meta:
+        model = EntradaProntuario
+        # O formulário só precisa do campo de texto. Os outros serão preenchidos na view.
+        fields = ['texto']
+        widgets = {
+            'texto': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Digite sua observação clínica aqui...'}),
+        }
+        labels = {
+            'texto': '' # Deixamos o label vazio para um visual mais limpo
+        }
