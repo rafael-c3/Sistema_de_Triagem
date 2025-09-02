@@ -4,6 +4,7 @@ from .ml.predict import predict_from_dict
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from datetime import date
 
 class CustomUser(AbstractUser):
     class TipoUsuario(models.TextChoices):
@@ -94,7 +95,8 @@ class Paciente(models.Model):
     ]
 
     nome = models.CharField(max_length=100)
-    idade = models.CharField(max_length=3)
+    # idade = models.CharField(max_length=3)
+    data_nascimento = models.DateField(verbose_name="Data de Nascimento")
     sexo = models.CharField(choices=Sexualidade, max_length=50)
     cpf = models.CharField(unique=True, max_length=11)
     convenio = models.CharField(choices=Convenios, max_length=50)
@@ -125,6 +127,17 @@ class Paciente(models.Model):
     atendente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='pacientes_criados')
     medico_responsavel = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='pacientes_atendidos', null=True, blank=True)
 
+    @property
+    def idade(self):
+        """Calcula a idade do paciente com base na data de nascimento."""
+        if not self.data_nascimento:
+            return None # Retorna nada se a data de nascimento não estiver preenchida
+            
+        hoje = date.today()
+        # O cálculo subtrai os anos e depois ajusta -1 se o aniversário ainda não passou no ano corrente
+        idade_calculada = hoje.year - self.data_nascimento.year - ((hoje.month, hoje.day) < (self.data_nascimento.month, self.data_nascimento.day))
+        return idade_calculada
+    
     @property
     def tempo_de_espera(self):
         """Calcula o tempo desde a chegada até o início do atendimento."""

@@ -10,7 +10,7 @@ class PacienteForm(forms.ModelForm):
 
         labels = {
             'nome': 'Nome',
-            'idade': 'Idade',
+            'data_nascimento': 'Data de Nascimento',
             'sexo': 'Gênero',
             'cpf': 'CPF',
             'convenio': 'Convenio',
@@ -38,7 +38,7 @@ class PacienteForm(forms.ModelForm):
         }
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
-            'idade': forms.TextInput(attrs={'class': 'form-control'}),
+            'data_nascimento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'sexo': forms.Select(attrs={'class': 'form-control'}),
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'convenio': forms.Select(attrs={'class': 'form-control'}),
