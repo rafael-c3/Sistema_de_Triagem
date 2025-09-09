@@ -100,7 +100,7 @@ class Paciente(models.Model):
     sexo = models.CharField(choices=Sexualidade, max_length=50)
     cpf = models.CharField(unique=True, max_length=11)
     convenio = models.CharField(choices=Convenios, max_length=50)
-
+    
     temperatura = models.FloatField(max_length=3)
     pressao_sistolica = models.CharField(max_length=3) # Valor maior
     pressao_diastolica = models.CharField(max_length=3) # Valor menor

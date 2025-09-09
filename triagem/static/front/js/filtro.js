@@ -1,69 +1,48 @@
-// Versão Atualizada com Menu de Filtros
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- CÓDIGO NOVO PARA O MENU DE FILTROS ---
-    const toggleFiltrosBtn = document.getElementById('toggle-filtros');
-    const filtrosAvancadosDiv = document.getElementById('filtros-avancados');
-
-    if (toggleFiltrosBtn && filtrosAvancadosDiv) {
-        // Evento para MOSTRAR/ESCONDER o menu ao clicar no botão
-        toggleFiltrosBtn.addEventListener('click', (event) => {
-            // event.stopPropagation() impede que o clique no botão feche o menu imediatamente
-            event.stopPropagation(); 
-            filtrosAvancadosDiv.classList.toggle('visivel');
-        });
-
-        // Evento para FECHAR o menu se o usuário clicar em qualquer lugar fora dele
-        document.addEventListener('click', (event) => {
-            const isClickInsideMenu = filtrosAvancadosDiv.contains(event.target);
-            const isClickOnToggleButton = toggleFiltrosBtn.contains(event.target);
-
-            if (!isClickInsideMenu && !isClickOnToggleButton) {
-                filtrosAvancadosDiv.classList.remove('visivel');
-            }
-        });
-    }
-    // --- FIM DO CÓDIGO NOVO ---
-
-
-    // --- SEU CÓDIGO ANTIGO E FUNCIONAL (inicia aqui) ---
-
-    // Seleciona todos os elementos necessários da página
-    const buscaInput = document.getElementById('busca-input');
-    const filtroStatusBtns = document.querySelectorAll('.filtro-status');
-    const filtroCorBtns = document.querySelectorAll('.filtro-cor');
+    // --- 1. SELEÇÃO DE TODOS OS ELEMENTOS ---
     const cardsPacientes = document.querySelectorAll('.card-paciente');
-    const btnsAtender = document.querySelectorAll('.btn-atender');
+    const buscaInput = document.getElementById('busca-input');
+    const filtroDataBtns = document.querySelectorAll('.btn-filtro-data');
+    
+    // Pega a data de hoje e formata como AAAA-MM-DD para a comparação
+    const hoje = new Date();
+    const hojeFormatado = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
 
-    // Objeto para guardar os filtros ativos
-    let filtrosAtivos = {
-        busca: '',
-        status: 'todos',
-        cor: 'todos'
+    // Objeto que guarda o estado de TODOS os filtros
+    let filtrosAtivos = { 
+        busca: '', 
+        status: 'todos', 
+        cor: 'todos',
+        periodo: 'todos'
     };
 
-    // Função principal que aplica os filtros
+    // --- 2. FUNÇÃO PRINCIPAL DE FILTRAGEM ---
     const aplicarFiltros = () => {
         cardsPacientes.forEach(card => {
             const nomePaciente = card.querySelector('strong').textContent.toLowerCase();
             const idPaciente = card.querySelector('small').textContent.toLowerCase();
             const statusCard = card.dataset.status;
             const corCard = card.dataset.cor;
+            const dataCadastroCard = card.dataset.cadastro;
 
+            // Verificação de cada filtro
             const matchBusca = nomePaciente.includes(filtrosAtivos.busca) || idPaciente.includes(filtrosAtivos.busca);
-            const matchStatus = filtrosAtivos.status === 'todos' || filtrosAtivos.status === statusCard;
-            const matchCor = filtrosAtivos.cor === 'todos' || filtrosAtivos.cor === corCard;
+            const matchStatus = filtrosAtivos.status === 'todos' || filtrosAtivos.status.toLowerCase() === statusCard.toLowerCase();
+            const matchCor = filtrosAtivos.cor === 'todos' || filtrosAtivos.cor.toLowerCase() === corCard.toLowerCase();
+            const matchPeriodo = filtrosAtivos.periodo === 'todos' || dataCadastroCard === hojeFormatado;
 
-            if (matchBusca && matchStatus && matchCor) {
-                card.style.display = 'block'; // Mostra o card
+            if (matchBusca && matchStatus && matchCor && matchPeriodo) {
+                card.style.display = 'block';
             } else {
-                card.style.display = 'none'; // Esconde o card
+                card.style.display = 'none';
             }
         });
     };
+    
+    // --- 3. LÓGICA PARA CADA TIPO DE FILTRO ---
 
-    // Adiciona o evento de 'input' para a barra de busca
+    // Filtro de Busca por texto
     if (buscaInput) {
         buscaInput.addEventListener('input', (e) => {
             filtrosAtivos.busca = e.target.value.toLowerCase();
@@ -71,24 +50,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Adiciona o evento de 'click' para os botões de filtro de STATUS
-    filtroStatusBtns.forEach(btn => {
+    // Filtros de Menu Dropdown (Status e Risco)
+    function setupDropdown(btnId, menuId, filterType, filterClass, filterPrefix) {
+        const triggerBtn = document.getElementById(btnId);
+        const menu = document.getElementById(menuId);
+        if (!triggerBtn || !menu) return;
+
+        const filterButtons = menu.querySelectorAll(filterClass);
+        const triggerBtnSpan = triggerBtn.querySelector('span');
+
+        triggerBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            document.querySelectorAll('.filtro-dropdown-menu.visivel').forEach(m => {
+                if (m !== menu) m.classList.remove('visivel');
+            });
+            menu.classList.toggle('visivel');
+        });
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filtrosAtivos[filterType] = btn.dataset[filterType];
+                aplicarFiltros();
+                triggerBtnSpan.textContent = `${filterPrefix}: ${btn.textContent}`;
+                filterButtons.forEach(b => b.classList.remove('ativo'));
+                btn.classList.add('ativo');
+                menu.classList.remove('visivel');
+            });
+        });
+    }
+
+    // Configura os dois menus
+    setupDropdown('status-filtro-btn', 'status-filtro-menu', 'status', '.filtro-status', 'Status');
+    setupDropdown('risco-filtro-btn', 'risco-filtro-menu', 'cor', '.filtro-cor', 'Risco');
+
+    // Novo Filtro de Data
+    filtroDataBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            filtroStatusBtns.forEach(b => b.classList.remove('ativo'));
+            filtroDataBtns.forEach(b => b.classList.remove('ativo'));
             btn.classList.add('ativo');
-            filtrosAtivos.status = btn.dataset.status;
+            filtrosAtivos.periodo = btn.dataset.periodo;
             aplicarFiltros();
         });
     });
 
-    // Adiciona o evento de 'click' para os botões de filtro de COR
-    filtroCorBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filtroCorBtns.forEach(b => b.classList.remove('ativo'));
-            btn.classList.add('ativo');
-            filtrosAtivos.cor = btn.dataset.cor;
-            aplicarFiltros();
-        });
+    // --- 4. AÇÕES FINAIS ---
+
+    // Fecha os menus dropdown se clicar fora
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.filtro-dropdown-menu.visivel').forEach(m => m.classList.remove('visivel'));
     });
 
+    // Aplica os filtros uma vez no carregamento da página para corrigir o layout
+    aplicarFiltros();
 });

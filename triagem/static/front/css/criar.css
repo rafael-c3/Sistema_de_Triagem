@@ -75,10 +75,34 @@ input, select, textarea {
   border: 1px solid #ccc;
   font-size: 1em;
   box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+
+/*  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
+
+  
+
 }
 
 textarea {
   resize: vertical;
+}
+
+
+
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    /* Remove a borda padrão do navegador (geralmente azul ou laranja forte) */
+    outline: none;
+    
+    /* Define a nova cor da borda */
+    border-color: #0d6efd; /* Azul primário */
+    
+    /* Adiciona uma "aura" ou "brilho" suave ao redor do campo */
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
 }
 
 .botoes {
@@ -122,4 +146,72 @@ textarea {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+
+.pressao-container {
+    display: flex;
+    align-items: center; /* Alinha verticalmente os campos e a barra */
+    gap: 0.5rem;       /* Adiciona um pequeno espaço entre os itens */
+}
+
+/* Estilo da barra separadora */
+.pressao-separator {
+    font-size: 1.5rem;
+    color: #6c757d;
+    font-weight: 300;
+}
+
+/* Define uma largura fixa para os campos de pressão, para não ficarem muito grandes */
+.pressao-container input {
+    width: 100px; /* Ajuste o valor se necessário */
+    text-align: center;
+}
+
+
+
+.form-box input.error,
+.form-box select.error,
+.form-box textarea.error {
+    border-color: #dc3545; /* Vermelho perigo */
+    background-color: #f8d7da;
+
+
+
+}
+.form-box input.error:focus,
+.form-box select.error:focus,
+.form-box textarea.error:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15); /* Brilho vermelho no foco */
+}
+
+
+/* --- Container para a lista de erros --- */
+.form-errors-container {
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border: 1px solid #f5c2c7;
+    background-color: #f8d7da;
+    color: #842029;
+    border-radius: 8px;
+}
+
+.form-errors-container h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.form-errors-container ul {
+    margin: 0;
+    padding-left: 20px; /* Adiciona um recuo para a lista */
+}
+
+.form-errors-container li {
+    font-weight: 500;
+}
+
+
+.hidden {
+    display: none !important;
 }

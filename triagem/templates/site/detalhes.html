@@ -100,7 +100,7 @@
             <hr>
 
             <h3>Histórico do Prontuário</h3>
-            {% if user.tipo_usuario != 'ATENDENTE' %}
+            {% if user.tipo_usuario == 'MEDICO' %}
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Adicionar Nova Observação</h5>

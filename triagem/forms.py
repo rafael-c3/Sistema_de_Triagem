@@ -53,11 +53,10 @@ class PacienteForm(forms.ModelForm):
             'glicemia': forms.NumberInput(attrs={'class': 'form-control'}),
             'dor': forms.NumberInput(attrs={'class': 'form-control'}),
 
-            'queixa': forms.Textarea(attrs={'class': 'form-control'}),
+            'queixa': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'inicio_sintomas': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'sintomas_associados': forms.Select(attrs={'class': 'form-control'}),
-            'observacoes': forms.Textarea(attrs={'class': 'form-control'}),
-
+            'observacoes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'classificacao': forms.Select(attrs={'class': 'form-control'}),
             'justificativa': forms.Textarea(attrs={'class': 'form-control'}),
             'encaminhamento': forms.Select(attrs={'class': 'form-control'}),

@@ -141,7 +141,7 @@ def detail_view(request, pk):
     
     # Lógica para processar o formulário de nova entrada no prontuário
     # Apenas aceita POST de um usuário Médico
-    if request.method == 'POST' and request.user.tipo_usuario != 'ATENDENTE':
+    if request.method == 'POST' and request.user.tipo_usuario == 'MEDICO':
         form_prontuario = EntradaProntuarioForm(request.POST)
         if form_prontuario.is_valid():
             nova_entrada = form_prontuario.save(commit=False)

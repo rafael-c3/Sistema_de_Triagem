@@ -4,16 +4,29 @@
     
 }
 
+.pacientes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.pacientes-header h2 {
+    margin: 0; /* Remove a margem padrão do h2 */
+    font-size: 2rem; /* Aumenta o tamanho da fonte. Ajuste o valor se desejar. */
+    
+}
+
 .btn-adicionar{
-    background-color: green;
+    background-color: #198754;;
     color: #fff;
     border: none;
-    padding: 8px 14px;
+    padding: 12px 20px;
     border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .btn-adicionar:hover{ 
@@ -28,19 +41,41 @@
 .filtros-container{
     position: relative;
     margin-bottom: 2rem;
+    
 }
 
 .filtros-principal{
-    display:flex;
-    align-items: center;
+    display:grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: start;
     gap: 1rem;
+}
+
+.busca-container-vertical {
+    display: grid;
+    grid-template-rows: auto auto; /* empilha busca + filtro de data */
+    gap: 0.5rem;
+    
+}
+
+.busca-container-vertical .busca-input {
+    height: 23px; /* mais slim */
+    padding: 0.4rem 0.8rem; /* menos preenchimento */
+    border: 1px solid #ddd;
+    border-radius: 6px; /* bordas mais discretas */
+    font-size: 0.9rem; /* texto levemente menor */
 }
 
 .filtros-principal .busca-input {
     flex-grow: 1; 
 }
 
-.btn-filtros {
+.filtro-dropdown-container{
+    position: relative;
+    flex-shrink: 0;
+}
+
+.filtro-ativar-btn{
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -51,80 +86,101 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex-shrink: 0; /* Impede que o botão seja espremido */
+    width: 200px;
+    justify-content: space-between;
 }
 
-.btn-filtros:hover {
+.filtro-ativar-btn:hover{
     background-color: #f8f9fa;
     border-color: #ccc;
 }
 
-.filtros-avancados {
-    display: none; /* Escondido por padrão */
+.filtro-ativar-btn span{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.filtro-dropdown-menu{
+    display: none;
     position: absolute;
     top: 100%;
-    right: 0; /* Alinha o menu à direita */
+    right: 0;
     margin-top: 0.5rem;
     background: #fff;
-    border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 0.5rem;
     box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     z-index: 10;
-    
-    flex-wrap: wrap;
-    gap: 1.5rem;
+    min-width: 220px;
 }
 
-.filtros-avancados.visivel {
-    display: flex; 
-}
-
-/* Estilo para cada grupo dentro do menu (Status, Risco) */
-.filtros-grupo {
+.filtro-data-container {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    background-color: #e9ecef; /* Um cinza um pouco mais escuro que o hover */
+    border-radius: 8px;
+    padding: 4px;
+    margin-right: auto; /* Joga o filtro para o canto direito da barra */
+    
 }
 
-.filtros-grupo strong {
+/* Estilo para cada um dos botões (Todos, Hoje) */
+.btn-filtro-data {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px; /* Bordas levemente arredondadas */
+    font-weight: 600;
     font-size: 0.9rem;
     color: #555;
-    font-weight: 600;
-    white-space: nowrap;
+    background-color: transparent; /* Fundo transparente por padrão */
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+/* Estilo para o botão ATIVO (selecionado) */
+.btn-filtro-data.ativo {
+    background-color: #fff; /* Fundo branco para destacar */
+    color: #333;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Sombra suave para dar profundidade */
+}
+
+.filtro-dropdown-menu.visivel{
+    display: block;
 }
 
 .filtros-status, .filtros-cor {
     display: flex;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .filtros-status button,
 .filtros-cor button{
-    padding: 6px 14px;
-    border: 1px solid #ddd;
-    background-color: #f8f9fa;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    background-color: transparent;
     color: #333;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.85rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
     cursor: pointer;
+    text-align: left;
     transition: all 0.2s ease-in-out;
-    white-space: nowrap;
 }
 
 .filtros-status button:hover,
 .filtros-cor button:hover {
-    background-color: #e9ecef;
-    border-color: #ccc;
-
+    background-color: #f0f0f0;
 }
 
 .filtros-status button.ativo,
 .filtros-cor button.ativo {
     background-color: #0d6efd;
     color: #fff;
-    border-color: #0d6efd;
+    font-weight: 600;
 }
 
 .busca-input {
@@ -135,18 +191,13 @@
     font-size: 1rem;
 }
 
-/*.btn-filtros {
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-} */
+
 
 .cards-pacientes {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
+    cursor: default;
 }
 
 @media (max-width: 1024px) {
@@ -163,20 +214,22 @@
 }
 
 .card-paciente {
-    min-height: 300px;
-    position: relative;
-    padding-left: 10px;
-    border-left: 5px solid transparent;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    padding-bottom: 50px;
+    
+    /* Lógica de layout */
+    display: flex;
+    flex-direction: column; /* Organiza os itens em coluna */
+    gap: 1.25rem;
+
+    /* A borda lateral continua igual */
+    position: relative; 
+    border-left: 5px solid transparent;
+    padding: 1rem 1.25rem 1.25rem 1.25rem;  
 }
+
 
 .card-paciente::before{
     content:"";
@@ -191,6 +244,12 @@
 
 .card-paciente.vermelho::before{
     background-color: #dc3545;
+}
+
+.card-paciente.azul::before{
+    background-color: #0dcaf0;
+
+    
 }
 
 .card-paciente.verde::before{
@@ -223,6 +282,11 @@
 .bolinha.vermelho{
     color: #842029;
     background-color: #d88289;
+}
+
+.bolinha.azul{
+    color:#072997;
+    background-color: #cff4fc;
 }
 
 .bolinha.verde{
@@ -288,6 +352,12 @@
     background-color: #d88289;
     
 }
+
+.tag.azul{
+    color:#072997;
+    background-color: #cff4fc;
+}
+
 .tag.verde{
     color: #0f5132;
     background-color: #94d4b8;
@@ -333,61 +403,162 @@
     background-color: #d1e7dd;
 }
 
+.card-paciente.azul .queixa{
+    color:#072997;
+    background-color: #e0f2fe
+}
 
 .detalhes {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: #555;
+    gap: 1rem; /* Espaço ENTRE os quadrados cinzas */
+    margin: 1rem 0; /* Espaçamento vertical acima e abaixo da seção */
 }
 
+/* Estilo COMUM para todos os 4 quadrados de sinais vitais */
+.detalhes .pressao,
+.detalhes .pulso,
+.detalhes .temperatura,
+.detalhes .saturacao {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.75rem;
+    text-align: center;
+    line-height: 1.2; /* << REDUZIDO para aproximar as linhas */
+    
+    /* Estilo para os VALORES (50/50 mmHg...) */
+    color: #212529; /* Cor mais escura para o valor, para dar destaque */
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Estilo APENAS PARA O TÍTULO (o texto em negrito 'Pressão', 'Pulso', etc.) */
+.detalhes b {
+    display: block;
+    margin-bottom: 0.2rem; /* << REDUZIDO para aproximar título do valor */
+    font-size: 0.8rem;
+    font-weight: 500; /* Deixa o título um pouco mais leve que o valor */
+    color: #6c757d;   /* Cor cinza para o título */
+    text-transform: uppercase;
+}
+
+
+
+
 .card-actions {
-    position:absolute;
     display: flex;
     justify-content: space-between;
     align-items: center;
+   
+    padding-top: 1rem;
     margin-top: auto;
-    flex-wrap: nowrap;
+}
+
+.atendido-por {
+    display: flex;
+    justify-content: space-between; /* palavra à esquerda, nome à direita */
+    align-items: center;
+    width: 100%;
+    
+}
+
+.atendido-por .medico {
+  font-weight: 600;
+  color: #0d6efd; /* azul */
+  
+}
+
+
+
+
+
+
+.card-actions .btn-prontuario,
+.card-actions .btn-secondary { /* Classe do Bootstrap para o Feedback */
+    display: inline-flex;
+    align-items: center;
     gap: 0.5rem;
-    bottom: 1.5rem;
-    left: 1.5rem;
-    right: 1.5rem;
-    height: 45px;
     
-    
-    
-}
-
-
-
-.btn-prontuario {
-    background: #f9f9f9;
-    border: 1px solid #ccc;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
+    color: #495057; 
+    font-weight: 600;
+    font-size: 0.9rem;
     cursor: pointer;
+    text-decoration: none;
+    padding: 8px ;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    transition: background-color 0.2s ease;
+    
 }
 
-.btn-prontuario:hover {
-    transform: scale(1.05);      
+
+.card-actions .btn-prontuario {
+    padding-top: 5px;    
+    padding-bottom: 11px; 
 }
 
-.btn-atender {
-    background: #10b981;
+.btn-prontuario > svg,
+.btn-prontuario > span {
+    position: relative;
+    top: 3px; /* <-- Empurra o ícone e o texto 1px para baixo. Experimente com 2px se necessário. */
+}
+.card-actions .btn-prontuario:hover {
+    background-color: #f0f0f0;
+    
+}
+
+.card-actions .btn-secondary{
+    background-color: #0d6efd; /* AZUL para o fundo */
+    color: #fff;              /* BRANCO para o texto */
+    border-color: #0d6efd;
+}
+
+.card-actions .btn-secondary:hover{
+    background-color: #0b5ed7; /* Azul mais escuro no hover */
+    
+    text-decoration: none;      /* Garante que não apareça sublinhado */
+    
+}
+
+/* --- 3. Estilo dos Botões da Direita (Ações do Médico) --- */
+.card-actions .btn-atender,
+.card-actions .btn-finalizar,
+.card-actions .btn-concluido {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
     color: #fff;
-    border: none;
-    padding: 0.4rem 1rem;
-    border-radius: 6px;
-    font-weight: bold;
     cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+
+
+
+.card-actions .btn-atender:hover,
+.card-actions .btn-finalizar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-actions .btn-atender {
+    background-color: #198754; /* Verde */
     
-
+}
+.card-actions .btn-finalizar {
+    background-color: #198754; /* Verde */
+}
+.card-actions .btn-concluido[disabled] {
+    background-color: #6c757d; /* Cinza */
+    opacity: 0.7;
 }
 
-.btn-atender:hover {
-    transform: scale(1.05);      
-}
+
+
+
+
 .btn-remover{
     background-color: #e53935;
     color: #fff;
@@ -433,6 +604,32 @@
 
 
 .card-actions button {
-    white-space: nowrap !important;
+    flex: 1; /* todos ocupam o mesmo espaço */
+    min-width: 120px; /* tamanho mínimo */
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease;
     
+}
+
+
+
+.status-atendimento-container {
+    /* Layout interno */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    
+    /* --- NOVOS ESTILOS DE CAIXA --- */
+    background-color: #f8f9fa;   /* Fundo cinza bem claro */
+    padding: 10px 15px;        /* Espaçamento interno da caixa */
+    border: 1px solid #e5e7eb;   /* Borda cinza sutil em todos os lados */
+    border-radius: 8px;          /* Cantos arredondados */
+    
+    /* Espaçamento externo */
+    margin-top: auto; 
 }

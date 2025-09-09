@@ -53,23 +53,28 @@
                 <!--<label for="{{ form.hora_chegada.id_for_label }}">Horário de Chegada:</label>
                 {{ form.hora_chegada }}-->
                 {% if form.errors %}
-                    {% for field in form %}
-                        {% if field.errors %}
-                            <li>{{ field.label }}: {{ field.errors|striptags }}</li>
-                        {% endif %}
-                    {% endfor %}
-                    
-                    {% if form.non_field_errors %}
-                        <li>{{ form.non_field_errors|striptags }}</li>
-                    {% endif %}
+                    <div class="form-errors-container">
+                        <h3>Por favor, corrija os erros abaixo:</h3>
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
             </section>
             <section class="form-box">
                 <h2>Avaliação Clínica</h2>
 
                 <div class="tabs">
-                    <button type="button" class="tab-button active" onclick="openTab(event, 'sinais')">Sinais Vitais</button>
-                    <button type="button" class="tab-button" onclick="openTab(event, 'queixa')">Queixa Principal</button>
+                    <button type="button" class="tab-button active" id="tab-btn-sinais" onclick="openTab(event, 'sinais')">Sinais Vitais</button>
+                    <button type="button" class="tab-button" id="tab-btn-queixa" onclick="openTab(event, 'queixa')">Queixa Principal</button>
                     <!-- <button type="button" class="tab-button" onclick="openTab(event, 'avaliacao')">Avaliação</button> -->
                 </div>
 
@@ -81,12 +86,12 @@
                             {{ form.temperatura }}
                         </div>
                         <div>
-                            <label for="{{ form.pressao_sistolica.id_for_label }}">Pressão Arterial Sistólica:</label>
-                            {{ form.pressao_sistolica }}
-                        </div>
-                        <div>
-                            <label for="{{ form.pressao_diastolica.id_for_label }}">Pressão Arterial Diastólica:</label>
-                            {{ form.pressao_diastolica }}
+                            <label for="{{ form.pressao_sistolica.id_for_label }}">Pressão Arterial (SIS / DIA):</label>
+                            <div class="pressao-container">
+                                {{ form.pressao_sistolica }}
+                                <span class="pressao-separator">/</span>
+                                {{ form.pressao_diastolica }}
+                            </div>
                         </div>
                         <div>
                             <label for="{{ form.pulso.id_for_label }}">Pulso:</label>
@@ -151,27 +156,59 @@
         </div>
 
         <div class="botoes">
-            <button type="submit" class="btn-enviar">Finalizar Triagem</button>
+            <button type="button" id="btn-proximo" class="btn-enviar">Próximo</button>
+            <button type="submit" id="btn-finalizar" class="btn-enviar">Finalizar Triagem</button>
         </div>
     </form>
 </main>
 {% endif %}
 <script>
-function openTab(evt, tabId) {
-  // Esconde todas as seções
-  const tabs = document.querySelectorAll('.tab-content');
-  tabs.forEach(tab => tab.classList.remove('active'));
+// Seleciona os botões que vamos manipular
+const btnProximo = document.getElementById('btn-proximo');
+const btnFinalizar = document.getElementById('btn-finalizar');
+const tabQueixaBtn = document.getElementById('tab-btn-queixa');
+const tabSinaisBtn = document.getElementById('tab-btn-sinais'); // <-- Adicionamos o botão da primeira aba
 
-  // Desativa todos os botões
-  const buttons = document.querySelectorAll('.tab-button');
-  buttons.forEach(btn => btn.classList.remove('active'));
-
-  // Ativa a aba clicada
-  document.getElementById(tabId).classList.add('active');
-  evt.currentTarget.classList.add('active');
+// Adiciona a funcionalidade ao botão "Próximo"
+if (btnProximo && tabQueixaBtn) {
+    btnProximo.addEventListener('click', () => {
+        // Simula um clique na aba "Queixa Principal"
+        tabQueixaBtn.click();
+    });
 }
 
+// Função openTab ATUALIZADA
+function openTab(evt, tabId) {
+    // Esconde todas as seções de conteúdo
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // Desativa todos os botões de aba
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    // Ativa a aba e o botão clicados
+    document.getElementById(tabId).classList.add('active');
+    evt.currentTarget.classList.add('active');
+
+    // --- LÓGICA PARA CONTROLAR OS BOTÕES ---
+    if (tabId === 'sinais') {
+        btnProximo.classList.remove('hidden');
+        btnFinalizar.classList.add('hidden');
+    } else {
+        btnProximo.classList.add('hidden');
+        btnFinalizar.classList.remove('hidden');
+    }
+}
+
+// --- LINHA MÁGICA ADICIONADA AQUI ---
+// Simula um clique na aba inicial assim que a página carrega para definir o estado correto dos botões
+if (tabSinaisBtn) {
+    tabSinaisBtn.click();
+}
 </script>
+
+<script src="{% static 'front/js/criar.js' %}?v=4"></script>
 
 </body>
 </html>

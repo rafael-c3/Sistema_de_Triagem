@@ -1,0 +1,43 @@
+<div class="card-actions">
+    <div class="acoes-esquerda">
+        <a href="{% url 'hosp:mostrar' paciente.id %}" class="btn-prontuario">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <span>Prontuário</span>
+        </a>
+        <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn-feedback">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Dar Feedback</span>
+        </a>
+    </div>
+
+    <div class="acoes-direita">
+        {% if user.tipo_usuario == 'ADMIN' and paciente.status != 'Concluido' %}
+            <button class="btn-remover">Remover</button>
+        {% endif %}
+
+        {% if user.tipo_usuario == 'MEDICO' %}
+            {% if paciente.status == 'Aguardando' %}
+                <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
+                    <button type="submit" class="btn-acao-primario atender">Atender</button>
+                </form>
+            {% elif paciente.status == 'Em atendimento' %}
+                <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
+                    <button type="submit" class="btn-acao-primario finalizar">Finalizar</button>
+                </form>
+            {% elif paciente.status == 'Concluido' %}
+                <button class="btn-acao-primario concluido" disabled>Concluído</button>
+            {% endif %}
+        
+        {% elif user.tipo_usuario == 'ATENDENTE' %}
+            {% if paciente.status == 'Aguardando' %}
+                <span class="status-final-texto">Aguardando na fila...</span>
+            {% elif paciente.medico_responsavel %}
+                <div class="atendido-por">
+                    <span class="status-dot {{ paciente.status|slugify }}"></span>
+                    <span class="atendido-por-label">Atendido por:</span>
+                    <span class="atendido-por-medico">{{ paciente.medico_responsavel.get_full_name|default:paciente.medico_responsavel.username }}</span>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
