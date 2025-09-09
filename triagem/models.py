@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
 
     nome_completo = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    cpf = models.CharField(max_length=11, unique=True)
+    cpf = models.CharField(max_length=14, unique=True)
     tipo_usuario = models.CharField(max_length=10, choices=TipoUsuario.choices, default=TipoUsuario.ATENDENTE)
 
     registro_profissional = models.CharField(max_length=20, blank=True, null=True)   # Permite que o valor seja nulo no banco
@@ -98,7 +98,7 @@ class Paciente(models.Model):
     # idade = models.CharField(max_length=3)
     data_nascimento = models.DateField(verbose_name="Data de Nascimento")
     sexo = models.CharField(choices=Sexualidade, max_length=50)
-    cpf = models.CharField(unique=True, max_length=11)
+    cpf = models.CharField(unique=True, max_length=14)
     convenio = models.CharField(choices=Convenios, max_length=50)
     
     temperatura = models.FloatField(max_length=3)

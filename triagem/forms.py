@@ -51,7 +51,7 @@ class PacienteForm(forms.ModelForm):
             'frequenciaRespiratoria': forms.NumberInput(attrs={'class': 'form-control'}),
             'saturacao': forms.NumberInput(attrs={'class': 'form-control'}),
             'glicemia': forms.NumberInput(attrs={'class': 'form-control'}),
-            'dor': forms.NumberInput(attrs={'class': 'form-control'}),
+            'dor': forms.NumberInput(attrs={'class': 'form-range', 'type': 'range', 'min': '0', 'max': '10', 'step': '1'}),
 
             'queixa': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'inicio_sintomas': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
