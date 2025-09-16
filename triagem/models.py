@@ -140,17 +140,50 @@ class Paciente(models.Model):
     
     @property
     def tempo_de_espera(self):
-        """Calcula o tempo desde a chegada até o início do atendimento."""
-        if self.hora_chegada and self.hora_inicio_atendimento:
-            return self.hora_inicio_atendimento - self.hora_chegada
-        return None
+        """Calcula e formata o tempo desde a chegada até o início do atendimento."""
+        # A "cláusula de guarda": se algum dos valores for Nulo, pare aqui.
+        if not self.hora_chegada or not self.hora_inicio_atendimento:
+            return "Em andamento"
+        
+        delta = self.hora_inicio_atendimento - self.hora_chegada
+        
+        total_seconds = int(delta.total_seconds())
+        if total_seconds < 0: total_seconds = 0
+
+        horas = total_seconds // 3600
+        minutos = (total_seconds % 3600) // 60
+        segundos = total_seconds % 60
+
+        if horas > 0:
+            return f"{horas}h {minutos}min {segundos}s"
+        elif minutos > 0:
+            return f"{minutos}min {segundos}s"
+        else:
+            return f"{segundos}s"
 
     @property
     def tempo_de_atendimento(self):
-        """Calcula a duração do atendimento."""
-        if self.hora_inicio_atendimento and self.hora_fim_atendimento:
-            return self.hora_fim_atendimento - self.hora_inicio_atendimento
-        return None
+        """Calcula e formata a duração do atendimento."""
+        # A "cláusula de guarda" para esta propriedade
+        if not self.hora_inicio_atendimento or not self.hora_fim_atendimento:
+            return "Em andamento"
+        
+        delta = self.hora_fim_atendimento - self.hora_inicio_atendimento
+        
+        total_seconds = int(delta.total_seconds())
+        if total_seconds < 0: total_seconds = 0
+
+        horas = total_seconds // 3600
+        minutos = (total_seconds % 3600) // 60
+        segundos = total_seconds % 60
+
+        if horas > 0:
+            return f"{horas}h {minutos}min {segundos}s"
+        elif minutos > 0:
+            return f"{minutos}min {segundos}s"
+        else:
+            return f"{segundos}s"
+
 
     def save(self, *args, **kwargs):
         campos_necessarios_ia = [
