@@ -1,0 +1,643 @@
+body{
+    background-color: #f8f9fa;
+}
+
+
+.prontuario-container{
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+
+}
+
+.prontuario-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;  /* <-- A MUDANÇA PRINCIPAL ACONTECE AQUI */
+    align-items: flex-start; /* Garante que ambos fiquem alinhados à esquerda */
+    gap: 0.30rem;
+    margin-top: 10px;
+    
+}
+
+
+.header-title {
+    
+    font-weight: 700;
+    color: #212529;
+    
+}
+
+.btn-voltar{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+}
+
+.btn-acao-secundario {
+    display: inline-flex; /* Permite alinhar o ícone e o texto */
+    align-items: center; /* Centraliza verticalmente o ícone e o texto */
+    gap: 0.5rem; /* Espaço entre o ícone e o texto */
+    
+    padding: 0.5rem 1rem; /* Espaçamento interno do botão */
+    background-color: #ffffff; /* Fundo branco */
+    border: 1px solid #e5e7eb; /* Borda cinza clara */
+    border-radius: 6px; /* Bordas arredondadas */
+    
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151; /* Cor do texto (cinza escuro) */
+    
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Efeito suave de transição */
+}
+
+
+.btn-acao-secundario:hover {
+    background-color: #f9fafb; /* Fundo cinza bem clarinho */
+    border-color: #d1d5db; /* Borda um pouco mais escura */
+}
+
+/* Estilo para os ícones SVG dentro dos botões */
+.btn-acao-secundario svg {
+    width: 16px;  /* Largura do ícone */
+    height: 16px; /* Altura do ícone */
+    stroke: currentColor; /* Faz o ícone ter a mesma cor do texto */
+}
+
+
+
+.prontuario-grid{
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2rem;
+    align-items: start;
+
+}
+
+.sidebar-paciente{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background-color: #fff;
+    
+}
+
+.info-paciente-principal{
+    
+    
+    
+    padding: 1.5rem;
+    text-align: center;
+
+}
+
+.bolinha {
+    background: #eee;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: grid;
+    place-content: center;
+    font-weight: bold;
+}
+
+.bolinha.vermelho{
+    color: #842029;
+    background-color: #d88289;
+}
+
+.bolinha.azul{
+    color:#072997;
+    background-color: #cff4fc;
+}
+
+.bolinha.verde{
+    color: #0f5132;
+    background-color: #94d4b8;
+
+}
+
+.bolinha.laranja{
+    color: #995b00;
+    background-color: #ffa600;
+
+}
+
+.bolinha.amarelo{
+    color:#664d03;
+    background-color: #FFD700;
+
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center; 
+    
+}
+
+.tag.vermelho{
+    color: #842029;
+    background-color: #d88289;
+    
+}
+
+.tag.azul{
+    color:#072997;
+    background-color: #cff4fc;
+}
+
+.tag.verde{
+    color: #0f5132;
+    background-color: #94d4b8;
+}
+.tag.amarelo {
+    color:#664d03;
+    background-color: #FFD700; 
+}
+.tag.laranja{
+    color: #995b00;
+    background-color: #ffa600;
+}
+
+.info-paciente-principal .bolinha { margin: 0 auto 1rem auto; }
+.info-paciente-principal h2 { margin: 0.5rem 0 0.25rem 0; font-size: 1.5rem; }
+.info-paciente-principal p { margin: 0; color: #666; }
+.info-paciente-principal .tag { margin-top: 1rem; display: inline-block; }
+
+
+
+.info-bloco{
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+
+.info-bloco .Pessoais {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f0f0f0; /* Linha separadora sutil */
+}
+
+.info-bloco p {
+    margin: 0.75rem 0;
+    color: #555;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between; /* Alinha o rótulo e o valor */
+}
+.info-bloco p strong { 
+    color: #6c757d; 
+    font-weight: 500;
+
+}
+
+/* --- Coluna da Direita (Conteúdo) --- */
+.conteudo-prontuario {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.card-atendimento {
+    
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    
+}
+
+/* Novo estilo para o grupo de título e data */
+.card-title-group {
+    display: flex;
+    flex-direction: column; /* Coloca o H2 e o Span um embaixo do outro */
+}
+
+.card-title-group h2 {
+    margin: 0;
+    font-size: 1.75rem; /* Pode ajustar o tamanho se preferir */
+}
+
+.card-title-group span{
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+
+
+
+
+
+
+
+.sinais-vitais-grid-boxed{
+    display: grid;
+    gap: 1rem; /* Espaçamento entre as caixas */
+
+    /* Define as 4 colunas: 3 para os itens normais e 1 para a dor */
+    grid-template-columns: repeat(3, 1fr) 1.1fr;
+
+    /* AQUI ESTÁ A MÁGICA: Desenhamos o layout */
+    grid-template-areas:
+      "pressao    pulso      temperatura  dor"
+      "saturacao  glicemia   respiratoria dor";
+
+     margin-bottom: 2.5rem;
+}
+
+.vital-pressao    { grid-area: pressao; }
+.vital-pulso      { grid-area: pulso; }
+.vital-temperatura{ grid-area: temperatura; }
+.vital-saturacao  { grid-area: saturacao; }
+.vital-glicemia   { grid-area: glicemia; }
+.vital-respiratoria{ grid-area: respiratoria; }
+.vital-dor        { grid-area: dor; }
+
+
+
+.vital-item-box {
+    background-color: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.vital-item-box label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.vital-item-box .valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Nova Grade Principal: Triagem | Encaminhamento */
+.triagem-classificacao-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem; /* Espaço entre as duas colunas principais */
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+
+
+/* --- Grid para Risco e Justificativa --- */
+.detalhes-risco-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+    
+}
+
+/* Estilo para as colunas individuais */
+.coluna-triagem, .coluna-classificacao {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem; /* Espaço vertical entre os itens de cada coluna */
+}
+
+
+
+.coluna-triagem h4,
+.coluna-classificacao h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #343a40;
+    margin: 0 0 1rem 0; /* Espaçamento abaixo do título */
+    padding-bottom: 0.75rem; /* Espaçamento entre o texto e a linha */
+     /* Linha divisória sutil */
+}
+
+
+
+/* --- Estilo comum para os itens de informação --- */
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.info-item label{
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+
+.info-item p{
+    margin: 0;
+    font-weight: 500;
+    color: #111;
+    font-size: 0.95rem;
+}
+
+
+
+
+.classificacao-risco {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+.classificacao-risco .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.classificacao-risco .status-dot.vermelho { background-color: #ef4444; }
+.classificacao-risco.vermelho { color: #ef4444; }
+
+.coluna-triagem > h4{
+    margin-bottom: 0.1rem;
+
+}
+.coluna-classificacao > h4 {
+    margin-bottom: 0.1rem; /* Reduz o espaço ABAIXO do título. Ajuste o valor se precisar. */
+}
+
+.coluna-classificacao .classificacao-risco {
+    margin-top: 0; /* Remove completamente o espaço ACIMA do parágrafo. */
+}
+
+.classificacao-subtexto {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+
+.coluna-encaminhamento {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* <<< ESTA LINHA ADICIONA O ESPAÇAMENTO DESEJADO */
+}
+
+.coluna-encaminhamento h4{
+    margin-bottom: 0.2rem;
+    
+
+}
+
+.justificativa-ia{
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem;
+    
+    font-size: 0.85rem;
+    
+}
+
+
+.timeline-container{
+    border-top: 1px solid #e5e7eb;
+    margin-top: 1rem;
+}
+
+
+
+.timeline-header h4 {
+    font-size: 1.1rem;
+    padding: 1.5rem 2rem 0 2rem;
+    margin: 0;
+}
+.timeline-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+}
+
+/* Estilo para cada coluna */
+.timeline-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espaço vertical entre os itens da mesma coluna */
+    flex: 1; /* Faz com que as colunas ocupem o espaço igualmente */
+}
+
+
+.info-item p.tempo-espera {
+    color: #c77700; /* Laranja/marrom */
+    font-weight: 600;
+}
+
+.info-item p.tempo-duracao {
+    color: #17a2b8; /* Azul/ciano */
+    font-weight: 600;
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: fit-content;
+}
+.status-tag.concluido { color: #14532d; background-color: #d1fae5; }
+
+
+.secao-observacoes{
+    padding: 1.5rem 0;
+    margin: 1.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+    border-top: 1px solid #e5e7eb;
+}
+
+.secao-observacoes h4{
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.observacoes-empty-state{
+    background-color: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.observacoes-empty-state p{
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+    color: #6c757d;   
+}
+
+.observacoes-empty-state span {
+    font-size: 0.85rem;
+    color: #adb5bd;
+}
+
+/* Estilo do botão 'Adicionar Observação' */
+.btn-adicionar-observacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1.5rem;
+    border: 1px dashed #ced4da;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+
+.btn-adicionar-observacao:hover {
+    background-color: #f8f9fa;
+    border-color: #495057;
+}
+
+
+/* Estilo para quando um histórico já existe */
+.entrada-historico {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+}
+.entrada-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #6c757d;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+.entrada-body p {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+.autor-observacao {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 1rem;
+}
+
+/* Container do formulário que aparece */
+.nova-entrada-prontuario {
+    margin-top: 2rem; /* Adiciona um bom espaço acima do formulário */
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+/* Título "Adicionar Nova Observação" */
+.nova-entrada-prontuario h5 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Estilo para a CAIXA DE TEXTO (textarea) */
+.nova-entrada-prontuario textarea {
+    width: 100%;
+    box-sizing: border-box;
+    align-self: stretch;
+    min-height: 120px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-family: inherit; /* Usa a mesma fonte do resto do site */
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: vertical; /* Permite que o usuário redimensione apenas na vertical */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Efeito de FOCO (quando o usuário clica na caixa de texto) */
+.nova-entrada-prontuario textarea:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
+/* Estilo para o BOTÃO "Salvar Observação" */
+.btn-adicionar-prontuario {
+    align-self: flex-end;
+    display: inline-block;
+    margin-top: 1rem; /* Espaço entre a caixa de texto e o botão */
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff; /* Cor primária (azul) */
+    color: #fff; /* Texto branco */
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-adicionar-prontuario:hover {
+    background-color: #0056b3; /* Tom de azul mais escuro ao passar o mouse */
+}
+
+/* Opcional: Alinha o botão à direita do formulário */
+.nova-entrada-prontuario form {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+
+
+/* Paleta de cores para tags (você já tem no listar.css, mas pode precisar aqui também) */
+.tag.Vermelho{ 
+    color: #991b1b; 
+    background-color: #fee2e2; 
+}
+/* ... (adicione as outras cores se necessário) ... */
