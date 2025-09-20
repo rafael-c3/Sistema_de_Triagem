@@ -340,6 +340,7 @@
     width: 97.5%;
     min-height: 80px;
     resize: vertical;
+    font-family: inherit;
 }
 .btn-submit-feedback { 
     display: inline-block; 
