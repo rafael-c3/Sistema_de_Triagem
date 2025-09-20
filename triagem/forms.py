@@ -92,7 +92,10 @@ class FeedbackTriagemForm(forms.ModelForm):
         # Apenas os campos que o usuário deve preencher
         fields = ['triagem_correta', 'classificacao_correta', 'motivo']
         widgets = {
-            'triagem_correta': forms.RadioSelect(choices=((True, 'Sim'), (False, 'Não'))),
+            'triagem_correta': forms.RadioSelect(choices=(
+                (True, 'Sim, a classificação estava adequada.'),
+                (False, 'Não, a classificação estava inadequada.')
+            )),
             'classificacao_correta': forms.Select(attrs={'class': 'form-control'}),
             'motivo': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }

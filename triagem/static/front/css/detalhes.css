@@ -43,6 +43,10 @@ body{
     text-decoration: none;
 }
 
+.btn-voltar:hover {
+    color: #0d6efd; /* Muda a cor para azul */
+}
+
 .btn-acao-secundario {
     display: inline-flex; /* Permite alinhar o ícone e o texto */
     align-items: center; /* Centraliza verticalmente o ícone e o texto */
@@ -92,6 +96,66 @@ body{
     border-radius: 10px;
     background-color: #fff;
     
+}
+
+
+/* Container para os botões na sidebar */
+.sidebar-actions {
+    padding: 0 1.5rem 1.5rem 1.5rem; /* Espaçamento interno */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Espaço entre os botões */
+}
+
+.coluna-esquerda-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Cria um espaço entre a sidebar e os botões */
+}
+
+/* Ajuste no container dos botões para garantir que ele não tenha paddings indesejados */
+.sidebar-actions {
+    padding: 0; /* Remove o padding que talvez existisse antes */
+}
+
+/* Garante que o botão ocupe 100% da largura da coluna */
+.sidebar-actions button {
+    width: 100%;
+    padding: 0.8rem; /* Aumenta um pouco a altura do botão */
+    font-size: 1rem; /* Aumenta um pouco a fonte */
+    background-color: #198754; /* Verde */
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 600;
+    
+}
+
+.sidebar-actions .btn {
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+
+
+
+.sidebar-actions .btn-primary:hover, 
+.sidebar-actions .btn-success:hover {
+    background-color: #157347; /* Tom de verde um pouco mais escuro */
+    transform: translateY(-2px); /* Efeito opcional de "levantar" o botão */
+}
+
+.sidebar-actions .text-muted{
+    background-color: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    padding: 0.8rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .info-paciente-principal{
@@ -388,6 +452,15 @@ body{
 
 .classificacao-risco .status-dot.vermelho { background-color: #ef4444; }
 .classificacao-risco.vermelho { color: #ef4444; }
+.classificacao-risco .status-dot.azul { background-color:#072997; }
+.classificacao-risco.azul { color:#072997; }
+.classificacao-risco .status-dot.verde { background-color: #0f5132; }
+.classificacao-risco.verde { color: #0f5132; }
+.classificacao-risco .status-dot.laranja { background-color: #ffa600; }
+.classificacao-risco.laranja { color: #ffa600; }
+.classificacao-risco .status-dot.amarelo { background-color: #FFD700; }
+.classificacao-risco.amarelo { color: #FFD700; }
+
 
 .coluna-triagem > h4{
     margin-bottom: 0.1rem;
@@ -477,7 +550,14 @@ body{
     font-weight: 600;
     width: fit-content;
 }
+
+.status-tag.aguardando { color:#664d03; background-color: #FFD700;}
+.status-tag.em-atendimento { color:#072997; background-color: #cff4fc;}
 .status-tag.concluido { color: #14532d; background-color: #d1fae5; }
+
+
+
+
 
 
 .secao-observacoes{
@@ -635,7 +715,7 @@ body{
 
 
 
-/* Paleta de cores para tags (você já tem no listar.css, mas pode precisar aqui também) */
+
 .tag.Vermelho{ 
     color: #991b1b; 
     background-color: #fee2e2; 

@@ -249,7 +249,7 @@ class FeedbackTriagem(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     
     # Campos do formulário de feedback
-    triagem_correta = models.BooleanField(default=True, verbose_name="A classificação do sistema foi correta?")
+    triagem_correta = models.BooleanField(verbose_name="A classificação do sistema foi correta?")
     classificacao_correta = models.CharField(max_length=50, choices=Paciente.Risco, blank=True, null=True, verbose_name="Se não, qual seria a classificação correta?")
     motivo = models.TextField(blank=True, null=True, verbose_name="Motivo da reclassificação")
 

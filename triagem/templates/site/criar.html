@@ -109,10 +109,21 @@
                             <label for="{{ form.pulso.id_for_label }}">Glicemia:</label>
                             {{ form.glicemia }}
                         </div>
-                        <div>
-                            <label for="{{ form.dor.id_for_label }}">Dor:</label>
-                            {{ form.dor }}
+                        <div class="form-group-slider">
+                            <label for="id_dor">Dor:</label>
+                            <div class="slider-container">
+                                <input type="range" 
+                                    id="id_dor" 
+                                    name="dor" 
+                                    min="1" 
+                                    max="10" 
+                                    value="5" 
+                                    class="pain-slider"
+                                    oninput="updatePainValue(this.value)">
+                                <span id="pain-value" class="pain-value-display">5 / 10</span>
+                            </div>
                         </div>
+                        
                     </div>
                 </section>
 

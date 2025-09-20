@@ -50,32 +50,55 @@
 
         <div class="prontuario-grid">
 
-            <aside class="sidebar-paciente">
-                <div class="info-paciente-principal">
-                    <div class="bolinha {{ paciente.classificacao|lower }}">{{ paciente.nome|slice:":2"|upper }}</div>
-                    <div class="info-paciente-nome">
-                        <h2>{{ paciente.nome }}</h2>
-                        <p>ID: P-{{ paciente.id }}</p>
+            <div class="coluna-esquerda-container">
+
+                <aside class="sidebar-paciente">
+                    <div class="info-paciente-principal">
+                        <div class="bolinha {{ paciente.classificacao|lower }}">{{ paciente.nome|slice:":2"|upper }}</div>
+                        <div class="info-paciente-nome">
+                            <h2>{{ paciente.nome }}</h2>
+                            <p>ID: P-{{ paciente.id }}</p>
+                        </div>
+                        <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
                     </div>
-                    <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
-                </div>
 
-                <div class="info-bloco">
-                    <p class="Pessoais"><strong>Informações Pessoais</strong></p>
-                    <p><strong>Idade:</strong>{{ paciente.idade }} anos</p>
-                    <p><strong>Sexo:</strong> {{ paciente.sexo }}</p>
-                    <p><strong>CPF:</strong> {{ paciente.cpf }}</p>
-                    <p><strong>Convênio:</strong> {{ paciente.convenio }}</p>
-                </div>
+                    <div class="info-bloco">
+                        <p class="Pessoais"><strong>Informações Pessoais</strong></p>
+                        <p><strong>Idade:</strong>{{ paciente.idade }} anos</p>
+                        <p><strong>Sexo:</strong> {{ paciente.sexo }}</p>
+                        <p><strong>Data Nasc.</strong> {{ paciente.data_nascimento }}</p>
+                        <p><strong>CPF:</strong> {{ paciente.cpf }}</p>
+                        <p><strong>Convênio:</strong> {{ paciente.convenio }}</p>
+                    </div>
 
-                <div class="info-bloco">
-                    <p class="Pessoais"><strong>Contato</strong></p>
-                    <p><strong>Telefone:</strong> (XX) XXXXX-XXXX</p>
-                    <p><strong>Email:</strong> email@paciente.com</p>
-                    <p><strong>Endereço:</strong> Rua das flores, 123</p>
-                </div>
+                    <div class="info-bloco">
+                        <p class="Pessoais"><strong>Contato</strong></p>
+                        <p><strong>Telefone:</strong> (XX) XXXXX-XXXX</p>
+                        <p><strong>Email:</strong> email@paciente.com</p>
+                        <p><strong>Endereço:</strong> Rua das flores, 123</p>
+                    </div>
 
-            </aside>
+                </aside>
+
+                <div class="sidebar-actions">
+                    {% if user.tipo_usuario == 'MEDICO' %}
+                        <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post">
+                            {% csrf_token %}
+
+                            {% if paciente.status == 'Aguardando' %}
+                                <button type="submit" class="btn btn-primary">Iniciar Atendimento</button>
+                            
+                            {% elif paciente.status == 'Em atendimento' %}
+                                <button type="submit" class="btn btn-success">Finalizar Atendimento</button>
+                            
+                            {% elif paciente.status == 'Concluido' %}
+                                <p class="text-muted">Atendimento finalizado.</p>
+                            {% endif %}
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+
 
             <section class="conteudo-prontuario">
 
@@ -111,11 +134,11 @@
                         </div>
                         <div class="vital-item-box vital-glicemia">
                             <label>Glicemia</label>
-                            <span class="valor">{{ paciente.glicemia }}</span>
+                            <span class="valor">{{ paciente.glicemia }} mg/dL</span>
                         </div>
                         <div class="vital-item-box vital-respiratoria">
                             <label>Freq. Respiratória</label>
-                            <span class="valor">{{ paciente.frequenciaRespiratoria }}</span>
+                            <span class="valor">{{ paciente.frequenciaRespiratoria }} rpm</span>
                         </div>
                         <div class="vital-item-box vital-dor">
                             <label>Dor</label>

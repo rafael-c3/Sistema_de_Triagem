@@ -1,42 +1,172 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Feedback</title>
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'front/css/feedback.css' %}?v=3">
 </head>
 <body>
-    <div class="container mt-4">
-    <h2>Feedback da Triagem para: {{ paciente.nome }}</h2>
-    <p>Classificação original do sistema: <strong>{{ paciente.get_classificacao_display }}</strong></p>
-    <hr>
+    <header>
+        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
+        <nav class="menu-links">
+            <a href="{% url 'hosp:index' %}">Home</a>
+            <!--<a href="{% url 'hosp:dashboard' %}">Dashboard</a>-->
+            {% if user.tipo_usuario != 'MEDICO' %}
+            <a href="{% url 'hosp:criar' %}">Triagem</a>
+            {% endif %}
+            <a href="{% url 'hosp:listar' %}">Pacientes</a>
+            <a href="{% url 'hosp:lista_feedback' %}">Feedbacks</a> 
+            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+                <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
+            {% endif %}
+        </nav>
+        <div class="entrar">
+            <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>
+        </div>
+    </header>
 
-    <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
-        <h4 style="margin-top: 0;">Resumo Clínico do Paciente</h4>
-        <p><strong>Queixa Principal:</strong> {{ paciente.queixa }}</p>
-        <p><strong>Início dos Sintomas:</strong> {{ paciente.inicio_sintomas|date:"d/m/Y" }}</p>
-        <p><strong>Sintomas Associados:</strong> {{ paciente.get_sintomas_associados_display }}</p>
-        
-        <h5 style="margin-top: 15px;">Sinais Vitais Registrados</h5>
-        <ul>
-            <li><strong>Temperatura:</strong> {{ paciente.temperatura }} °C</li>
-            <li><strong>Pressão Arterial:</strong> {{ paciente.pressao_arterial }} mmHg</li>
-            <li><strong>Pulso:</strong> {{ paciente.pulso }} bpm</li>
-            <li><strong>Frequencia Respiratória:</strong> {{ paciente.frequenciaRespiratoria }} bpm</li>
-            <li><strong>Saturação:</strong> {{ paciente.saturacao }}%</li>
-            <li><strong>Glicemia:</strong> {{ paciente.glicemia }} mg</li>
-            <li><strong>Nivel de dor:</strong> {{ paciente.dor }}</li>
-        </ul>
-    </div>
+    <main class="feedback-container">
+        <div class="feedback-header">
+            <a class="btn-voltar" href="javascript:history.back()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span>Voltar</span>
+            </a>
+            <h2 class="header-title">Feedback da Triagem</h2>
+        </div>
 
-    <h4>Avaliação do Profissional</h4>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+        <div class="feedback-grid">
+            <aside class="patient-summary-card">
+                <div class="summary-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <h3>{{ paciente.nome }}</h3>
+                </div>
 
-        <button type="submit" class="btn btn-primary">Enviar Feedback</button>
-        <a href="javascript:history.back()" class="btn btn-secondary mt-3">Cancelar</a>
-    </form>
-</div>
+                <p class="summary-id-cpf">ID: P-{{ paciente.id }} &bull; CPF: {{ paciente.cpf }}</p>
+
+                <div class="summary-item summary-item-bordered">
+                    <label>Classificação Original do Sistema</label>
+                    <span class="tag {{ paciente.classificacao|lower }}">
+                        {{ paciente.classificacao }} - {{ paciente.get_classificacao_display }}
+                    </span>
+                </div>
+                <div class="summary-item">
+                    <label>Data/Hora da Triagem</label>
+                    <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> {{ paciente.hora_chegada|date:"d/m/Y \- H:i" }}</span>
+                </div>
+                <div class="summary-item">
+                    <label>Responsavel pela Triagem</label>
+                    <span>Enf. {{ paciente.atendente.nome_completo }}</span>
+                </div>
+            </aside>
+
+            <div class="feedback-main-content">
+
+                <div class="card">
+                    <div class="card-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 12H16c-1.1-4.4-3.6-8-7-9.5M16 12a9 9 0 1 1-13 4.4M16 12v8c1.1 4.4 3.6 8 7 9.5M8 12a9 9 0 0 1 13-4.4M2.5 12H8c1.1 4.4 3.6 8 7 9.5M8 12V4c-1.1-4.4-3.6-8-7-9.5"></path></svg>
+                        <h4>Resumo Clínico do Paciente</h4>
+                    </div>
+                    <div class="clinical-summary-grid">
+                        <div><label>Queixa Principal</label><p>{{ paciente.queixa }}</p></div>
+                        <div><label>Início dos Sintomas</label><p>{{ paciente.inicio_sintomas|date:"d/m/Y" }}</p></div>
+                        <div><label>Sintomas Associados</label><p>{{ paciente.get_sintomas_associados_display }}</p></div>
+                        <div><label>Observações do Triador</label><p>{{ paciente.observacoes|default:"Nenhuma." }}</p> </div>
+                    </div>
+
+                    <h4 class="sinais-vitais-title">Sinais Vitais Registrados</h4>
+
+                    <div class="sinais-vitais-grid-feedback">
+
+                        <div class="vitais-main-grid">
+                            <div class="vital-item-box vital-pressao">
+                                <label>Pressão Arterial</label>
+                                <span class="valor">{{ paciente.pressao_arterial }}</span>
+                            </div>
+                            <div class="vital-item-box vital-pulso">
+                                <label>Pulso</label>
+                                <span class="valor">{{ paciente.pulso }} bpm</span>
+                            </div>
+                            <div class="vital-item-box vital-temperatura">
+                                <label>Temperatura</label>
+                                <span class="valor">{{ paciente.temperatura }} °C</span>
+                            </div>
+                            <div class="vital-item-box vital-saturacao">
+                                <label>Saturação O2</label>
+                                <span class="valor">{{ paciente.saturacao }}%</span>
+                            </div>
+                            <div class="vital-item-box vital-glicemia">
+                                <label>Glicemia</label>
+                                <span class="valor">{{ paciente.glicemia }} mg/dL</span>
+                            </div>
+                            <div class="vital-item-box vital-respiratoria">
+                                <label>Freq. Respiratória</label>
+                                <span class="valor">{{ paciente.frequenciaRespiratoria }} rpm</span>
+                            </div>
+                        </div>
+
+                        <div class="vital-item-box vital-item-dor-large vital-dor">
+                            <label>Dor</label>
+                            <span class="valor">{{ paciente.dor }}/10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h3v-2l3 3-3 3v-2z"></path><path d="M15 12v-2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2"></path><path d="M21 12h-2.5"></path><path d="M15 18h-2.5"></path><path d="M9 6v.01"></path></svg>
+                        <h4>Avaliação do Profissional</h4>
+                    </div>
+                    <p class="form-description">Forneça seu feedback sobre a classificação de triagem realizada pelo sistema</p>
+
+                    <form method="post" class="feedback-form">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label class="form-group-title">A classificação do sistema estava correta?</label>
+                            <div class="radio-group">
+                                {% for radio in form.triagem_correta %}
+                                <label for="{{ radio.id_for_label }}" class="radio-label">
+                                    {{ radio.tag }} 
+                                    <span class="custom-radio"></span>
+
+                                    {% if radio.choice_label == 'Sim, a classificação estava adequada.' %}
+                                        <span class="icon-avaliacao icon-sim">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        </span>
+                                    {% elif radio.choice_label == 'Não, a classificação estava inadequada.' %}
+                                        <span class="icon-avaliacao icon-nao">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        </span>
+                                    {% endif %}
+                                    <span class="radio-text">{{ radio.choice_label }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="classificacao-sugerida-group">
+                            <label for="{{ form.classificacao_correta.id_for_label }}" class="form-group-title">Qual classificação você sugeriria?</label>
+                            {{ form.classificacao_correta }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.motivo.id_for_label }}" class="form-group-title">Justificativa da Avaliação</label>
+                            {{ form.motivo }}
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="javascript:history.back()" class="btn-cancelar">Cancelar</a>
+                            <button type="submit" class="btn-submit-feedback">Enviar Feedback</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <script src="{% static 'front/js/feedback.js' %}?v=4"></script>
 </body>
 </html>

@@ -1,0 +1,381 @@
+.feedback-container{
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+
+}
+
+.feedback-header{
+    display: flex; 
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.btn-voltar{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;         /* Cor do texto (cinza escuro) */
+    text-decoration: none;
+}
+
+.btn-voltar:hover {
+    color: #0d6efd; /* Muda a cor para azul */
+}
+
+.header-title{
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.feedback-grid{
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+
+.feedback-main-content{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.patient-summary-card{
+    border: 1px solid #e5e7eb; 
+    border-radius: 12px; 
+    background-color: #fff; 
+    padding: 1.5rem;
+}
+
+.summary-header{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+   
+}
+
+.summary-header h3 { 
+    margin: 0; 
+    font-size: 1.2rem; 
+}
+
+.summary-id-cpf {
+    font-size: 0.9rem;
+    color: #6c757d;      /* Cor de texto cinza */
+    margin-top: 0.25rem;  /* Pequeno espaço abaixo do nome */
+    margin-bottom: 1rem; /* Espaço antes da próxima seção */
+    padding-bottom: 1rem; /* Espaço antes da linha */
+}
+
+.summary-item-bordered {
+    margin-bottom: 1rem; /* Espaço antes da próxima seção */
+    padding-bottom: 1rem; /* Espaço antes da linha */
+    border-bottom: 1px solid #f0f0f0; /* A linha separadora */
+}
+
+.patient-summary-card p { 
+    margin: 0.5rem 0; 
+    color: #666; 
+    font-size: 0.9rem; 
+}
+
+.patient-summary-card p strong { 
+    color: #333; 
+}
+
+.summary-item { 
+    margin-top: 1.5rem; 
+}
+
+.summary-item label { 
+    display: block; 
+    font-size: 0.8rem; 
+    color: #666; 
+    margin-bottom: 0.25rem; 
+}
+.summary-item span { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    font-weight: 600; 
+    font-size: 0.9rem; }
+.tag { 
+    display: inline-block; /* Faz o elemento se ajustar ao conteúdo */
+    width: fit-content;    /* Garante que a largura seja automática */
+    padding: 0.25rem 0.6rem; 
+    border-radius: 99px; 
+    font-size: 0.8rem; 
+    font-weight: 600; 
+}
+.tag.azul { 
+    color:#072997;
+    background-color: #cff4fc;
+}
+
+.tag.verde { 
+    color: #0f5132;
+    background-color: #94d4b8;
+}
+
+
+.tag.amarelo { 
+    color:#664d03;
+    background-color: #FFD700; 
+}
+
+.tag.laranja { 
+    color: #995b00;
+    background-color: #ffa600;
+}
+
+.tag.vermelho { 
+    color: #991b1b; 
+    background-color: #fee2e2;
+}
+.card{
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: #fff;
+    padding: 1.5rem 2rem;
+}
+
+.card-header-icon{
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.card-header-icon h4{
+    margin: 0;
+}
+
+.card-header-icon h4,
+.sinais-vitais-title {
+    font-size: 1.1rem;    /* Um pouco maior */
+    font-weight: 600;     /* Negrito (semi-bold) */
+    color: #343a40;      /* Cinza bem escuro */
+    letter-spacing: 0.5px; /* Leve espaçamento entre as letras */
+}
+
+.clinical-summary-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 1.5rem; 
+    margin-top: 1.5rem; 
+    padding-bottom: 1.5rem; 
+    border-bottom: 1px solid #f0f0f0; 
+}
+
+.clinical-summary-grid .full-width { 
+    grid-column: 1 / -1; 
+}
+
+.clinical-summary-grid label { 
+    font-size: 0.8rem; 
+    color: #666; 
+    margin-bottom: 0.25rem; 
+    display: block; 
+}
+
+.clinical-summary-grid p { 
+    margin: 0; 
+    font-weight: 600; 
+    overflow-wrap: break-word;
+}
+
+.sinais-vitais-title { 
+    margin: 1.5rem 0 1rem 0; 
+}
+
+
+.sinais-vitais-grid-feedback { 
+    display: flex; 
+    align-items: stretch; 
+    gap: 1rem; 
+}
+
+.vitais-main-grid{
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.vital-item-dor-large{
+    flex-basis: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.vital-item-box{
+    background-color: #f3f4f6; /* Fundo cinza claro padrão */
+    color: #4b5563;            /* Texto cinza escuro */
+    border-radius: 8px; 
+    padding: 1rem; 
+    text-align: center; 
+}
+
+.vital-item-box label{
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.vital-item-box .valor { 
+    display: block; 
+    font-size: 1.5rem; 
+    font-weight: 700; 
+    margin-bottom: 0.5rem; 
+}
+.vital-item-box .tag-status { 
+    display: inline-block; 
+    padding: 0.2rem 0.5rem; 
+    border-radius: 6px; 
+    font-size: 0.75rem; 
+    font-weight: 600;
+ }
+ 
+ .form-group{
+    margin-bottom: 2rem;
+ }
+.form-group-title{
+    display: block;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #343a40;
+    margin-bottom: 1rem;
+}
+.radio-group{
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.radio-label{
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.radio-label:hover{
+    background-color: #f9fafb;
+    border-color: #adb5bd;
+}
+
+.radio-label input[type="radio"] {
+    display: none;
+}
+
+.custom-radio{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #adb5bd;
+    border-radius: 50%;
+    margin-right: 0.75rem; /* Espaço entre a bolinha e o ícone */
+    transition: all 0.2s;
+}
+
+.custom-radio::after{
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    /* Ajuste para alinhar com a bolinha customizada */
+    left: calc(1rem + 12px); /* padding-left + metade da largura da bolinha */
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.2s;
+}
+
+.radio-label input[type="radio"]:checked ~ .custom-radio {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+.radio-label input[type="radio"]:checked ~ .custom-radio::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.radio-label input[type="radio"]:checked ~ .radio-text {
+    font-weight: 600;
+    color: #212529;
+}
+.icon-avaliacao{
+    margin-right: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.icon-sim { color: #198754; }
+.icon-nao { color: #dc3545; }
+
+.feedback-form select,
+.feedback-form textarea {
+    
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+.feedback-form select {
+    width: 100%; /* Select continua com 100% */
+}
+
+.feedback-form textarea {
+    width: 97.5%;
+    min-height: 80px;
+    resize: vertical;
+}
+.btn-submit-feedback { 
+    display: inline-block; 
+    background-color: #16a34a; 
+    color: white; 
+    padding: 0.8rem 1.5rem; 
+    border: 1px solid #16a34a;
+    border-radius: 8px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: background-color 0.2s; 
+}
+.btn-submit-feedback:hover { 
+    background-color: #15803d; 
+}
+.hidden {
+    display: none;
+}
+.btn-cancelar{
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #6c757d; /* Cinza */
+    background-color: transparent;
+    border: 1px solid #ced4da; /* Para manter o tamanho */
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+.btn-cancelar:hover {
+    background-color: #f8f9fa; /* Fundo cinza bem claro ao passar o mouse */
+    color: #212529;
+}
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Isso alinha os botões à direita */
+    align-items: center;       /* Isso alinha os botões verticalmente */
+    gap: 1rem;                 /* Isso adiciona um espaço entre os botões */
+}

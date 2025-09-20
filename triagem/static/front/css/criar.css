@@ -68,7 +68,7 @@ label {
   color: #333;
 }
 
-input, select, textarea {
+input:not([type="range"]), select, textarea {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
@@ -76,6 +76,7 @@ input, select, textarea {
   font-size: 1em;
   box-sizing: border-box;
   font-family: 'Segoe UI', sans-serif;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
 /*  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
 
@@ -164,8 +165,75 @@ textarea:focus {
 
 /* Define uma largura fixa para os campos de pressão, para não ficarem muito grandes */
 .pressao-container input {
-    width: 100px; /* Ajuste o valor se necessário */
+    width: 118px; /* Ajuste o valor se necessário */
     text-align: center;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* --- Estilização do trilho (a barra de fundo) --- */
+.pain-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px; /* Trilha um pouco mais grossa */
+    background: #e9ecef; /* Cor do trilho */
+    border-radius: 10px;
+    outline: none;
+    padding: 0;
+    border: none;
+}
+
+/* --- Estilização da bolinha (o seletor) --- */
+
+/* Para Chrome, Safari, Edge e Opera */
+.pain-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;  /* Bolinha maior */
+    height: 24px; /* Bolinha maior */
+    background: #0d6efd; /* Cor da bolinha (azul) */
+    border-radius: 50%;
+    border: 3px solid white; /* Borda branca para dar destaque */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Sombra suave para profundidade */
+    cursor: pointer;
+    margin-top: -7px; /* Ajuste para centralizar a bolinha na vertical */
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Para Firefox */
+.pain-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: #0d6efd;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+/* --- Efeitos de Hover (passar o mouse) --- */
+
+.pain-slider:hover::-webkit-slider-thumb {
+    transform: scale(1.1); /* Aumenta um pouco a bolinha */
+}
+
+.pain-slider:hover::-moz-range-thumb {
+    transform: scale(1.1);
+}
+
+
+/* Estilo para o texto que mostra o valor (pode manter o anterior) */
+.pain-value-display {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #495057;
+    min-width: 50px;
+    text-align: right;
 }
 
 

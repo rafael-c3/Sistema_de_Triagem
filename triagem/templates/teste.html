@@ -1,32 +1,39 @@
-<div class="sinais-vitais-grid-boxed">
-    
-    <div class="vital-item-box vital-pressao">
-        <label>Pressão Arterial</label>
-        <span class="valor">{{ paciente.pressao_arterial }}</span>
-    </div>
-    <div class="vital-item-box vital-pulso">
-        <label>Pulso</label>
-        <span class="valor">{{ paciente.pulso }} bpm</span>
-    </div>
-    <div class="vital-item-box vital-temperatura">
-        <label>Temperatura</label>
-        <span class="valor">{{ paciente.temperatura }} °C</span>
-    </div>
-    <div class="vital-item-box vital-saturacao">
-        <label>Saturação O2</label>
-        <span class="valor">{{ paciente.saturacao }}%</span>
-    </div>
-    <div class="vital-item-box vital-glicemia">
-        <label>Glicemia</label>
-        <span class="valor">{{ paciente.glicemia }}</span>
-    </div>
-    <div class="vital-item-box vital-respiratoria">
-        <label>Freq. Respiratória</label>
-        <span class="valor">{{ paciente.frequenciaRespiratoria }}</span>
-    </div>
-    <div class="vital-item-box vital-dor">
-        <label>Dor</label>
-        <span class="valor">{{ paciente.dor }}/10</span>
-    </div>
+<div class="form-group" id="classificacao-sugerida-group">
+    <label for="id_classificacao_correta" class="form-group-title">Qual classificação você sugeriria?</label>
 
+    <div class="custom-select-wrapper">
+        
+        <select name="classificacao_correta" id="id_classificacao_correta" style="display: none;">
+            <option value="" selected>Selecione a classificação</option>
+            <option value="VERMELHO">Vermelho - Emergência</option>
+            <option value="LARANJA">Laranja - Muito Urgente</option>
+            <option value="AMARELO">Amarelo - Urgente</option>
+            <option value="VERDE">Verde - Pouco Urgente</option>
+            <option value="AZUL">Azul - Não Urgente</option>
+        </select>
+
+        <div class="custom-select">
+            <div class="custom-select__trigger">
+                <span>Selecione a classificação</span>
+                <div class="arrow"></div>
+            </div>
+            <div class="custom-options">
+                <div class="custom-option" data-value="VERMELHO">
+                    <span class="color-dot vermelho"></span>Vermelho - Emergência
+                </div>
+                <div class="custom-option" data-value="LARANJA">
+                    <span class="color-dot laranja"></span>Laranja - Muito Urgente
+                </div>
+                <div class="custom-option" data-value="AMARELO">
+                    <span class="color-dot amarelo"></span>Amarelo - Urgente
+                </div>
+                <div class="custom-option" data-value="VERDE">
+                    <span class="color-dot verde"></span>Verde - Pouco Urgente
+                </div>
+                <div class="custom-option" data-value="AZUL">
+                    <span class="color-dot azul"></span>Azul - Não Urgente
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
