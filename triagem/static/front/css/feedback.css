@@ -45,6 +45,41 @@
     gap: 2rem;
 }
 
+.coluna-paciente {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Cria um espaço de 16px entre o card e o botão */
+}
+
+
+.btn-prontuario {
+    display: inline-flex; /* Essencial para alinhar o ícone e o texto */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Espaçamento entre o ícone e o texto */
+
+    width: 100%;
+    background-color: #fff; /* Fundo branco */
+    color: #495057; /* Texto cinza escuro */
+    border: 1px solid #ced4da; /* Borda cinza claro */
+
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    /* margin-top: 1.5rem; /* <-- REMOVA OU COMENTE ESTA LINHA */
+}
+
+.btn-prontuario:hover {
+    background-color: #f8f9fa; /* Fundo levemente acinzentado ao passar o mouse */
+    color: #212529; /* Texto fica um pouco mais escuro */
+    border-color: #adb5bd; /* Borda fica um pouco mais escura */
+}
+
 .patient-summary-card{
     border: 1px solid #e5e7eb; 
     border-radius: 12px; 

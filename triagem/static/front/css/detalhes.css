@@ -158,6 +158,29 @@ body{
     box-sizing: border-box;
 }
 
+/* Estilo para o botão "Dar Feedback" na tela de prontuário */
+.btn-feedback {
+    display: block; /* Para ocupar a largura inteira */
+    width: 100%;
+    text-decoration: none;
+    background-color: #0d6efd; /* Cor azul primária, padrão de "ação" */
+    color: #fff; /* Texto branco */
+    text-align: center;
+    padding: 0.8rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    margin-top: 0.75rem; /* Espaçamento para separar do botão/texto de cima */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+}
+
+.btn-feedback:hover {
+    background-color: #0b5ed7; /* Tom de azul um pouco mais escuro ao passar o mouse */
+}
+
 .info-paciente-principal{
     
     

@@ -7,13 +7,14 @@ body {
 }
 
 header {
-    background-color: #2f80ed;
+ /* background-color: #2f80ed; */
     color: white;
     padding: 1rem 2rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    position:relative;
+    background-color: #3498db;
+    
 }
 header a {
   text-decoration: none;  
@@ -51,6 +52,88 @@ main {
 .menu-links a:hover{
     opacity: 0.8;
 }
+
+
+.user-profile{
+    position: relative;
+    display: inline-block;
+}
+
+.avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color:  #3498db;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.avatar:hover {
+    background-color: #2980b9; /* Cor um pouco mais escura ao passar o mouse */
+}
+
+.dropdown-menu {
+    display: none; /* Começa escondido */
+    position: absolute;
+    top: 50px; /* Distância do avatar */
+    right: 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    width: 220px;
+    z-index: 1000;
+    border: 1px solid #f0f0f0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.dropdown-header strong {
+    display: block;
+    font-size: 0.95em;
+    color: #333;
+}
+.dropdown-header span {
+    font-size: 0.8em;
+    color: #777;
+}
+
+
+/* Itens do menu (links e botão) */
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    text-align: left;
+    color: #333;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    font-size: 0.9em;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+
+
+/* Estilo específico para o botão de "Sair" parecer um link */
+.logout-button {
+    cursor: pointer;
+}
+
 
 .entrar {
     grid-column: 3;

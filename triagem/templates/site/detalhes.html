@@ -96,6 +96,10 @@
                             {% endif %}
                         </form>
                     {% endif %}
+
+                    {% if paciente.status != 'Aguardando' %}
+                        <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn-feedback">Dar Feedback</a>
+                    {% endif %}
                 </div>
             </div>
 
