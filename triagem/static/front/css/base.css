@@ -21,9 +21,6 @@ header a {
   color: inherit;         
 }
 
-
-
-
 header h1 {
     margin: 0;
     font-size: 1.5rem;
@@ -109,7 +106,6 @@ main {
     color: #777;
 }
 
-
 /* Itens do menu (links e botão) */
 .dropdown-item {
     display: block;
@@ -127,13 +123,10 @@ main {
     background-color: #f8f9fa;
 }
 
-
-
 /* Estilo específico para o botão de "Sair" parecer um link */
 .logout-button {
     cursor: pointer;
 }
-
 
 .entrar {
     grid-column: 3;
@@ -155,9 +148,6 @@ main {
     background-color: #dbe9ff;
     color: #1a5dcc;
 }
-
-
-
 
 footer {
     text-align: center;

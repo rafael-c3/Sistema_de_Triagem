@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html{
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #f4f7f6;
+    cursor: default;
+    
+}
+
+.login-container{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to right, #0d47a1, #06204a);
+    
+    
+}
+
+
+.left-panel{
+    flex: 45%;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.panel-content{
+    max-width: 450px;
+    text-align: left;
+}
+
+.panel-content h2{
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.panel-content p{
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+}
+
+.features-list{
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.features-list li{
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.features-list .fa-check-circle{
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.footer-credit{
+    position: absolute;
+    bottom: 20px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.right-panel{
+    flex: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.form-container{
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff;
+    padding: 40px;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+}
+
+.form-container h2{
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+}
+
+.form-container .subtitle{
+    color: #6c757d;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.form-container h2{
+    text-align: center;
+}
+
+.form-group{
+    margin-bottom: 20px;
+}
+
+.form-group label{
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #495057;
+}
+
+input.form-control,
+input[type="text"], 
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input.form-control:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: #425cb1;
+    box-shadow: 0 0 0 3px rgba(40, 127, 167, 0.2);
+}
+
+.form-options{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+.remember-me{
+    display: flex;
+    align-items: center;
+}
+
+.remember-me input[type="checkbox"]{
+    margin-right: 8px;
+}
+
+.form-options a{
+    color: #007bff;
+    text-decoration: none;
+}
+
+.form-options a:hover{
+    text-decoration: underline;
+}
+
+.btn-login{
+    width: 100%;
+    padding: 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #218838;
+}
+
+.divider{
+    text-align: center;
+    margin: 25px 0;
+    color: #adb5bd;
+    display: flex;
+    align-items: center;
+}
+
+.divider::before, .divider::after{
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.divider:not(:empty)::before{
+    margin-right: .25em;
+}
+
+.divider:not(:empty)::after{
+    margin-left: .25em;
+}
+
+.text-center{
+    text-align: center;
+    color: #6c757d;
+}
+
+.text-center a{
+    color: #007bff;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.info-box{
+    display: flex;
+    align-items: flex-start;
+    background-color: #e9f7ff;
+    border: 1px solid #bce0fd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 25px;
+}
+
+
+.support-text{
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.support-text a{
+    color: #007bff;
+    text-decoration: none;
+}
+
+
+.alert-danger{
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.error-text {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}

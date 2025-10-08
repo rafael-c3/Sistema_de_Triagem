@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import admin_required, medico_required, atendente_required
 from django.contrib import messages
 from django.utils import timezone
-from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField
+from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField, Count
 from django.urls import reverse
 import datetime
 
@@ -307,11 +307,45 @@ def feedback_view(request, pk):
 
 @login_required
 def lista_feedback_view(request):
-    # Busca todos os feedbacks, ordenados do mais recente para o mais antigo
-    todos_os_feedbacks = FeedbackTriagem.objects.all().order_by('-data_criacao')
+    # Otimizamos a consulta E adicionamos a contagem de feedbacks por paciente
+    todos_os_feedbacks = FeedbackTriagem.objects.select_related('paciente', 'usuario') \
+        .annotate(
+            total_feedbacks_paciente=Count('paciente__feedbacktriagem')
+        ) \
+        .order_by('-data_criacao')
+    
+    total_feedbacks = todos_os_feedbacks.count()
+    
+    # Filtramos a lista que já temos em memória, sem precisar ir ao banco de novo
+    classificacoes_corretas = todos_os_feedbacks.filter(triagem_correta=True).count()
+    classificacoes_incorretas = total_feedbacks - classificacoes_corretas
+    
+    # Lógica para evitar divisão por zero se não houver feedbacks
+    if total_feedbacks > 0:
+        percentual_corretas = (classificacoes_corretas / total_feedbacks) * 100
+        percentual_incorretas = (classificacoes_incorretas / total_feedbacks) * 100
+    else:
+        percentual_corretas = 0
+        percentual_incorretas = 0
+    
     context = {
-        'feedbacks': todos_os_feedbacks
+        'feedbacks': todos_os_feedbacks,
+        
+        # ADICIONADO: Enviando a lista de opções de classificação para o template
+        'classificacao_choices': Paciente.Risco,
+        
+        # ADICIONADO: Enviando a lista de tipos de usuário para o template
+        'tipo_usuario_choices': CustomUser.TipoUsuario.choices,
+
+        # ADICIONADO: Enviando os novos valores calculados para o template
+        'total_feedbacks': total_feedbacks,
+        'classificacoes_corretas': classificacoes_corretas,
+        'classificacoes_incorretas': classificacoes_incorretas,
+        'percentual_corretas': percentual_corretas,
+        'percentual_incorretas': percentual_incorretas,
     }
+    
+    # Verifique se o nome do seu template é 'lista_feedback.html' ou outro
     return render(request, 'site/lista_feedback.html', context)
 
 @login_required

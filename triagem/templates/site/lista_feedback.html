@@ -1,49 +1,218 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Relatorio de feedbacks</title>
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'front/css/lista_feedback.css' %}?v=2">
 </head>
 <body>
-    <div class="container mt-4">
-    <h2>Relatório de Feedbacks da Triagem</h2>
-    <p>Lista de todas as avaliações feitas pelos profissionais sobre o desempenho do sistema.</p>
+    <header>
+        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
+        <nav class="menu-links">
+            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
+            <!-- <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a> -->
+            {% if user.tipo_usuario != 'MEDICO' %}
+                <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
+            {% endif %}
+            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
+            <a href="{% url 'hosp:lista_feedback' %}"><p>Feedbacks</p></a>
+            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+                <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
+            {% endif %}
+        </nav>
+        <div class="user-profile">
+            <div class="avatar" id="avatar-button">
+                <span id="user-initials"></span>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu">
+                <div class="dropdown-header">
+                    <strong>{{ user.nome_completo|default:user.username }}</strong>
+                    <span>{{ user.get_tipo_usuario_display }}</span>
+                </div>
+                <a href="{% url 'hosp:perfil' %}" class="dropdown-item">Meu Perfil</a>
+                <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item logout-button">Sair </button>
+                </form>
+            </div>
+        </div>
+        <input type="hidden" id="user-full-name" value="{{ user.nome_completo|default:user.username }}">
+    </header>
 
-    <table class="table table-striped mt-4">
-        <thead>
-            <tr>
-                <th>ID Paciente</th>
-                <th>Nome do Paciente</th>
-                <th>Classificação Original</th>
-                <th>Avaliação do Profissional</th>
-                <th>Avaliador</th>
-                <th>Tipo de Usuário</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for fb in feedbacks %}
-            <tr>
-                <td>{{ fb.paciente.id }}</td>
-                <td><a href="{% url 'hosp:mostrar' pk=fb.paciente.pk %}">{{ fb.paciente.nome }}</a></td>
-                <td>{{ fb.paciente.get_classificacao_display }}</td>
-                <td>
-                    {% if fb.triagem_correta %}
-                        <span class="text-success">Correta</span>
-                    {% else %}
-                        <span class="text-danger">Incorreta (Sugerido: {{ fb.get_classificacao_correta_display }})</span>
-                    {% endif %}
-                </td>
-                <td>{{ fb.usuario.nome_completo }}</td>
-                <td>{{ fb.usuario.get_tipo_usuario_display }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6" class="text-center">Nenhum feedback foi registrado ainda.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <main class="feedback-container">
+        <div class="feedback-header">
+            <div>
+                <h2>Relatório de Feedbacks da Triagem</h2>
+                <p>Lista de todas as avaliações feitas pelos profissionais sobre o desempenho do sistema.</p>
+            </div>
+            <button class="btn btn-export">Exportar Relatório</button>
+        </div>
+
+        <div class="card filter-card">
+            <h4>Filtros</h4>
+            <p>Filtre os feedbacks por diferentes critérios</p>
+            <div class="filter-form"> 
+                <input type="text" id="paciente-search" placeholder="Buscar por paciente...">
+                <select id="classificacao-filter">
+                    <option value="">Classificação Original</option>
+                    {% for value, display in classificacao_choices %}
+                        <option value="{{ display|slugify }}">{{ display }}</option>
+                    {% endfor %}
+                </select>
+
+                <select id="avaliacao-filter">
+                    <option value="">Avaliação</option>
+                    <option value="correta">Correta</option>
+                    <option value="incorreta">Incorreta</option>
+                </select>
+
+                <select id="tipo-usuario-filter">
+                    <option value="">Tipo de Usuário</option>
+                    {% for value, display in tipo_usuario_choices %}
+                        <option value="{{ value|slugify }}">{{ display }}</option>
+                    {% endfor %}
+                </select>
+
+                <button id="clear-filters-btn" class="btn btn-secondary">Limpar</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="card stat-card">
+                <span>Total de Feedbacks</span>
+                <strong>{{ total_feedbacks }}</strong>
+            </div>
+            <div class="card stat-card">
+                <span>Classificações Corretas</span>
+                <strong>{{ classificacoes_corretas }}</strong>
+                <small>{{ percentual_corretas|floatformat:0 }}% do total</small>
+            </div>
+            <div class="card stat-card">
+                <span>Classificações Incorretas</span>
+                <strong>{{ classificacoes_incorretas }}</strong>
+                <small>{{ percentual_incorretas|floatformat:0 }}% do total</small>
+            </div>
+            <div class="card stat-card">
+                <span>Taxa de Acerto</span>
+                <strong class="text-blue">50%</strong>
+                <small>Precisão do sistema</small>
+            </div>
+        </div>
+
+        <div class="card list-card">
+            <h4>Lista de Feedbacks</h4>
+            <p>Avaliações detalhadas dos profissionais sobre as classificações de triagem.</p>
+            <table class="feedback-table">
+                <thead>
+                    
+                    <tr>
+                        
+                        <th>ID</th>
+                        <th>Nome do Paciente</th>
+                        <th>Classificação Original</th>
+                        <th>Avaliação do Profissional</th>
+                        <th>Avaliador</th>
+                        <th>Tipo de Usuário</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+
+                    </tr>
+                </thead>
+                <tbody id="feedback-tbody">
+                    <tr id="no-results-row" style="display: none;">
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: #6c757d;">
+                            Nenhum feedback encontrado para os filtros selecionados.
+                        </td>
+                    </tr>
+
+                    {% for fb in feedbacks %}
+                    <tr
+                        data-paciente="{{ fb.paciente.nome|lower }}"
+                        data-classificacao="{{ fb.paciente.get_classificacao_display|slugify }}"
+                        data-avaliacao="{% if fb.triagem_correta %}correta{% else %}incorreta{% endif %}"
+                        data-tipo-usuario="{{ fb.usuario.get_tipo_usuario_display|slugify }}">
+
+                        <td>{{ fb.paciente.id }}</td>
+                        <td><a href="{% url 'hosp:mostrar' pk=fb.paciente.pk %}">{{ fb.paciente.nome }}</a></td>
+                        <td>
+                            <span class="tag tag-{{ fb.paciente.get_classificacao_display|slugify }}">{{ fb.paciente.get_classificacao_display }}</span>
+                        </td>
+                        <td>
+                            {% if fb.triagem_correta %}
+                                <span class="avaliacao-correta">✔ Correta</span>
+                            {% else %}
+                                <span class="avaliacao-incorreta">✖ Incorreta
+                                    <small>Sugerido: {{ fb.get_classificacao_correta_display }}</small>
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>{{ fb.usuario.nome_completo }}</td>
+                        <td><span class="tag-user">{{ fb.usuario.get_tipo_usuario_display }}</span></td>
+                        <td>{{ fb.data_criacao|date:"d/m/Y" }}</td>
+
+                        <td>
+                            <button class="btn-ver" 
+                                    data-paciente-nome="{{ fb.paciente.nome }}"
+                                    data-queixa-principal="{{ fb.paciente.queixa }}"
+                                    data-avaliador-nome="{{ fb.usuario.nome_completo }}"
+                                    data-data="{{ fb.data_criacao|date:'d/m/Y H:i' }}"
+                                    data-classificacao-original="{{ fb.paciente.get_classificacao_display }}"
+                                    data-triagem-correta="{{ fb.triagem_correta|yesno:'Correta,Incorreta' }}"
+                                    data-classificacao-sugerida="{{ fb.get_classificacao_correta_display }}"
+                                    data-motivo="{{ fb.motivo|default:'Nenhuma justificativa fornecida.' }}"
+                                    data-feedback-count="{{ fb.total_feedbacks_paciente }}"
+                                    data-classificacao-slug="{{ fb.paciente.get_classificacao_display|slugify }}">
+                                Ver
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align: center;">Nenhum feedback foi registrado ainda.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="feedback-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal-btn" class="close-button">&times;</button>
+            <h3>Detalhes do feedback</h3>
+
+            <div class="modal-grid">
+                <div class="modal-col">
+                    <h4>Resumo do Paciente</h4>
+                    <div class="modal-details">
+                        <p><strong>Paciente:</strong> <span id="modal-paciente"></span></p>
+                        <p><strong>Total de Feedbacks do Paciente:</strong> <span id="modal-feedback-count"></span></p>
+                        <p><strong>Queixa Principal:</strong> <span id="modal-queixa"></span></p>
+                        <p><strong>Classificação Original (Sistema):</strong> <span id="modal-classificacao-original"></span></p>
+                    </div>
+                </div>
+
+                <div class="modal-col">
+                    <h4>Avaliação do Profissional</h4>
+                    <div class="modal-details">
+                        <p><strong>Avaliador:</strong> <span id="modal-avaliador"></span></p>
+                        <p><strong>Data:</strong> <span id="modal-data"></span></p>
+                        <p><strong>Avaliação:</strong> <span id="modal-avaliacao" class="tag-avaliacao"></span></p>
+                        <div id="detalhe-incorreto" class="hidden">
+                            <p><strong>Classificação Sugerida:</strong> <span id="modal-classificacao-sugerida"></span></p>
+                            <p><strong>Justificativa:</strong> <span id="modal-motivo" class="motivo-box"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     
+    <script src="{% static 'front/js/base.js' %}?v=4"></script>
+    <script src="{% static 'front/js/lista_feedback.js' %}?v=4"></script>
 </body>
 </html>

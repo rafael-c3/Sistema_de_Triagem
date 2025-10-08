@@ -1,39 +1,92 @@
-<div class="form-group" id="classificacao-sugerida-group">
-    <label for="id_classificacao_correta" class="form-group-title">Qual classificação você sugeriria?</label>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Triagem</title>
+    
+    <link rel="stylesheet" href="{% static 'front/css/login.css' %}?v=4">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
 
-    <div class="custom-select-wrapper">
-        
-        <select name="classificacao_correta" id="id_classificacao_correta" style="display: none;">
-            <option value="" selected>Selecione a classificação</option>
-            <option value="VERMELHO">Vermelho - Emergência</option>
-            <option value="LARANJA">Laranja - Muito Urgente</option>
-            <option value="AMARELO">Amarelo - Urgente</option>
-            <option value="VERDE">Verde - Pouco Urgente</option>
-            <option value="AZUL">Azul - Não Urgente</option>
-        </select>
+    <div class="login-container">
+        <div class="left-panel">
+            <div class="panel-content">
+                <h2>Sistema de Gestão de Triagem Hospitalar</h2>
+                <p>Otimize o atendimento e garanta a melhor assistência aos pacientes com nossa plataforma.</p>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Gestão de Pacientes</li>
+                    <li><i class="fas fa-check-circle"></i> Triagem Inteligente</li>
+                    <li><i class="fas fa-check-circle"></i> Atendimento em Tempo Real</li>
+                    <li><i class="fas fa-check-circle"></i> Métricas e Analytics</li>
+                    <li><i class="fas fa-check-circle"></i> Otimização do Sistema</li>
+                </ul>
 
-        <div class="custom-select">
-            <div class="custom-select__trigger">
-                <span>Selecione a classificação</span>
-                <div class="arrow"></div>
-            </div>
-            <div class="custom-options">
-                <div class="custom-option" data-value="VERMELHO">
-                    <span class="color-dot vermelho"></span>Vermelho - Emergência
-                </div>
-                <div class="custom-option" data-value="LARANJA">
-                    <span class="color-dot laranja"></span>Laranja - Muito Urgente
-                </div>
-                <div class="custom-option" data-value="AMARELO">
-                    <span class="color-dot amarelo"></span>Amarelo - Urgente
-                </div>
-                <div class="custom-option" data-value="VERDE">
-                    <span class="color-dot verde"></span>Verde - Pouco Urgente
-                </div>
-                <div class="custom-option" data-value="AZUL">
-                    <span class="color-dot azul"></span>Azul - Não Urgente
+                <div class="footer-credit">
+                    <p>Desenvolvido por José Vieira e Rafael Lucas</p>
                 </div>
             </div>
         </div>
+
+        <div class="right-panel">
+            <div class="form-container">
+                <h2>Bem-vindo de volta</h2>
+                <p class="subtitle">Entre com suas credenciais para acessar o sistema</p>
+
+                {% if form.non_field_errors %}
+                    <div class="alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ form.username.id_for_label }}">Nome de Usuário</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="error-text">{{ form.username.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.password.id_for_label }}">Senha</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                             <div class="error-text">{{ form.password.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Lembrar-me</label>
+                        </div>
+                        <a href="#">Esqueceu a senha?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-login">Entrar</button>
+                </form>
+
+                <div class="divider">ou</div>
+
+                <p class="text-center">
+                    Não tem uma conta? <a href="{% url 'hosp:registro' %}">Crie uma aqui</a>
+                </p>
+
+                <p class="support-text">
+                    Precisa de ajuda? Entre em contato com o suporte técnico <a href="mailto:suporte@medtriagem.com.br">suporte@medtriagem.com.br</a>
+                </p>
+            </div>
+        </div>
     </div>
-</div>
+
+</body>
+</html>
