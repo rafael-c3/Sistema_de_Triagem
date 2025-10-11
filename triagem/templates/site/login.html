@@ -1,91 +1,59 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistema de Triagem</title>
+{% extends 'site/loginBase.html' %}
 
-    <link rel="stylesheet" href="{% static 'front/css/login.css' %}?v=3">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-</head>
-<body>
+{% block body_class %}page-login{% endblock %}
 
-    <div class="login-container">
-        <div class="left-panel">
-            <div class="panel-content">
-                <h2>Sistema de Gestão de Triagem Hospitalar</h2>
-                <p>Otimize o atendimento e garanta a melhor assistência aos pacientes com nossa plataforma.</p>
-                
-                <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> Gestão de Pacientes</li>
-                    <li><i class="fas fa-check-circle"></i> Triagem Inteligente</li>
-                    <li><i class="fas fa-check-circle"></i> Atendimento em tempo real</li>
-                    <li><i class="fas fa-check-circle"></i> Métricas e Analytics</li>
-                    <li><i class="fas fa-check-circle"></i> Otimização do Sistema</li>
+{% block title %}Login{% endblock %}
 
-                </ul>
+{% block form_content %}
+<div class="form-container">
+    <h2>Bem-vindo de volta</h2>
+    <p class="subtitle">Entre com suas credenciais para acessar o sistema</p>
 
-                <div class="footer-credit">
-                    <p> Desenvolvido por José Vieira e Rafael Lucas</p>
-                </div>
-            </div>
+    {% if form.non_field_errors %}
+        <div class="alert-danger">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Nome de Usuário</label>
+            {{ form.username }}
+            {% if form.username.errors %}<div class="error-text">{{ form.username.errors.as_text }}</div>{% endif %}
         </div>
 
-        <div class="right-panel">
-            <div class="form-container">
-                <h2>Bem-vindo de volta</h2>
-                <p class="subtitle">Entre com suas credenciais para acessar o sistema</p>
-
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {% for error in form.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                <form method="POST">
-                    {% csrf_token %}
-
-                    <div class="form-group">
-                        <label for="{{ form.username.id_for_label }}">Nome de Usuário</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}
-                            <div class="error-text">{{ form.username.errors.as_text }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.password.id_for_label }}">Senha</label>
-                        {{ form.password }}
-                        {% if form.password.errors %}
-                             <div class="error-text">{{ form.password.errors.as_text }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-options">
-                        <div class="remember-me">
-                            <input type="checkbox" id="remember">
-                            <label for="remember">Lembrar-me</label>
-                        </div>
-                        <a href="#">Esqueceu a senha?</a>
-                    </div>
-
-                    <button type="submit" class="btn-login">Entrar</button>
-                </form>
-
-               <div class="divider">ou</div>
-               
-               <p class="text-center">
-                    Não tem uma conta? <a href="{% url 'hosp:registro' %}">Crie uma aqui</a>
-               </p>
-
-               <p class="support-text">
-                    Precisa de ajuda? Entre em contato com o suporte técnico <a href="mailto:suporte@medtriagem.com.br">suporte@medtriagem.com.br</a>
-               </p>
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Senha</label>
+            {{ form.password }}
+            {% if form.password.errors %}<div class="error-text">{{ form.password.errors.as_text }}</div>{% endif %}
+        </div>
+        
+        <div class="form-options">
+            <div class="remember-me">
+                <input type="checkbox" id="remember">
+                <label for="remember">Lembrar-me</label>
             </div>
-        </div>         
-    </div>  
-</body>
-</html>
+            <a href="#">Esqueceu a senha?</a>
+        </div>
+        
+        <button type="submit" class="btn-login">Entrar</button>
+    </form>
+
+    <div class="divider">ou</div>
+
+    <p class="text-center">
+        Não tem uma conta? <a href="{% url 'hosp:registro' %}">Crie uma aqui</a> 
+    </p>
+
+    <p class="support-text">
+        Precisa de ajuda? Entre em contato com o suporte técnico <a href="mailto:suporte@medtriagem.com.br">suporte@medtriagem.com.br</a>
+    </p>
+
+
+
+</div>
+{% endblock %}

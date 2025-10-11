@@ -353,24 +353,66 @@ def lista_feedback_view(request):
 def gestao_view(request):
     hoje = timezone.now().date()
 
-    # 1. Dados dos Pacientes
-    todos_pacientes = Paciente.objects.all().order_by('-id')
-    pacientes_hoje = todos_pacientes.filter(hora_chegada__date=hoje).count()
-
-    # 2. Dados dos Médicos
+    # --- Lógica de Estatísticas de Pacientes (já feita) ---
+    total_pacientes = Paciente.objects.count()
+    pacientes_hoje_count = Paciente.objects.filter(hora_chegada__date=hoje).count()
+    inicio_semana = hoje - datetime.timedelta(days=hoje.weekday())
+    pacientes_esta_semana = Paciente.objects.filter(hora_chegada__date__gte=inicio_semana).count()
+    
+    # --- Lógica para Profissionais (já feita) ---
+    todos_pacientes_para_tabela = Paciente.objects.all().order_by('-id')
     todos_medicos = CustomUser.objects.filter(tipo_usuario='MEDICO').order_by('nome_completo')
     total_medicos = todos_medicos.count()
-
-    # 3. Dados dos Atendentes
+    todos_enfermeiros = CustomUser.objects.filter(tipo_usuario='ENFERMEIRO').order_by('nome_completo')
+    total_enfermeiros = todos_enfermeiros.count()
     todos_atendentes = CustomUser.objects.filter(tipo_usuario='ATENDENTE').order_by('nome_completo')
     total_atendentes = todos_atendentes.count()
     
+    # =========================================================
+    #  NOVO: LÓGICA PARA ATIVIDADE RECENTE
+    # =========================================================
+    # 1. Novos usuários nos últimos 7 dias
+    data_inicio_ultimos_7_dias = hoje - datetime.timedelta(days=7)
+    novos_usuarios_7_dias = CustomUser.objects.filter(date_joined__date__gte=data_inicio_ultimos_7_dias).count()
+
+    # 2. Novos usuários no período anterior (de 14 a 8 dias atrás)
+    data_fim_periodo_anterior = data_inicio_ultimos_7_dias
+    data_inicio_periodo_anterior = hoje - datetime.timedelta(days=14)
+    novos_usuarios_periodo_anterior = CustomUser.objects.filter(
+        date_joined__date__gte=data_inicio_periodo_anterior,
+        date_joined__date__lt=data_fim_periodo_anterior
+    ).count()
+
+    # 3. Cálculo da Taxa de Crescimento
+    taxa_crescimento = 0
+    if novos_usuarios_periodo_anterior > 0:
+        # Fórmula padrão de variação percentual
+        taxa_crescimento = ((novos_usuarios_7_dias - novos_usuarios_periodo_anterior) / novos_usuarios_periodo_anterior) * 100
+    elif novos_usuarios_7_dias > 0:
+        # Se o período anterior foi 0 e o atual não, o crescimento é total
+        taxa_crescimento = 100
+
+    # Formatando para exibição (ex: "+15%" ou "-5%")
+    taxa_crescimento_formatada = f"{'+' if taxa_crescimento >= 0 else ''}{taxa_crescimento:.0f}%"
+
+    # --- Contexto Final para o Template ---
     context = {
-        'pacientes': todos_pacientes,
-        'pacientes_hoje': pacientes_hoje,
+        # ... (todas as suas outras variáveis de contexto) ...
+        'pacientes': todos_pacientes_para_tabela,
         'medicos': todos_medicos,
-        'total_medicos': total_medicos,
+        'enfermeiros': todos_enfermeiros,
         'atendentes': todos_atendentes,
+        'total_pacientes_hoje': pacientes_hoje_count,
+        'pacientes_esta_semana': pacientes_esta_semana,
+        'total_pacientes': total_pacientes,
+        'total_medicos': total_medicos,
+        'total_enfermeiros': total_enfermeiros,
         'total_atendentes': total_atendentes,
+
+        # Novas variáveis para Atividade Recente
+        'novos_usuarios_7_dias': novos_usuarios_7_dias,
+        'taxa_crescimento': taxa_crescimento, # Valor numérico para lógica no template
+        'taxa_crescimento_formatada': taxa_crescimento_formatada, # Valor formatado para exibição
     }
+    
     return render(request, 'site/gestao.html', context)

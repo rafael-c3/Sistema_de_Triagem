@@ -65,9 +65,39 @@ class PacienteForm(forms.ModelForm):
         }
     
 class CustomUserCreationForm(UserCreationForm):
+
+    terms_agreement = forms.BooleanField(
+        required=True,
+        label="Eu li e concordo com os Termos de Uso e Política de Privacidade"
+    )
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ('username', 'nome_completo', 'email', 'cpf', 'tipo_usuario', 'registro_profissional', 'especializacao')
+
+        # === ESTA É A PARTE CRUCIAL QUE FALTAVA ===
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Digite seu nome de usuário'}),
+            'nome_completo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Digite seu nome completo'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'seu@email.com'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '000.000.000-00'}),
+            'tipo_usuario': forms.Select(attrs={'class': 'form-control'}),
+            'registro_profissional': forms.TextInput(attrs={'class': 'form-control'}),
+            'especializacao': forms.TextInput(attrs={'class': 'form-control'}),
+            'password1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Digite sua senha'}),
+            'password2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirme sua senha'}),
+        }
+        # === FIM DA PARTE QUE FALTAVA ===
+
+        # Também é bom definir os labels aqui para garantir consistência
+        labels = {
+            'username': 'Nome de Usuário *',
+            'nome_completo': 'Nome Completo *',
+            'email': 'Email *',
+            'cpf': 'CPF *',
+            'tipo_usuario': 'Tipo de Usuário *',
+            'password1': 'Senha *',
+            'password2': 'Confirmar Senha *',
+        }
 
     def clean(self):
         cleaned_data = super().clean()
