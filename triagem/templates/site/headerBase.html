@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}MedTriagem{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=5">
+
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+    <header>
+        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
+        <nav class="menu-links">
+            <a href="{% url 'hosp:index' %}" class="{% if pagina_ativa == 'home' %}active{% endif %}">
+                Home
+            </a>
+
+            {% if user.tipo_usuario != 'MEDICO' %}
+                <a href="{% url 'hosp:criar' %}" class="{% if pagina_ativa == 'triagem' %}active{% endif %}">
+                    Triagem
+                </a>
+            {% endif %}
+            <a href="{% url 'hosp:listar' %}" class="{% if pagina_ativa == 'pacientes' %}active{% endif %}">
+                Pacientes
+            </a>
+            <a href="{% url 'hosp:lista_feedback' %}" class="{% if pagina_ativa == 'feedbacks' %}active{% endif %}">
+                Feedbacks
+            </a>
+
+            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+                <a href="{% url 'hosp:painel_gestao' %}"class="{% if pagina_ativa == 'gestao' %}active{% endif %}">
+                    Painel de Gestão
+                </a>
+            {% endif %}
+        </nav>
+        <div class="user-profile">
+            <div class="avatar" id="avatar-button">
+                <span id="user-initials"></span>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu">
+                <div class="dropdown-header">
+                    <strong>{{ user.nome_completo|default:user.username }}</strong>
+                    <span>{{ user.get_tipo_usuario_display }}</span>
+                </div>
+                <a href="{% url 'hosp:perfil' %}" class="dropdown-item">Meu Perfil</a>
+                <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item logout-button">Sair </button>
+                </form>
+            </div>
+        </div>
+        <input type="hidden" id="user-full-name" value="{{ user.nome_completo|default:user.username }}">
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© {% now "Y" %} Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
+    </footer>
+
+    <script src="{% static 'front/js/base.js' %}?v=5"></script>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

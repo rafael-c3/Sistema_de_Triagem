@@ -11,7 +11,7 @@ header {
     color: white;
     padding: 1rem 2rem;
     display: flex;
-    justify-content: space-between;
+    
     align-items: center;
     background-color: #3498db;
     
@@ -24,7 +24,7 @@ header a {
 header h1 {
     margin: 0;
     font-size: 1.5rem;
-    grid-column: 1;
+    
 }
 main {
     background-color: #ffffff;
@@ -32,18 +32,46 @@ main {
 
 
 .menu-links{
-    display:flex;
-    justify-content: center;
+    display: flex;
+    align-items: center;
     gap: 1.5em;
-    grid-column: 2;
+    margin-left: 3rem;
 }
 
 .menu-links a{
     color: white;
     text-decoration: none;
     font-weight: bold;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, border-color 0.2s;
+    border-bottom: 2px solid transparent;
 
+    /* 2. Adiciona um padding IGUAL em cima e embaixo para centralizar o texto */
+    padding-top: 5px;
+    padding-bottom: 1px;
+
+}
+
+.menu-links a p {
+    margin: 0;
+    border-bottom: 2px solid transparent; 
+    padding-bottom: 4px;
+    /* Opcional: Adiciona uma transição suave para a cor da borda */
+    transition: border-color 0.2s ease-in-out;
+}
+
+.menu-links a.active  {
+    font-weight: bold; /* ou 700 */
+    border-bottom-color: #ffffff; /* Apenas muda a cor da borda que já existe */
+    opacity: 1;
+}
+
+.menu-links a:not(.active):hover p {
+    border-bottom-color: rgba(255, 255, 255, 0.3); /* Borda branca semitransparente */
+}
+
+/* Opcional: Remove a opacidade do hover quando o link já está ativo */
+.menu-links a.active:hover p {
+    opacity: 1;
 }
 
 .menu-links a:hover{
@@ -54,6 +82,7 @@ main {
 .user-profile{
     position: relative;
     display: inline-block;
+    margin-left: auto;
 }
 
 .avatar{

@@ -1,191 +1,163 @@
-{% load static %} 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Perfil - Sistema Hospitalar</title>
+{% extends 'site/headerBase.html' %}
+{% load static %}
+
+{% block title %}Meu Perfil - MedTriagem{% endblock %}
+
+{% block styles %}
     <link rel="stylesheet" href="{% static 'front/css/perfil.css' %}?v=3">
-    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
-    
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
-        <nav class="menu-links">
-            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <!-- <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a> -->
-            {% if user.tipo_usuario != 'MEDICO' %}
-                <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
-            {% endif %}
-            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
-            <a href="{% url 'hosp:lista_feedback' %}"><p>Feedbacks</p></a>
-            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
-                <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
-            {% endif %}
-        </nav>
-        <div class="user-profile">
-            <div class="avatar" id="avatar-button">
-                <span id="user-initials"></span>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu">
-                <div class="dropdown-header">
-                    <strong>{{ user.nome_completo|default:user.username }}</strong>
-                    <span>{{ user.get_tipo_usuario_display }}</span>
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-main-container">
+
+    <a href="javascript:history.back()" class="btn-voltar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            <span>Voltar</span>
+        
+    </a>
+
+    <h2>Perfil de Usuário</h2>
+
+    <div class="profile-content-wrapper">
+        <aside class="profile-sidebar">
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg>
                 </div>
-                <a href="{% url 'hosp:perfil' %}" class="dropdown-item">Meu Perfil</a>
-                <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;">
+                <h3>Dr. {{ user.nome_completo }}</h3>
+                <p class="username">@{{ user.username }}</p>
+                <span class="user-role">{{ user.get_tipo_usuario_display }}</span>
+
+                <ul class="profile-details">
+                    <li>
+                        <span class="icon">👤</span>
+                        <div>
+                            <small>Nome Completo</small>
+                            <p>{{ user.nome_completo }}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="icon">📧</span>
+                        <div>
+                            <small>Email</small>
+                            <p>{{ user.email }}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="icon">💳</span>
+                        <div>
+                            <small>CPF</small>
+                            <p>{{ user.cpf }}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="icon">🏷️</span>
+                        <div>
+                            <small>Tipo de Conta</small>
+                            <p>{{ user.get_tipo_usuario_display }}</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <form action="{% url 'hosp:logout' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="dropdown-item logout-button">Sair </button>
+                    <button type="submit" class="logout-btn">
+                        <span class="icon">→</span> Sair (Logout)
+                    </button>
                 </form>
             </div>
-        </div>
-        <input type="hidden" id="user-full-name" value="{{ user.nome_completo|default:user.username }}">
-    </header>
+        </aside>
 
-    <main class="profile-main-container">
+        <section class="profile-main-content">
+            <div class="tabs-container">
+                <button class="tab-button active" data-tab="historico">Histórico de Pacientes</button>
+                <button class="tab-button" data-tab="feedbacks">Meus Feedbacks</button>
+            </div>
 
-        <a href="javascript:history.back()" class="btn-voltar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
-                <span>Voltar</span>
-            
-        </a>
-
-        <h2>Perfil de Usuário</h2>
-
-        <div class="profile-content-wrapper">
-            <aside class="profile-sidebar">
-                <div class="profile-card">
-                    <div class="profile-avatar">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                        </svg>
-                    </div>
-                    <h3>Dr. {{ user.nome_completo }}</h3>
-                    <p class="username">@{{ user.username }}</p>
-                    <span class="user-role">{{ user.get_tipo_usuario_display }}</span>
-
-                    <ul class="profile-details">
-                        <li>
-                            <span class="icon">👤</span>
-                            <div>
-                                <small>Nome Completo</small>
-                                <p>{{ user.nome_completo }}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="icon">📧</span>
-                            <div>
-                                <small>Email</small>
-                                <p>{{ user.email }}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="icon">💳</span>
-                            <div>
-                                <small>CPF</small>
-                                <p>{{ user.cpf }}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="icon">🏷️</span>
-                            <div>
-                                <small>Tipo de Conta</small>
-                                <p>{{ user.get_tipo_usuario_display }}</p>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <form action="{% url 'hosp:logout' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="logout-btn">
-                            <span class="icon">→</span> Sair (Logout)
-                        </button>
-                    </form>
+            <div id="historico" class="tab-content active">
+                <div class="content-card">
+                    <h4>Pacientes Atendidos</h4>
+                    <p>Histórico dos pacientes que você atendeu ou acompanhou</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do Paciente</th>
+                                <th>Data de Chegada</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for paciente in historico_pacientes %}
+                            <tr>
+                                <td><a href="{% url 'hosp:mostrar' pk=paciente.pk %}">{{ paciente.nome }}</a></td>
+                                <td>🗓️ {{ paciente.hora_chegada|date:"d/m/Y" }}</td>
+                                <td><span class="status-tag {{ paciente.status|slugify }}">{{ paciente.get_status_display }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">Nenhum paciente no histórico.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </aside>
+            </div>
 
-            <section class="profile-main-content">
-                <div class="tabs-container">
-                    <button class="tab-button active" data-tab="historico">Histórico de Pacientes</button>
-                    <button class="tab-button" data-tab="feedbacks">Meus Feedbacks</button>
+            <div id="feedbacks" class="tab-content">
+                <div class="content-card">
+                    <h4>Meus Feedbacks</h4>
+                    <p>Avaliações que você fez sobre as classificações de triagem</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Classificação Original</th>
+                                <th>Minha Avaliação</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for feedback in feedbacks_do_usuario %}
+                            <tr>
+                                <td><a href="{% url 'hosp:mostrar' pk=feedback.paciente.pk %}">{{ feedback.paciente.nome }}</a></td>
+                                <td><span class="tag {{ feedback.paciente.classificacao|slugify }}">{{ feedback.paciente.get_classificacao_display }}</span></td>
+
+                                <td>
+                                    {% if feedback.triagem_correta %}
+                                        <span class="avaliacao correta">✔️ Correta</span>
+                                    {% else %}
+                                        <div class="avaliacao-wrapper">
+                                            <span class="avaliacao incorreta">❌ Incorreta</span>
+                                            <small>Sugestão: {{ feedback.get_classificacao_correta_display }}</small>
+                                        </div>
+                                    {% endif %}    
+                                </td>
+                                <td>🗓️ {{ feedback.data_criacao|date:"d/m/Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4">Nenhum feedback enviado.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </section>
+    </div>
+</div>
 
-                <div id="historico" class="tab-content active">
-                    <div class="content-card">
-                        <h4>Pacientes Atendidos</h4>
-                        <p>Histórico dos pacientes que você atendeu ou acompanhou</p>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nome do Paciente</th>
-                                    <th>Data de Chegada</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for paciente in historico_pacientes %}
-                                <tr>
-                                    <td><a href="{% url 'hosp:mostrar' pk=paciente.pk %}">{{ paciente.nome }}</a></td>
-                                    <td>🗓️ {{ paciente.hora_chegada|date:"d/m/Y" }}</td>
-                                    <td><span class="status-tag {{ paciente.status|slugify }}">{{ paciente.get_status_display }}</span></td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="3">Nenhum paciente no histórico.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+{% endblock %}
 
-                <div id="feedbacks" class="tab-content">
-                    <div class="content-card">
-                        <h4>Meus Feedbacks</h4>
-                        <p>Avaliações que você fez sobre as classificações de triagem</p>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Paciente</th>
-                                    <th>Classificação Original</th>
-                                    <th>Minha Avaliação</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for feedback in feedbacks_do_usuario %}
-                                <tr>
-                                    <td><a href="{% url 'hosp:mostrar' pk=feedback.paciente.pk %}">{{ feedback.paciente.nome }}</a></td>
-                                    <td><span class="tag {{ feedback.paciente.classificacao|slugify }}">{{ feedback.paciente.get_classificacao_display }}</span></td>
-
-                                    <td>
-                                        {% if feedback.triagem_correta %}
-                                            <span class="avaliacao correta">✔️ Correta</span>
-                                        {% else %}
-                                            <div class="avaliacao-wrapper">
-                                                <span class="avaliacao incorreta">❌ Incorreta</span>
-                                                <small>Sugestão: {{ feedback.get_classificacao_correta_display }}</small>
-                                            </div>
-                                        {% endif %}    
-                                    </td>
-                                    <td>🗓️ {{ feedback.data_criacao|date:"d/m/Y" }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="4">Nenhum feedback enviado.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
+{% block scripts %}
+    <script src="{% static 'front/js/perfil.js' %}?v=4"></script>
+{% endblock %}
 
 
-<script src="{% static 'front/js/base.js' %}?v=4"></script>  
-<script src="{% static 'front/js/perfil.js' %}?v=4"></script>  
+
+
 </body>
 </html>

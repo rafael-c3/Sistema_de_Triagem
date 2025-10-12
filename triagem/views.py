@@ -101,6 +101,7 @@ def index_view(request):
         'laranjas_aguardando': laranjas_aguardando,
         'tempo_medio_espera': tempo_medio_formatado, # <-- Enviando o valor formatado
         'pacientes': lista_pacientes_priorizada,
+        'pagina_ativa': 'home',
     }
     
     return render(request, 'site/index.html', context)
@@ -110,7 +111,11 @@ def index_view(request):
 def create_view(request):
     if request.method == 'GET':
         form = PacienteForm()
-        return render(request, 'site/criar.html', {'form': form})
+        context = {
+            'form': form,
+            'pagina_ativa': 'triagem',
+        }
+        return render(request, 'site/criar.html', context)
     if request.method == 'POST':
         form = PacienteForm(request.POST)
         if form.is_valid():
@@ -120,16 +125,24 @@ def create_view(request):
             return redirect('hosp:listar')
         else:
             print("Erros de validação:", form.errors)
-            return render(request, 'site/criar.html', {'form': form})
+            # ADICIONADO: 'pagina_ativa' para o POST com erro
+            context = {
+                'form': form,
+                'pagina_ativa': 'triagem',
+            }
+            return render(request, 'site/criar.html', context)
 
 @login_required        
 def list_view(request):
     pacientes = Paciente.objects.all()
     status_contagem = Counter(p.status for p in pacientes)
-    return render(request, 'site/listar.html', {
+    context = {
         'pacientes': pacientes,
-        'status_contagem': status_contagem
-    })
+        'status_contagem': status_contagem,
+        'pagina_ativa': 'pacientes', # <-- ADICIONADO
+    }
+    return render(request, 'site/listar.html', context)
+
 
 @login_required
 def detail_view(request, pk):
@@ -163,6 +176,8 @@ def detail_view(request, pk):
         'voltar_para_url': voltar_para_url,
         'historico': historico,
         'form_prontuario': form_prontuario,
+        'pagina_ativa': 'pacientes',
+        
     }
     
     return render(request, 'site/detalhes.html', context)
@@ -343,6 +358,7 @@ def lista_feedback_view(request):
         'classificacoes_incorretas': classificacoes_incorretas,
         'percentual_corretas': percentual_corretas,
         'percentual_incorretas': percentual_incorretas,
+        'pagina_ativa': 'feedbacks',
     }
     
     # Verifique se o nome do seu template é 'lista_feedback.html' ou outro
@@ -413,6 +429,7 @@ def gestao_view(request):
         'novos_usuarios_7_dias': novos_usuarios_7_dias,
         'taxa_crescimento': taxa_crescimento, # Valor numérico para lógica no template
         'taxa_crescimento_formatada': taxa_crescimento_formatada, # Valor formatado para exibição
+        'pagina_ativa': 'gestao',
     }
     
     return render(request, 'site/gestao.html', context)

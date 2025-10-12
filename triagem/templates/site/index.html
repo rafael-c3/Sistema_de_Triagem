@@ -1,162 +1,111 @@
+{% extends 'site/headerBase.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Início</title>
-    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
-    <link rel="stylesheet" href="{% static 'front/css/index.css' %}?v=2"> 
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
 
-        <nav class="menu-links">
-            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <!-- <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a> -->
-            {% if user.tipo_usuario != 'MEDICO' %}
-                <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
-            {% endif %}
-            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
-            <a href="{% url 'hosp:lista_feedback' %}"><p>Feedbacks</p></a>
-            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
-                <a href="{% url 'hosp:painel_gestao' %}"><p>Painel de Gestão</p></a>
-            {% endif %}
-        </nav>
+{% block title %}Início - MedTriagem{% endblock %}
 
-        <div class="user-profile">
-            <div class="avatar" id="avatar-button">
-                <span id="user-initials"></span>
-            </div>
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'front/css/index.css' %}?v=2">
+{% endblock %}
 
-            <div class="dropdown-menu" id="dropdown-menu">
-                <div class="dropdown-header">
-                    <strong>{{ user.nome_completo|default:user.username }}</strong>
-                    <span>{{ user.get_tipo_usuario_display }}</span>
-                </div>
-                <a href="{% url 'hosp:perfil' %}" class="dropdown-item">Meu Perfil</a>
-                <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;">
-                    {% csrf_token %}
-                    <button type="submit" class="dropdown-item logout-button">Sair</button>
-                </form>
-            </div>
+{% block content %}
+<div class="container">
+
+    <h1>Painel de Controle</h1>
+
+    <div class="bem-vindo">
+        <h3>Bem-vindo(a) {{ user.username }} ao Sistema de Gestão de Triagem</h3>
+        <p>Esta ferramenta foi projetada para otimizar o fluxo de pacientes e garantir que os atendimentos sejam realizados com a máxima eficiência.</p>
+        <ul>
+            <li><strong>Resumo da Situação:</strong> Os cards acima mostram as métricas mais importantes do dia em tempo real.</li>
+            <li><strong>Fila de Atendimento:</strong> A tabela abaixo é sua principal ferramenta de trabalho. Ela exibe os pacientes ordenados por prioridade de risco (Vermelho sendo a mais alta) e, em seguida, por ordem de chegada.</li>
+        </ul>
+        <p>
+            <strong>Para Médicos:</strong> Utilize o botão "Atender" na coluna "Ação" para iniciar o atendimento de um paciente e vinculá-lo ao seu perfil.<br>
+            <strong>Para todos os usuários:</strong> Clique no nome de um paciente para acessar seu prontuário completo.
+        </p>
+    </div>
+
+    <h2>Situação Atual e Resumo do Dia</h2>
+    <div class="summary-container">
+        <div class="summary-card">
+            <h3>Aguardando na Fila</h3>
+            <p class="count">{{ total_aguardando }}</p>
         </div>
-        <input type="hidden" id="user-full-name" value="{{ user.nome_completo|default:user.username }}">
-
-        
-
-    </header>
-
-
-    <main>
-       
-        <div class="container">
-
-            <h1>Painel de Controle</h1>
-
-            <div class="bem-vindo">
-                <h3>Bem-vindo(a) {{ user.username }} ao Sistema de Gestão de Triagem</h3>
-                <p>Esta ferramenta foi projetada para otimizar o fluxo de pacientes e garantir que os atendimentos sejam realizados com a máxima eficiência.</p>
-                <ul>
-                    <li><strong>Resumo da Situação:</strong> Os cards acima mostram as métricas mais importantes do dia em tempo real.</li>
-                    <li><strong>Fila de Atendimento:</strong> A tabela abaixo é sua principal ferramenta de trabalho. Ela exibe os pacientes ordenados por prioridade de risco (Vermelho sendo a mais alta) e, em seguida, por ordem de chegada.</li>
-                </ul>
-                <p>
-                    <strong>Para Médicos:</strong> Utilize o botão "Atender" na coluna "Ação" para iniciar o atendimento de um paciente e vinculá-lo ao seu perfil.<br>
-                    <strong>Para todos os usuários:</strong> Clique no nome de um paciente para acessar seu prontuário completo.
-                </p>
-            </div>
-
-            <h2>Situação Atual e Resumo do Dia</h2>
-            <div class="summary-container">
-                <div class="summary-card">
-                    <h3>Aguardando na Fila</h3>
-                    <p class="count">{{ total_aguardando }}</p>
-                </div>
-                <div class="summary-card vermelha">
-                    <h3>Prioridade Vermelha</h3>
-                    <p class="count">{{ vermelhos_aguardando }}</p>
-                </div>
-                <div class="summary-card laranja">
-                    <h3>Prioridade Laranja</h3>
-                    <p class="count">{{ laranjas_aguardando }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Chegadas Hoje</h3>
-                    <p class="count">{{ chegadas_hoje }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Em Atendimento</h3>
-                    <p class="count">{{ total_em_atendimento }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Concluídos Hoje</h3>
-                    <p class="count">{{ concluidos_hoje }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Tempo Médio de Espera (Hoje)</h3>
-                    <p class="count small-text">{{ tempo_medio_espera }}</p>
-                </div>
-            </div>
-
-            <h2>Fila de Atendimento</h2>
-            <table class="patient-table">
-                <thead>
-                    <tr>
-                        <th>Prioridade</th>
-                        <th>Nome do Paciente</th>
-                        <th>Hora da Chegada</th>
-                        <th>Triagem Por</th>
-                        <th>Médico Responsável</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for paciente in pacientes %}
-                    <tr>
-                        <td>
-                            <span class="badge {{ paciente.classificacao|lower }}">
-                                {{ paciente.get_classificacao_display }}
-                            </span>
-                        </td>
-                        <td><a href="{% url 'hosp:mostrar' pk=paciente.pk %}">{{ paciente.nome }}</a></td>
-                        <td>{{ paciente.hora_chegada|date:"H:i"|default:"--:--" }}</td>
-                        <td>{{ paciente.atendente.nome_completo|default:"N/A" }}</td>
-                        <td>
-                            {% if paciente.medico_responsavel %}
-                                {{ paciente.medico_responsavel.nome_completo }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if user.tipo_usuario == 'MEDICO' and paciente.status == 'Aguardando' %}
-                                <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="action-button">Atender</button>
-                                </form>
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 20px;">Nenhum paciente na fila.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="summary-card vermelha">
+            <h3>Prioridade Vermelha</h3>
+            <p class="count">{{ vermelhos_aguardando }}</p>
         </div>
-    
-    </main>
+        <div class="summary-card laranja">
+            <h3>Prioridade Laranja</h3>
+            <p class="count">{{ laranjas_aguardando }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Chegadas Hoje</h3>
+            <p class="count">{{ chegadas_hoje }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Em Atendimento</h3>
+            <p class="count">{{ total_em_atendimento }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Concluídos Hoje</h3>
+            <p class="count">{{ concluidos_hoje }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Tempo Médio de Espera (Hoje)</h3>
+            <p class="count small-text">{{ tempo_medio_espera }}</p>
+        </div>
+    </div>
 
-    <footer>
-        <p>© 2025 Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
-    </footer>
-
-<script src="{% static 'front/js/base.js' %}?v=4"></script>
-
+    <h2>Fila de Atendimento</h2>
+    <table class="patient-table">
+        <thead>
+            <tr>
+                <th>Prioridade</th>
+                <th>Nome do Paciente</th>
+                <th>Hora da Chegada</th>
+                <th>Triagem Por</th>
+                <th>Médico Responsável</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
+                <td>
+                    <span class="badge {{ paciente.classificacao|lower }}">
+                        {{ paciente.get_classificacao_display }}
+                    </span>
+                </td>
+                <td><a href="{% url 'hosp:mostrar' pk=paciente.pk %}">{{ paciente.nome }}</a></td>
+                <td>{{ paciente.hora_chegada|date:"H:i"|default:"--:--" }}</td>
+                <td>{{ paciente.atendente.nome_completo|default:"N/A" }}</td>
+                <td>
+                    {% if paciente.medico_responsavel %}
+                        {{ paciente.medico_responsavel.nome_completo }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.tipo_usuario == 'MEDICO' and paciente.status == 'Aguardando' %}
+                        <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="action-button">Atender</button>
+                        </form>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 20px;">Nenhum paciente na fila.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
 </body>
 </html>

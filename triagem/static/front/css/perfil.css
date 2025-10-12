@@ -1,16 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-body{
-    background-color: #f8f9fa;
-    font-family: 'Inter', sans-serif;
-    color: #333;
 
-}
 
 .profile-main-container{
     max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    background-color: #ffffff;
+    min-height: calc(100vh - 150px);
 }
 
 .profile-main-container h2{

@@ -1,364 +1,333 @@
+{% extends 'site/headerBase.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de gestão</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
-    <link rel="stylesheet" href="{% static 'front/css/gestao.css' %}?v=2">
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
-        <nav class="menu-links">
-            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <!-- <a href="{% url 'hosp:dashboard' %}" ><p>Dashboard</p></a> -->
-            {% if user.tipo_usuario != 'MEDICO' %}
-                <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
-            {% endif %}
-            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
-            <a href="{% url 'hosp:lista_feedback' %}"><p>Feedbacks</p></a>
-            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
-                <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
-            {% endif %}
-        </nav>
-        <div class="user-profile">
-            <div class="avatar" id="avatar-button">
-                <span id="user-initials"></span>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu">
-                <div class="dropdown-header">
-                    <strong>{{ user.nome_completo|default:user.username }}</strong>
-                    <span>{{ user.get_tipo_usuario_display }}</span>
-                </div>
-                <a href="{% url 'hosp:perfil' %}" class="dropdown-item">Meu Perfil</a>
-                <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;">
-                    {% csrf_token %}
-                    <button type="submit" class="dropdown-item logout-button">Sair </button>
-                </form>
-            </div>
-        </div>
-        <input type="hidden" id="user-full-name" value="{{ user.nome_completo|default:user.username }}">
-    </header>
 
-    <main class="gestao-container">
-        <aside class="sidebar-estatisticas">
-        
-            <div class="sidebar-section">
-                <h2>Estatísticas do Sistema</h2>
-                <p class="subtitle">Resumo geral de todos os registros</p>
-            </div>
-            
-            <div class="sidebar-section">
-                <div class="section-header">
-                    <i class="fas fa-users"></i>
-                    <h3>Pacientes</h3>
-                </div>
-                <ul class="stat-list">
-                    <li class="stat-item">
-                        <span>Cadastrados Hoje</span>
-                        <span class="stat-value">{{ total_pacientes_hoje }}</span>
-                    </li>
-                    <li class="stat-item">
-                        <span>Esta Semana</span>
-                        <span class="stat-value">{{ pacientes_esta_semana }}</span>
-                    </li>
-                    <li class="stat-item">
-                        <span>Total</span>
-                        <span class="stat-value">{{ total_pacientes }}</span>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="sidebar-section">
-                <div class="section-header">
-                    <i class="fas fa-user-tie"></i>
-                    <h3>Profissionais</h3>
-                </div>
-                <div class="professional-list">
-                    <div class="professional-item medicos">
-                        <div class="professional-info">
-                            <i class="fas fa-user-md"></i>
-                            <span>Médicos</span>
-                        </div>
-                        <span class="professional-count">{{ total_medicos }}</span>
-                    </div>
-                    <div class="professional-item enfermeiros">
-                        <div class="professional-info">
-                            <i class="fas fa-user-nurse"></i>
-                            <span>Enfermeiros</span>
-                        </div>
-                        <span class="professional-count">{{ total_enfermeiros }}</span>
-                    </div>
-                    <div class="professional-item atendentes">
-                        <div class="professional-info">
-                            <i class="fas fa-user-edit"></i>
-                            <span>Atendentes</span>
-                        </div>
-                        <span class="professional-count">{{ total_atendentes }}</span>
-                    </div>
-                </div>
-            </div>
-            
-            {% comment %}
-            <div class="sidebar-section">
-                <h3>Ações Rápidas</h3>
-                <div class="quick-actions">
-                    <a href="#" class="action-button">
-                        <i class="fas fa-user-plus"></i>
-                        <span>Novo Usuário</span>
-                    </a>
-                    <a href="#" class="action-button">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Gerar Relatório</span>
-                    </a>
-                    <a href="#" class="action-button">
-                        <i class="fas fa-external-link-alt"></i>
-                        <span>Exportar Dados</span>
-                    </a>
-                </div>
-            </div>
+{% block title %}Painel de Gestão - MedTriagem{% endblock %}
 
-            {% endcomment %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'front/css/gestao.css' %}?v=5">
+{% endblock %}
 
-            <div class="sidebar-section">
-                <h3>Atividade Recente</h3>
-                <ul class="stat-list">
-                    <li class="stat-item">
-                        <span>Novos Usuários (7 dias)</span>
-                        <span class="activity-badge green-badge">+{{ novos_usuarios_7_dias }}</span>
-                    </li>
-                    <li class="stat-item">
-                        <span>Taxa de Crescimento</span>
-                        
-                        {% if taxa_crescimento > 0 %}
-                            <span class="activity-badge blue-badge">{{ taxa_crescimento_formatada }}</span>
-                        {% elif taxa_crescimento < 0 %}
-                            <span class="activity-badge red-badge">{{ taxa_crescimento_formatada }}</span>
-                        {% else %}
-                            <span class="activity-badge gray-badge">{{ taxa_crescimento_formatada }}</span>
-                        {% endif %}
+{% block content %}
 
-                    </li>
-                </ul>
-            </div>
-
-        </aside>
-
+<div class="gestao-container">
+    <aside class="sidebar-estatisticas">
     
-
-        <div class="management-section">
-                <div class="tab-nav">
-                    <button class="tab-button active" data-tab="pacientes">
-                        <i class="fas fa-users"></i> Pacientes
-                    </button>
-                    <button class="tab-button" data-tab="medicos">
-                        <i class="fas fa-user-md"></i> Médicos
-                    </button>
-                    <button class="tab-button" data-tab="enfermeiros">
-                        <i class="fas fa-user-nurse"></i> Enfermeiros
-                    </button>
-                    <button class="tab-button" data-tab="atendentes">
-                        <i class="fas fa-user-edit"></i> Atendentes
-                    </button>
-                </div>
-
-                <div id="pacientes" class="tab-content active">
-                    <div class="content-header">
-                        <div>
-                            <h2>Gestão de Pacientes</h2>
-                            <p class="subtitle">{{ total_pacientes }} pacientes cadastrados no sistema </p>
-                        </div>
-                    </div>
-
-                    <div class="filter-bar">
-                        <div class="search-box">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" placeholder="Buscar por nome ou CPF...">
-                        </div>
-
-                        <div class="filter-dropdown-container">
-                            <button class="btn btn-secondary" id="filter-btn">
-                                <i class="fas fa-filter"></i>
-                                <span id="filter-btn-text">Filtros</span>
-                            </button>
-                            
-                            <div class="filter-menu" id="filter-menu">
-                                <a href="#" class="filter-option" data-gender="todos">Todos</a>
-                                <a href="#" class="filter-option" data-gender="masculino">Masculino</a>
-                                <a href="#" class="filter-option" data-gender="feminino">Feminino</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>CPF</th>
-                                <th>Gênero</th>
-                                <th>Data de Nasc.</th>
-                                <th>Idade</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for paciente in pacientes %}
-                            <tr>
-                                <td>{{ paciente.id }}</td>
-                                <td>{{ paciente.nome }}</td>
-                                <td>{{ paciente.cpf }}</td>
-                                <td>
-                                    <span class="badge genero-{{ paciente.get_sexo_display|lower }}">
-                                        {{ paciente.get_sexo_display }}
-                                    </span>
-                                </td>
-                                <td>{{ paciente.data_nascimento|date:"d/m/Y" }}</td>
-                                <td>{{ paciente.idade }} anos</td>
-                                <td class="actions">
-                                    <a href="{% url 'hosp:mostrar' pk=paciente.pk %}" class="action-icon" title="Ver Prontuário">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <form action="{% url 'hosp:deletar' pk=paciente.pk %}" method="post" onsubmit="return confirm('Tem certeza?');">
-                                        {% csrf_token %}
-                                        <button type="submit" class="action-icon-delete" title="Remover">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="7">Nenhum paciente cadastrado.</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="medicos" class="tab-content">
-                    <div class="content-header">
-                        <div>
-                            <h2>Gestão de Médicos</h2>
-                            <p class="subtitle">{{ total_medicos }} médicos cadastrados no sistema </p>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>CPF</th>
-                                <th>Email</th>
-                                <th>CRM</th>
-                                <th>Especialidade</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for medico in medicos %}
-                            <tr>
-                                <td>{{ medico.id }}</td>
-                                <td>{{ medico.nome_completo|default:medico.username }}</td>
-                                <td>{{ medico.cpf }}</td>
-                                <td>{{ medico.email }}</td>
-                                <td>{{ medico.registro_profissional|default:"-" }}</td>
-                                <td>Cardiologia</td> <td class="actions">
-                                    <a href="{% url 'admin:triagem_customuser_change' medico.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                    <a href="{% url 'admin:triagem_customuser_delete' medico.pk %}" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="7">Nenhum médico cadastrado.</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="enfermeiros" class="tab-content">
-                    <div class="content-header">
-                        <div>
-                            <h2>Gestão de Enfermeiros</h2>
-                            <p class="subtitle">{{ total_enfermeiros }} enfermeiros cadastrados no sistema </p>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>CPF</th>
-                                <th>Email</th>
-                                <th>COREN</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>3</td>
-                                <td>Enf. José Santos</td>
-                                <td>444.555.666-77</td>
-                                <td>jose.santos@hospital.com.br</td>
-                                <td>COREN 78012</td>
-                                <td class="actions">
-                                    <a href="#" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                    <a href="#" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Enf. Maria Oliveira</td>
-                                <td>555.666.777-88</td>
-                                <td>maria.oliveira@hospital.com.br</td>
-                                <td>COREN 890123</td>
-                                <td class="actions">
-                                    <a href="#" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                    <a href="#" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="atendentes" class="tab-content">
-                    <div class="content-header">
-                        <div>
-                            <h2>Gestão de Atendentes</h2>
-                            <p class="subtitle">{{ total_atendentes }} atendentes cadastrados no sistema </p>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>CPF</th>
-                                <th>Email</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for atendente in atendentes %}
-                            <tr>
-                                <td>{{ atendente.id }}</td>
-                                <td>{{ atendente.nome_completo|default:atendente.username }}</td>
-                                <td>{{ atendente.cpf }}</td>
-                                <td>{{ atendente.email }}</td>
-                                <td class="actions">
-                                    <a href="{% url 'admin:triagem_customuser_change' atendente.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                    <a href="{% url 'admin:triagem_customuser_delete' atendente.pk %}" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="5">Nenhum atendente cadastrado.</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        <div class="sidebar-section">
+            <h2>Estatísticas do Sistema</h2>
+            <p class="subtitle">Resumo geral de todos os registros</p>
         </div>
-    </main>
-    <script src="{% static 'front/js/base.js' %}?v=4"></script>
-    <script src="{% static 'front/js/gestao.js' %}?v=4"></script>
+        
+        <div class="sidebar-section">
+            <div class="section-header">
+                <i class="fas fa-users"></i>
+                <h3>Pacientes</h3>
+            </div>
+            <ul class="stat-list">
+                <li class="stat-item">
+                    <span>Cadastrados Hoje</span>
+                    <span class="stat-value">{{ total_pacientes_hoje }}</span>
+                </li>
+                <li class="stat-item">
+                    <span>Esta Semana</span>
+                    <span class="stat-value">{{ pacientes_esta_semana }}</span>
+                </li>
+                <li class="stat-item">
+                    <span>Total</span>
+                    <span class="stat-value">{{ total_pacientes }}</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="section-header">
+                <i class="fas fa-user-tie"></i>
+                <h3>Profissionais</h3>
+            </div>
+            <div class="professional-list">
+                <div class="professional-item medicos">
+                    <div class="professional-info">
+                        <i class="fas fa-user-md"></i>
+                        <span>Médicos</span>
+                    </div>
+                    <span class="professional-count">{{ total_medicos }}</span>
+                </div>
+                <div class="professional-item enfermeiros">
+                    <div class="professional-info">
+                        <i class="fas fa-user-nurse"></i>
+                        <span>Enfermeiros</span>
+                    </div>
+                    <span class="professional-count">{{ total_enfermeiros }}</span>
+                </div>
+                <div class="professional-item atendentes">
+                    <div class="professional-info">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Atendentes</span>
+                    </div>
+                    <span class="professional-count">{{ total_atendentes }}</span>
+                </div>
+            </div>
+        </div>
+        
+        {% comment %}
+        <div class="sidebar-section">
+            <h3>Ações Rápidas</h3>
+            <div class="quick-actions">
+                <a href="#" class="action-button">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Novo Usuário</span>
+                </a>
+                <a href="#" class="action-button">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Gerar Relatório</span>
+                </a>
+                <a href="#" class="action-button">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Exportar Dados</span>
+                </a>
+            </div>
+        </div>
+
+        {% endcomment %}
+
+        <div class="sidebar-section">
+            <h3>Atividade Recente</h3>
+            <ul class="stat-list">
+                <li class="stat-item">
+                    <span>Novos Usuários (7 dias)</span>
+                    <span class="activity-badge green-badge">+{{ novos_usuarios_7_dias }}</span>
+                </li>
+                <li class="stat-item">
+                    <span>Taxa de Crescimento</span>
+                    
+                    {% if taxa_crescimento > 0 %}
+                        <span class="activity-badge blue-badge">{{ taxa_crescimento_formatada }}</span>
+                    {% elif taxa_crescimento < 0 %}
+                        <span class="activity-badge red-badge">{{ taxa_crescimento_formatada }}</span>
+                    {% else %}
+                        <span class="activity-badge gray-badge">{{ taxa_crescimento_formatada }}</span>
+                    {% endif %}
+
+                </li>
+            </ul>
+        </div>
+
+    </aside>
+
+
+
+    <div class="management-section">
+            <div class="tab-nav">
+                <button class="tab-button active" data-tab="pacientes">
+                    <i class="fas fa-users"></i> Pacientes
+                </button>
+                <button class="tab-button" data-tab="medicos">
+                    <i class="fas fa-user-md"></i> Médicos
+                </button>
+                <button class="tab-button" data-tab="enfermeiros">
+                    <i class="fas fa-user-nurse"></i> Enfermeiros
+                </button>
+                <button class="tab-button" data-tab="atendentes">
+                    <i class="fas fa-user-edit"></i> Atendentes
+                </button>
+            </div>
+
+            <div id="pacientes" class="tab-content active">
+                <div class="content-header">
+                    <div>
+                        <h2>Gestão de Pacientes</h2>
+                        <p class="subtitle">{{ total_pacientes }} pacientes cadastrados no sistema </p>
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Buscar por nome ou CPF...">
+                    </div>
+
+                    <div class="filter-dropdown-container">
+                        <button class="btn btn-secondary" id="filter-btn">
+                            <i class="fas fa-filter"></i>
+                            <span id="filter-btn-text">Filtros</span>
+                        </button>
+                        
+                        <div class="filter-menu" id="filter-menu">
+                            <a href="#" class="filter-option" data-gender="todos">Todos</a>
+                            <a href="#" class="filter-option" data-gender="masculino">Masculino</a>
+                            <a href="#" class="filter-option" data-gender="feminino">Feminino</a>
+                        </div>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Gênero</th>
+                            <th>Data de Nasc.</th>
+                            <th>Idade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paciente in pacientes %}
+                        <tr>
+                            <td>{{ paciente.id }}</td>
+                            <td>{{ paciente.nome }}</td>
+                            <td>{{ paciente.cpf }}</td>
+                            <td>
+                                <span class="badge genero-{{ paciente.get_sexo_display|lower }}">
+                                    {{ paciente.get_sexo_display }}
+                                </span>
+                            </td>
+                            <td>{{ paciente.data_nascimento|date:"d/m/Y" }}</td>
+                            <td>{{ paciente.idade }} anos</td>
+                            <td class="actions">
+                                <a href="{% url 'hosp:mostrar' pk=paciente.pk %}" class="action-icon" title="Ver Prontuário">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <form action="{% url 'hosp:deletar' pk=paciente.pk %}" method="post" onsubmit="return confirm('Tem certeza?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-icon-delete" title="Remover">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7">Nenhum paciente cadastrado.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="medicos" class="tab-content">
+                <div class="content-header">
+                    <div>
+                        <h2>Gestão de Médicos</h2>
+                        <p class="subtitle">{{ total_medicos }} médicos cadastrados no sistema </p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Email</th>
+                            <th>CRM</th>
+                            <th>Especialidade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for medico in medicos %}
+                        <tr>
+                            <td>{{ medico.id }}</td>
+                            <td>{{ medico.nome_completo|default:medico.username }}</td>
+                            <td>{{ medico.cpf }}</td>
+                            <td>{{ medico.email }}</td>
+                            <td>{{ medico.registro_profissional|default:"-" }}</td>
+                            <td>Cardiologia</td> <td class="actions">
+                                <a href="{% url 'admin:triagem_customuser_change' medico.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
+                                <a href="{% url 'admin:triagem_customuser_delete' medico.pk %}" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7">Nenhum médico cadastrado.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="enfermeiros" class="tab-content">
+                <div class="content-header">
+                    <div>
+                        <h2>Gestão de Enfermeiros</h2>
+                        <p class="subtitle">{{ total_enfermeiros }} enfermeiros cadastrados no sistema </p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Email</th>
+                            <th>COREN</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>Enf. José Santos</td>
+                            <td>444.555.666-77</td>
+                            <td>jose.santos@hospital.com.br</td>
+                            <td>COREN 78012</td>
+                            <td class="actions">
+                                <a href="#" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Enf. Maria Oliveira</td>
+                            <td>555.666.777-88</td>
+                            <td>maria.oliveira@hospital.com.br</td>
+                            <td>COREN 890123</td>
+                            <td class="actions">
+                                <a href="#" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="atendentes" class="tab-content">
+                <div class="content-header">
+                    <div>
+                        <h2>Gestão de Atendentes</h2>
+                        <p class="subtitle">{{ total_atendentes }} atendentes cadastrados no sistema </p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Email</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for atendente in atendentes %}
+                        <tr>
+                            <td>{{ atendente.id }}</td>
+                            <td>{{ atendente.nome_completo|default:atendente.username }}</td>
+                            <td>{{ atendente.cpf }}</td>
+                            <td>{{ atendente.email }}</td>
+                            <td class="actions">
+                                <a href="{% url 'admin:triagem_customuser_change' atendente.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
+                                <a href="{% url 'admin:triagem_customuser_delete' atendente.pk %}" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5">Nenhum atendente cadastrado.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'front/js/gestao.js' %}?v=5"></script>
+{% endblock %}
 </body>
 </html>

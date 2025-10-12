@@ -1,32 +1,14 @@
+{% extends 'site/headerBase.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triagem</title>
-    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
-    <link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=3">
-</head>
-<body>
-{% if user.tipo_usuario != 'MEDICO' %}
-<header>
-    <a href="{% url 'hosp:index' %}"><h1>MedTriagem</h1></a>
-    <nav class="menu-links">
-        <a href="{% url 'hosp:index' %}"><p>Home</p></a>
-        <!--<a href="{% url 'hosp:dashboard' %}">Dashboard</a>-->
-        <a href="{% url 'hosp:criar' %}"><p>Triagem</p></a>
-        <a href="{% url 'hosp:listar' %}"><p>Pacientes</p></a>
-        <a class="nav-link" href="{% url 'hosp:lista_feedback' %}">Feedbacks</a>
-        {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
-            <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
-        {% endif %}
-    </nav>
-    <div class="entrar">
-        <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>
-    </div>
-</header>
 
+{% block title %}Triagem - MedTriagem{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=3">
+{% endblock %}
+
+{% block content %}
+{% if user.tipo_usuario != 'MEDICO' %}
 <main class="triagem-container">
     <h2>Avaliação de Triagem</h2>
     <form class="form-triagem" action="{% url 'hosp:criar' %}" method="post">
@@ -173,53 +155,56 @@
     </form>
 </main>
 {% endif %}
-<script>
-// Seleciona os botões que vamos manipular
-const btnProximo = document.getElementById('btn-proximo');
-const btnFinalizar = document.getElementById('btn-finalizar');
-const tabQueixaBtn = document.getElementById('tab-btn-queixa');
-const tabSinaisBtn = document.getElementById('tab-btn-sinais'); // <-- Adicionamos o botão da primeira aba
+{% endblock %}
 
-// Adiciona a funcionalidade ao botão "Próximo"
-if (btnProximo && tabQueixaBtn) {
-    btnProximo.addEventListener('click', () => {
-        // Simula um clique na aba "Queixa Principal"
-        tabQueixaBtn.click();
-    });
-}
+{% block scripts %}
+    <script src="{% static 'front/js/criar.js' %}?v=4"></script>
+    <script>
+    // Seleciona os botões que vamos manipular
+    const btnProximo = document.getElementById('btn-proximo');
+    const btnFinalizar = document.getElementById('btn-finalizar');
+    const tabQueixaBtn = document.getElementById('tab-btn-queixa');
+    const tabSinaisBtn = document.getElementById('tab-btn-sinais'); // <-- Adicionamos o botão da primeira aba
 
-// Função openTab ATUALIZADA
-function openTab(evt, tabId) {
-    // Esconde todas as seções de conteúdo
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => tab.classList.remove('active'));
-
-    // Desativa todos os botões de aba
-    const buttons = document.querySelectorAll('.tab-button');
-    buttons.forEach(btn => btn.classList.remove('active'));
-
-    // Ativa a aba e o botão clicados
-    document.getElementById(tabId).classList.add('active');
-    evt.currentTarget.classList.add('active');
-
-    // --- LÓGICA PARA CONTROLAR OS BOTÕES ---
-    if (tabId === 'sinais') {
-        btnProximo.classList.remove('hidden');
-        btnFinalizar.classList.add('hidden');
-    } else {
-        btnProximo.classList.add('hidden');
-        btnFinalizar.classList.remove('hidden');
+    // Adiciona a funcionalidade ao botão "Próximo"
+    if (btnProximo && tabQueixaBtn) {
+        btnProximo.addEventListener('click', () => {
+            // Simula um clique na aba "Queixa Principal"
+            tabQueixaBtn.click();
+        });
     }
-}
 
-// --- LINHA MÁGICA ADICIONADA AQUI ---
-// Simula um clique na aba inicial assim que a página carrega para definir o estado correto dos botões
-if (tabSinaisBtn) {
-    tabSinaisBtn.click();
-}
-</script>
+    // Função openTab ATUALIZADA
+    function openTab(evt, tabId) {
+        // Esconde todas as seções de conteúdo
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => tab.classList.remove('active'));
 
-<script src="{% static 'front/js/criar.js' %}?v=4"></script>
+        // Desativa todos os botões de aba
+        const buttons = document.querySelectorAll('.tab-button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        // Ativa a aba e o botão clicados
+        document.getElementById(tabId).classList.add('active');
+        evt.currentTarget.classList.add('active');
+
+        // --- LÓGICA PARA CONTROLAR OS BOTÕES ---
+        if (tabId === 'sinais') {
+            btnProximo.classList.remove('hidden');
+            btnFinalizar.classList.add('hidden');
+        } else {
+            btnProximo.classList.add('hidden');
+            btnFinalizar.classList.remove('hidden');
+        }
+    }
+
+    // --- LINHA MÁGICA ADICIONADA AQUI ---
+    // Simula um clique na aba inicial assim que a página carrega para definir o estado correto dos botões
+    if (tabSinaisBtn) {
+        tabSinaisBtn.click();
+    }
+    </script>
+{% endblock %}
 
 </body>
 </html>

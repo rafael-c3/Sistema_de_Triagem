@@ -1,299 +1,281 @@
+{% extends 'site/headerBase.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paciente {{paciente.nome}}</title>
-    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=2">
+
+{% block title %}Prontuário de {{ paciente.nome }} - MedTriagem{% endblock %}
+
+{% block styles %}
     <link rel="stylesheet" href="{% static 'front/css/detalhes.css' %}?v=2">
+{% endblock %}
 
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
+{% block content %}
+<main class="prontuario-container">
 
-        <nav class="menu-links">
-            <a href="{% url 'hosp:index' %}" ><p>Home</p></a>
-            <a href="{% url 'hosp:listar' %}" ><p>Dashboard</p></a>
-            <a href="{% url 'hosp:criar' %}" ><p>Triagem</p></a>
-            <a href="{% url 'hosp:listar' %}" ><p>Pacientes</p></a>
-            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
-                <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
-            {% endif %}
-            
-        </nav>
-            
-         <div class="entrar">
-            <a href="{% url 'hosp:listar' %}" class="btn-entrar">Entrar</a>
-        </div>
-    </header>
-    <main class="prontuario-container">
+    <div class="prontuario-header">
 
-        <div class="prontuario-header">
-    
-            <div class="header-left">
-                <a class="btn-voltar" href="{{ voltar_para_url}}">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    <span>Voltar</span>
-                </a>
-                <h2 class="header-title">Prontuário Médico</h2>
-            </div>
-
-            <div class="prontuario-actions-topo">
-                <button class="btn-acao-secundario">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                    <span>Imprimir</span>
-                </button>
-            </div>
+        <div class="header-left">
+            <a class="btn-voltar" href="{{ voltar_para_url}}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span>Voltar</span>
+            </a>
+            <h2 class="header-title">Prontuário Médico</h2>
         </div>
 
-        <div class="prontuario-grid">
+        <div class="prontuario-actions-topo">
+            <button class="btn-acao-secundario">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>Imprimir</span>
+            </button>
+        </div>
+    </div>
 
-            <div class="coluna-esquerda-container">
+    <div class="prontuario-grid">
 
-                <aside class="sidebar-paciente">
-                    <div class="info-paciente-principal">
-                        <div class="bolinha {{ paciente.classificacao|lower }}">{{ paciente.nome|slice:":2"|upper }}</div>
-                        <div class="info-paciente-nome">
-                            <h2>{{ paciente.nome }}</h2>
-                            <p>ID: P-{{ paciente.id }}</p>
-                        </div>
-                        <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
+        <div class="coluna-esquerda-container">
+
+            <aside class="sidebar-paciente">
+                <div class="info-paciente-principal">
+                    <div class="bolinha {{ paciente.classificacao|lower }}">{{ paciente.nome|slice:":2"|upper }}</div>
+                    <div class="info-paciente-nome">
+                        <h2>{{ paciente.nome }}</h2>
+                        <p>ID: P-{{ paciente.id }}</p>
                     </div>
-
-                    <div class="info-bloco">
-                        <p class="Pessoais"><strong>Informações Pessoais</strong></p>
-                        <p><strong>Idade:</strong>{{ paciente.idade }} anos</p>
-                        <p><strong>Sexo:</strong> {{ paciente.sexo }}</p>
-                        <p><strong>Data Nasc.</strong> {{ paciente.data_nascimento }}</p>
-                        <p><strong>CPF:</strong> {{ paciente.cpf }}</p>
-                        <p><strong>Convênio:</strong> {{ paciente.convenio }}</p>
-                    </div>
-
-                    <div class="info-bloco">
-                        <p class="Pessoais"><strong>Contato</strong></p>
-                        <p><strong>Telefone:</strong> (XX) XXXXX-XXXX</p>
-                        <p><strong>Email:</strong> email@paciente.com</p>
-                        <p><strong>Endereço:</strong> Rua das flores, 123</p>
-                    </div>
-
-                </aside>
-
-                <div class="sidebar-actions">
-                    {% if user.tipo_usuario == 'MEDICO' %}
-                        <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post">
-                            {% csrf_token %}
-
-                            {% if paciente.status == 'Aguardando' %}
-                                <button type="submit" class="btn btn-primary">Iniciar Atendimento</button>
-                            
-                            {% elif paciente.status == 'Em atendimento' %}
-                                <button type="submit" class="btn btn-success">Finalizar Atendimento</button>
-                            
-                            {% elif paciente.status == 'Concluido' %}
-                                <p class="text-muted">Atendimento finalizado.</p>
-                            {% endif %}
-                        </form>
-                    {% endif %}
-
-                    {% if paciente.status != 'Aguardando' %}
-                        <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn-feedback">Dar Feedback</a>
-                    {% endif %}
+                    <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
                 </div>
-            </div>
 
+                <div class="info-bloco">
+                    <p class="Pessoais"><strong>Informações Pessoais</strong></p>
+                    <p><strong>Idade:</strong>{{ paciente.idade }} anos</p>
+                    <p><strong>Sexo:</strong> {{ paciente.sexo }}</p>
+                    <p><strong>Data Nasc.</strong> {{ paciente.data_nascimento }}</p>
+                    <p><strong>CPF:</strong> {{ paciente.cpf }}</p>
+                    <p><strong>Convênio:</strong> {{ paciente.convenio }}</p>
+                </div>
 
-            <section class="conteudo-prontuario">
+                <div class="info-bloco">
+                    <p class="Pessoais"><strong>Contato</strong></p>
+                    <p><strong>Telefone:</strong> (XX) XXXXX-XXXX</p>
+                    <p><strong>Email:</strong> email@paciente.com</p>
+                    <p><strong>Endereço:</strong> Rua das flores, 123</p>
+                </div>
 
-                <div class="card-atendimento">
-                    <div class="card-header">
-                        <div class="card-title-group">
-                            <h2>Atendimento Atual</h2>
-                            <span><strong>Entrada:</strong> {{ paciente.hora_chegada|date:"d/m/Y \à\s H:i" }}</span>
-                        </div>
-                        <p class="status-tag {{ paciente.status|slugify }}">{{ paciente.get_status_display }}</p>
-                    </div>
-                    <div class="card-subheader">
-                        <h4>Sinais Vitais</h4>
-                    </div>
+            </aside>
 
-                    <div class="sinais-vitais-grid-boxed">
-    
-                        <div class="vital-item-box vital-pressao">
-                            <label>Pressão Arterial</label>
-                            <span class="valor">{{ paciente.pressao_arterial }}</span>
-                        </div>
-                        <div class="vital-item-box vital-pulso">
-                            <label>Pulso</label>
-                            <span class="valor">{{ paciente.pulso }} bpm</span>
-                        </div>
-                        <div class="vital-item-box vital-temperatura">
-                            <label>Temperatura</label>
-                            <span class="valor">{{ paciente.temperatura }} °C</span>
-                        </div>
-                        <div class="vital-item-box vital-saturacao">
-                            <label>Saturação O2</label>
-                            <span class="valor">{{ paciente.saturacao }}%</span>
-                        </div>
-                        <div class="vital-item-box vital-glicemia">
-                            <label>Glicemia</label>
-                            <span class="valor">{{ paciente.glicemia }} mg/dL</span>
-                        </div>
-                        <div class="vital-item-box vital-respiratoria">
-                            <label>Freq. Respiratória</label>
-                            <span class="valor">{{ paciente.frequenciaRespiratoria }} rpm</span>
-                        </div>
-                        <div class="vital-item-box vital-dor">
-                            <label>Dor</label>
-                            <span class="valor">{{ paciente.dor }}/10</span>
-                        </div>
+            <div class="sidebar-actions">
+                {% if user.tipo_usuario == 'MEDICO' %}
+                    <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post">
+                        {% csrf_token %}
 
-                    </div>
-
-                    
-                    <div class="triagem-classificacao-grid">
+                        {% if paciente.status == 'Aguardando' %}
+                            <button type="submit" class="btn btn-primary">Iniciar Atendimento</button>
                         
-                    
-                        <div class="coluna-triagem">
-                            <h4>Triagem</h4>
-                             <div class="info-item com-fundo">
-                                <label>Queixa Principal</label>
-                                <p>{{ paciente.queixa }}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Início dos Sintomas</label>
-                                <p>{{ paciente.inicio_sintomas|date:"d/m/Y" }}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Sintomas Associados</label>
-                                <p>{{ paciente.get_sintomas_associados_display }}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Observações do Triador</label>
-                                <p>{{ paciente.observacoes|default:"Nenhuma." }}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Responsável pela Triagem</label>
-                                <p>{{ paciente.atendente.nome_completo }}</p>
-                            </div>
-                        </div>
+                        {% elif paciente.status == 'Em atendimento' %}
+                            <button type="submit" class="btn btn-success">Finalizar Atendimento</button>
+                        
+                        {% elif paciente.status == 'Concluido' %}
+                            <p class="text-muted">Atendimento finalizado.</p>
+                        {% endif %}
+                    </form>
+                {% endif %}
 
-                        <div class="coluna-classificacao">
-                            <h4>classificação de risco</h4>
-                            <p class="classificacao-risco {{ paciente.classificacao|lower }}">
-                                <span class="status-dot {{ paciente.classificacao|lower }}"></span>
-                                {{ paciente.classificacao }} - {{ paciente.get_classificacao_display }}
-                            </p>
+                {% if paciente.status != 'Aguardando' %}
+                    <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn-feedback">Dar Feedback</a>
+                {% endif %}
+            </div>
+        </div>
 
-                        <div class="coluna-encaminhamento">
-                            <h4>Encaminhamento</h4>
-                            <div class="info-item">
-                                <label>Especialidade</label>
-                                <p>{{ paciente.encaminhamento|default:"Não definido" }}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Médico Responsável</label>
-                                <p>{{ paciente.medico_responsavel.nome_completo|default:"-" }}</p>
-                            </div>
+
+        <section class="conteudo-prontuario">
+
+            <div class="card-atendimento">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <h2>Atendimento Atual</h2>
+                        <span><strong>Entrada:</strong> {{ paciente.hora_chegada|date:"d/m/Y \à\s H:i" }}</span>
+                    </div>
+                    <p class="status-tag {{ paciente.status|slugify }}">{{ paciente.get_status_display }}</p>
+                </div>
+                <div class="card-subheader">
+                    <h4>Sinais Vitais</h4>
+                </div>
+
+                <div class="sinais-vitais-grid-boxed">
+
+                    <div class="vital-item-box vital-pressao">
+                        <label>Pressão Arterial</label>
+                        <span class="valor">{{ paciente.pressao_arterial }}</span>
+                    </div>
+                    <div class="vital-item-box vital-pulso">
+                        <label>Pulso</label>
+                        <span class="valor">{{ paciente.pulso }} bpm</span>
+                    </div>
+                    <div class="vital-item-box vital-temperatura">
+                        <label>Temperatura</label>
+                        <span class="valor">{{ paciente.temperatura }} °C</span>
+                    </div>
+                    <div class="vital-item-box vital-saturacao">
+                        <label>Saturação O2</label>
+                        <span class="valor">{{ paciente.saturacao }}%</span>
+                    </div>
+                    <div class="vital-item-box vital-glicemia">
+                        <label>Glicemia</label>
+                        <span class="valor">{{ paciente.glicemia }} mg/dL</span>
+                    </div>
+                    <div class="vital-item-box vital-respiratoria">
+                        <label>Freq. Respiratória</label>
+                        <span class="valor">{{ paciente.frequenciaRespiratoria }} rpm</span>
+                    </div>
+                    <div class="vital-item-box vital-dor">
+                        <label>Dor</label>
+                        <span class="valor">{{ paciente.dor }}/10</span>
+                    </div>
+
+                </div>
+
+                
+                <div class="triagem-classificacao-grid">
                     
+                
+                    <div class="coluna-triagem">
+                        <h4>Triagem</h4>
+                            <div class="info-item com-fundo">
+                            <label>Queixa Principal</label>
+                            <p>{{ paciente.queixa }}</p>
                         </div>
                         <div class="info-item">
-                            <label>Justificativa da IA (Triagem)</label>
-                            <div class="justificativa-ia">
-                                {{ paciente.justificativa }}
-                            </div>
+                            <label>Início dos Sintomas</label>
+                            <p>{{ paciente.inicio_sintomas|date:"d/m/Y" }}</p>
                         </div>
-                            
-                            
+                        <div class="info-item">
+                            <label>Sintomas Associados</label>
+                            <p>{{ paciente.get_sintomas_associados_display }}</p>
                         </div>
-                    </div>
-
-                    <div class="timeline-container">
-                        <div class="timeline-header">
-                            <h4>Linha do Tempo do Atendimento</h4>
+                        <div class="info-item">
+                            <label>Observações do Triador</label>
+                            <p>{{ paciente.observacoes|default:"Nenhuma." }}</p>
                         </div>
-
-                        <div class="timeline-grid">
-
-                            <div class="timeline-column">
-
-                                <div class="info-item">
-                                    <label>Chegada</label>
-                                    <p>{{ paciente.hora_chegada|date:"d/m/Y \à\s H:i" }}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>Tempo de Espera</label>
-                                    <p class="tempo-espera">{{ paciente.tempo_de_espera|default:"-" }}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>Duração do Atendimento</label>
-                                    <p class="tempo-duracao">{{ paciente.tempo_de_atendimento|default:"-" }}</p>
-                                </div>
-                            </div>
-
-                            <div class="timeline-column">
-                                <div class="info-item">
-                                    <label>Início do Atendimento</label>
-                                    <p>{{ paciente.hora_inicio_atendimento|date:"d/m/Y \à\s H:i"|default:"-" }}</p>
-                                </div>
-                                
-                                <div class="info-item">
-                                    <label>Fim do Atendimento</label>
-                                    <p>{{ paciente.hora_fim_atendimento|date:"d/m/Y \à\s H:i"|default:"-" }}</p>
-                                </div>
-                            </div>
-                            
+                        <div class="info-item">
+                            <label>Responsável pela Triagem</label>
+                            <p>{{ paciente.atendente.nome_completo }}</p>
                         </div>
                     </div>
 
-    
-                    <div class="secao-observacoes">
-                        <h4>Observações do Médico</h4>
+                    <div class="coluna-classificacao">
+                        <h4>classificação de risco</h4>
+                        <p class="classificacao-risco {{ paciente.classificacao|lower }}">
+                            <span class="status-dot {{ paciente.classificacao|lower }}"></span>
+                            {{ paciente.classificacao }} - {{ paciente.get_classificacao_display }}
+                        </p>
 
-                        {% for entrada in historico %}
-                            <div class="entrada-historico">
-                                <div class="entrada-header">
-                                    <span><strong>{{ entrada.autor.get_tipo_usuario_display|default:'Observação' }} em</strong></span>
-                                    <span>{{ entrada.data_criacao|date:"d/m/Y \à\s H:i" }}</span>
-                                </div>
-                                <div class="entrada-body">
-                                    <p>{{ entrada.texto }}</p>
-                                    <p class="autor-observacao"><strong>Por:</strong> {{ entrada.autor.nome_completo }}</p>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <div class="observacoes-empty-state">
-                                <p>Nenhuma observação registrada no prontuário ainda...</p>
-                                <span>(podem ter mais de uma)</span>
-                            </div>
-                        {% endfor %}
-
-                        {% if user.tipo_usuario == 'MEDICO' %}
-        
-                            <button class="btn-adicionar-observacao" id="toggle-form-btn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                <span>Adicionar Observação Médica</span>
-                            </button>
-
-                            <div class="nova-entrada-prontuario" id="nova-observacao-form" style="display: none;">
-                                <h5>Adicionar Nova Observação</h5>
-                                <form method="post">
-                                    {% csrf_token %}
-                                    {{ form_prontuario.texto }}
-                                    <button type="submit" class="btn-adicionar-prontuario">Salvar Observação</button>
-                                </form>
-                            </div>
-
-                        {% endif %}
+                    <div class="coluna-encaminhamento">
+                        <h4>Encaminhamento</h4>
+                        <div class="info-item">
+                            <label>Especialidade</label>
+                            <p>{{ paciente.encaminhamento|default:"Não definido" }}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Médico Responsável</label>
+                            <p>{{ paciente.medico_responsavel.nome_completo|default:"-" }}</p>
+                        </div>
+                
                     </div>
-
-                    
+                    <div class="info-item">
+                        <label>Justificativa da IA (Triagem)</label>
+                        <div class="justificativa-ia">
+                            {{ paciente.justificativa }}
+                        </div>
+                    </div>
+                        
+                        
+                    </div>
                 </div>
-            </section>
-        </div>
-    </main>
 
+                <div class="timeline-container">
+                    <div class="timeline-header">
+                        <h4>Linha do Tempo do Atendimento</h4>
+                    </div>
+
+                    <div class="timeline-grid">
+
+                        <div class="timeline-column">
+
+                            <div class="info-item">
+                                <label>Chegada</label>
+                                <p>{{ paciente.hora_chegada|date:"d/m/Y \à\s H:i" }}</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Tempo de Espera</label>
+                                <p class="tempo-espera">{{ paciente.tempo_de_espera|default:"-" }}</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Duração do Atendimento</label>
+                                <p class="tempo-duracao">{{ paciente.tempo_de_atendimento|default:"-" }}</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-column">
+                            <div class="info-item">
+                                <label>Início do Atendimento</label>
+                                <p>{{ paciente.hora_inicio_atendimento|date:"d/m/Y \à\s H:i"|default:"-" }}</p>
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Fim do Atendimento</label>
+                                <p>{{ paciente.hora_fim_atendimento|date:"d/m/Y \à\s H:i"|default:"-" }}</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+                <div class="secao-observacoes">
+                    <h4>Observações do Médico</h4>
+
+                    {% for entrada in historico %}
+                        <div class="entrada-historico">
+                            <div class="entrada-header">
+                                <span><strong>{{ entrada.autor.get_tipo_usuario_display|default:'Observação' }} em</strong></span>
+                                <span>{{ entrada.data_criacao|date:"d/m/Y \à\s H:i" }}</span>
+                            </div>
+                            <div class="entrada-body">
+                                <p>{{ entrada.texto }}</p>
+                                <p class="autor-observacao"><strong>Por:</strong> {{ entrada.autor.nome_completo }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="observacoes-empty-state">
+                            <p>Nenhuma observação registrada no prontuário ainda...</p>
+                            <span>(podem ter mais de uma)</span>
+                        </div>
+                    {% endfor %}
+
+                    {% if user.tipo_usuario == 'MEDICO' %}
+    
+                        <button class="btn-adicionar-observacao" id="toggle-form-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Adicionar Observação Médica</span>
+                        </button>
+
+                        <div class="nova-entrada-prontuario" id="nova-observacao-form" style="display: none;">
+                            <h5>Adicionar Nova Observação</h5>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form_prontuario.texto }}
+                                <button type="submit" class="btn-adicionar-prontuario">Salvar Observação</button>
+                            </form>
+                        </div>
+
+                    {% endif %}
+                </div>
+
+                
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
     <script>
         // Pega o botão e o container do formulário pelos seus IDs
         const toggleBtn = document.getElementById('toggle-form-btn');
@@ -308,5 +290,6 @@
             });
         }
     </script>
+{% endblock %}
 </body>
 </html>

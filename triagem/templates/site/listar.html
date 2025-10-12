@@ -1,184 +1,164 @@
+{% extends 'site/headerBase.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pacientes</title>
-    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=3">
+
+
+{% block title %}Pacientes - MedTriagem{% endblock %}
+
+{% block styles %}
     <link rel="stylesheet" href="{% static 'front/css/listar.css' %}?v=4">
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
-        <nav class="menu-links">
-            <a href="{% url 'hosp:index' %}">Home</a>
-            <!--<a href="{% url 'hosp:dashboard' %}">Dashboard</a>-->
-            {% if user.tipo_usuario != 'MEDICO' %}
-            <a href="{% url 'hosp:criar' %}">Triagem</a>
-            {% endif %}
-            <a href="{% url 'hosp:listar' %}">Pacientes</a>
-            <a href="{% url 'hosp:lista_feedback' %}">Feedbacks</a> 
-            {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
-                <a href="{% url 'hosp:painel_gestao' %}">Painel de Gestão</a>
-            {% endif %}
-        </nav>
-        <div class="entrar">
-            <a href="{% url 'hosp:perfil' %}" class="btn-entrar">Perfil</a>
-        </div>
-    </header>
+{% endblock %}
 
-    <main class="pacientes-container">
-        <div class="pacientes-header">
-            <h2>Pacientes</h2>
-            {% if user.tipo_usuario != 'MEDICO' %}
-            <a href="{% url 'hosp:criar' %}">
-                <button class="btn-adicionar">+ Adicionar Paciente</button>
-                </a>
-            {% endif %}
-        </div>
-        
-        <div class="filtros-container">
-            <div class="filtros-principal">
+{% block content %}
+<main class="pacientes-container">
+    <div class="pacientes-header">
+        <h2>Pacientes</h2>
+        {% if user.tipo_usuario != 'MEDICO' %}
+        <a href="{% url 'hosp:criar' %}">
+            <button class="btn-adicionar">+ Adicionar Paciente</button>
+            </a>
+        {% endif %}
+    </div>
+    
+    <div class="filtros-container">
+        <div class="filtros-principal">
+            
+
+            <div class="busca-container-vertical">
+                <input type="text" id="busca-input" placeholder="🔍 Buscar por nome ou ID..." class="busca-input">
                 
-
-                <div class="busca-container-vertical">
-                    <input type="text" id="busca-input" placeholder="🔍 Buscar por nome ou ID..." class="busca-input">
-                    
-                    <div class="filtro-data-container">
-                        <button class="btn-filtro-data ativo" data-periodo="todos">Todos</button>
-                        <button class="btn-filtro-data" data-periodo="hoje">Cadastrados Hoje</button>
-                    </div>
-                </div>
-                
-                <div class="filtro-dropdown-container">
-                    <button class="filtro-ativar-btn" id="status-filtro-btn"> 
-                        <span>Status: Todos</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="filtro-dropdown-menu" id="status-filtro-menu">
-                        <div class="filtros-status">
-                            <button class="filtro-status ativo" data-status="todos">Todos</button>
-                            <button class="filtro-status" data-status="Aguardando">Aguardando</button>
-                            <button class="filtro-status" data-status="Em Atendimento">Em Atendimento</button>
-                            <button class="filtro-status" data-status="Concluido">Concluídos</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="filtro-dropdown-container">
-                    <button class="filtro-ativar-btn" id="risco-filtro-btn">
-                        <span>Risco: Todas</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="filtro-dropdown-menu" id="risco-filtro-menu">
-                        <div class ="filtros-cor">
-                            <button class="filtro-cor ativo" data-cor="todos">Todas</button>
-                            <button class="filtro-cor" data-cor="vermelho">Vermelho</button>
-                            <button class="filtro-cor" data-cor="laranja">Laranja</button>
-                            <button class="filtro-cor" data-cor="amarelo">Amarelo</button>
-                            <button class="filtro-cor" data-cor="verde">Verde</button>
-                            <button class="filtro-cor" data-cor="azul">Azul</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="cards-pacientes">
-            {% for paciente in pacientes %}
-            <div class="card-paciente {{ paciente.classificacao|lower }}" data-cor="{{ paciente.classificacao|lower }}" data-status="{{ paciente.status }}" data-cadastro="{{ paciente.hora_chegada|date:'Y-m-d' }}">
-                <div class="card-topo">
-                    <div class="bolinha {{ paciente.classificacao|lower }}">{{ paciente.nome|slice:":2"|upper }}</div>
-                    <div class="card-info">
-                        <strong>{{ paciente.nome }}</strong>
-                        <br>
-                        <small>ID: P-{{ paciente.id }} • {{ paciente.idade }} anos</small>
-                        <br>
-                        <small>{{ paciente.hora_chegada }}</small>
-                    </div>
-                    <div class="topo-direita">
-                        <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
-                        <span class="status-paciente">{{ paciente.status|default:'Aguardando' }}</span>
-                    </div>
-                </div>
-
-                <p class="queixa">Queixa Principal: {{ paciente.queixa }}</p>
-
-                <div class="detalhes">
-                    <div class="pressao"><b>Pressão</b><br>{{ paciente.pressao_arterial }} mmHg</div>
-                    <div class="pulso"><b>Pulso</b><br>{{ paciente.pulso }} bpm</div>
-                    <div class="temperatura"><b>Temperatura</b><br>{{ paciente.temperatura }} °C</div>
-                    <div class="saturacao"><b>Saturação</b><br>{{ paciente.saturacao }}%</div>
-                </div>
-
-                <div class="status-atendimento-container">
-                    {% if user.tipo_usuario == 'ATENDENTE' %}
-                        <div class="atendido-por">
-                            {% if paciente.status == 'Aguardando' %}
-                                <span class="status-info">Aguardando na fila...</span>
-                            {% elif paciente.status == 'Em atendimento' or paciente.status == 'Concluido' %}
-                                {% if paciente.medico_responsavel %}
-                                    <span class="status-info">Atendido por:</span>
-                                    <span class="medico">{{ paciente.medico_responsavel.username }}</span> 
-                                {% else %}
-                                    <span class="status-info">{{ paciente.get_status_display }}</span>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <div class="card-actions">
-                    <div class="acoes-botoes"> 
-                        <a href="{% url 'hosp:mostrar' paciente.id %}" class="btn-prontuario">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                            </svg>
-                            <span>Prontuário</span>
-                        </a>
-                        <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn btn-secondary btn-sm mt-1">Dar Feedback</a>
-                        {% if user.tipo_usuario == 'ADMIN' %}
-                        <a href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza que deseja remover este paciente?')"><button class="btn-remover">Remover</button></a>
-                        {% endif %}
-                        {% if user.tipo_usuario == 'MEDICO' %}
-
-                        {% if paciente.status == 'Aguardando' %}
-                            <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn-atender">Atender</button>
-                            </form>
-
-                        {% elif paciente.status == 'Em atendimento' %}
-                            <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn-finalizar"> Finalizar</button>
-                            </form>
-
-                        {% elif paciente.status == 'Concluido' %}
-                            <button class="btn-concluido" disabled>Concluído</button>
-                        {% endif %}
-                    {% endif %}
-                    </div>
-                 
+                <div class="filtro-data-container">
+                    <button class="btn-filtro-data ativo" data-periodo="todos">Todos</button>
+                    <button class="btn-filtro-data" data-periodo="hoje">Cadastrados Hoje</button>
                 </div>
             </div>
             
-             {% empty %}
-                <p style="grid-column: 1 / -1; text-align: center; color: #777;">
-                    Nenhum paciente encontrado no banco de dados.
-                </p>
-            {% endfor %}
-        </div>
-    </main>
+            <div class="filtro-dropdown-container">
+                <button class="filtro-ativar-btn" id="status-filtro-btn"> 
+                    <span>Status: Todos</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="filtro-dropdown-menu" id="status-filtro-menu">
+                    <div class="filtros-status">
+                        <button class="filtro-status ativo" data-status="todos">Todos</button>
+                        <button class="filtro-status" data-status="Aguardando">Aguardando</button>
+                        <button class="filtro-status" data-status="Em Atendimento">Em Atendimento</button>
+                        <button class="filtro-status" data-status="Concluido">Concluídos</button>
+                    </div>
+                </div>
+            </div>
 
-    <footer>
-        <p>© 2025 Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
-    </footer>
-    
+            <div class="filtro-dropdown-container">
+                <button class="filtro-ativar-btn" id="risco-filtro-btn">
+                    <span>Risco: Todas</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="filtro-dropdown-menu" id="risco-filtro-menu">
+                    <div class ="filtros-cor">
+                        <button class="filtro-cor ativo" data-cor="todos">Todas</button>
+                        <button class="filtro-cor" data-cor="vermelho">Vermelho</button>
+                        <button class="filtro-cor" data-cor="laranja">Laranja</button>
+                        <button class="filtro-cor" data-cor="amarelo">Amarelo</button>
+                        <button class="filtro-cor" data-cor="verde">Verde</button>
+                        <button class="filtro-cor" data-cor="azul">Azul</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cards-pacientes">
+        {% for paciente in pacientes %}
+        <div class="card-paciente {{ paciente.classificacao|lower }}" data-cor="{{ paciente.classificacao|lower }}" data-status="{{ paciente.status }}" data-cadastro="{{ paciente.hora_chegada|date:'Y-m-d' }}">
+            <div class="card-topo">
+                <div class="bolinha {{ paciente.classificacao|lower }}">{{ paciente.nome|slice:":2"|upper }}</div>
+                <div class="card-info">
+                    <strong>{{ paciente.nome }}</strong>
+                    <br>
+                    <small>ID: P-{{ paciente.id }} • {{ paciente.idade }} anos</small>
+                    <br>
+                    <small>{{ paciente.hora_chegada }}</small>
+                </div>
+                <div class="topo-direita">
+                    <span class="tag {{ paciente.classificacao|lower }}">{{ paciente.classificacao }}</span>
+                    <span class="status-paciente">{{ paciente.status|default:'Aguardando' }}</span>
+                </div>
+            </div>
+
+            <p class="queixa">Queixa Principal: {{ paciente.queixa }}</p>
+
+            <div class="detalhes">
+                <div class="pressao"><b>Pressão</b><br>{{ paciente.pressao_arterial }} mmHg</div>
+                <div class="pulso"><b>Pulso</b><br>{{ paciente.pulso }} bpm</div>
+                <div class="temperatura"><b>Temperatura</b><br>{{ paciente.temperatura }} °C</div>
+                <div class="saturacao"><b>Saturação</b><br>{{ paciente.saturacao }}%</div>
+            </div>
+
+            <div class="status-atendimento-container">
+                {% if user.tipo_usuario == 'ATENDENTE' %}
+                    <div class="atendido-por">
+                        {% if paciente.status == 'Aguardando' %}
+                            <span class="status-info">Aguardando na fila...</span>
+                        {% elif paciente.status == 'Em atendimento' or paciente.status == 'Concluido' %}
+                            {% if paciente.medico_responsavel %}
+                                <span class="status-info">Atendido por:</span>
+                                <span class="medico">{{ paciente.medico_responsavel.username }}</span> 
+                            {% else %}
+                                <span class="status-info">{{ paciente.get_status_display }}</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="card-actions">
+                <div class="acoes-botoes"> 
+                    <a href="{% url 'hosp:mostrar' paciente.id %}" class="btn-prontuario">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                        <span>Prontuário</span>
+                    </a>
+                    <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn btn-secondary btn-sm mt-1">Dar Feedback</a>
+                    {% if user.tipo_usuario == 'ADMIN' %}
+                    <a href="{% url 'hosp:deletar' paciente.id %}" onclick="return confirm('Tem certeza que deseja remover este paciente?')"><button class="btn-remover">Remover</button></a>
+                    {% endif %}
+                    {% if user.tipo_usuario == 'MEDICO' %}
+
+                    {% if paciente.status == 'Aguardando' %}
+                        <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-atender">Atender</button>
+                        </form>
+
+                    {% elif paciente.status == 'Em atendimento' %}
+                        <form action="{% url 'hosp:mudar_status' pk=paciente.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-finalizar"> Finalizar</button>
+                        </form>
+
+                    {% elif paciente.status == 'Concluido' %}
+                        <button class="btn-concluido" disabled>Concluído</button>
+                    {% endif %}
+                {% endif %}
+                </div>
+                
+            </div>
+        </div>
+        
+            {% empty %}
+            <p style="grid-column: 1 / -1; text-align: center; color: #777;">
+                Nenhum paciente encontrado no banco de dados.
+            </p>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
     <script src="{% static 'front/js/filtro.js' %}?v=4"></script>
+{% endblock %}
 </body>
 </html>
