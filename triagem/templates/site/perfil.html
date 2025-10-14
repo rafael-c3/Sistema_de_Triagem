@@ -9,6 +9,8 @@
 
 {% block content %}
 
+{% with usuario=perfil_usuario|default:user %}
+
 <div class="profile-main-container">
 
     <a href="javascript:history.back()" class="btn-voltar">
@@ -27,37 +29,44 @@
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                     </svg>
                 </div>
-                <h3>Dr. {{ user.nome_completo }}</h3>
-                <p class="username">@{{ user.username }}</p>
-                <span class="user-role">{{ user.get_tipo_usuario_display }}</span>
+                <h3>Dr. {{ usuario.nome_completo }}</h3>
+                <p class="username">@{{ usuario.username }}</p>
+                <span class="user-role">{{ usuario.get_tipo_usuario_display }}</span>
 
                 <ul class="profile-details">
                     <li>
                         <span class="icon">👤</span>
                         <div>
                             <small>Nome Completo</small>
-                            <p>{{ user.nome_completo }}</p>
+                            <p>{{ usuario.nome_completo }}</p>
                         </div>
                     </li>
                     <li>
                         <span class="icon">📧</span>
                         <div>
                             <small>Email</small>
-                            <p>{{ user.email }}</p>
+                            <p>{{ usuario.email }}</p>
                         </div>
                     </li>
                     <li>
                         <span class="icon">💳</span>
                         <div>
                             <small>CPF</small>
-                            <p>{{ user.cpf }}</p>
+                            <p>{{ usuario.cpf }}</p>
                         </div>
                     </li>
                     <li>
                         <span class="icon">🏷️</span>
                         <div>
                             <small>Tipo de Conta</small>
-                            <p>{{ user.get_tipo_usuario_display }}</p>
+                            <p>{{ usuario.get_tipo_usuario_display }}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="icon">📅</span>
+                        <div>
+                            <small>Criado em</small>
+                            <p>{{ usuario.date_joined|date:"d/m/Y" }}</p>
                         </div>
                     </li>
                 </ul>
@@ -149,6 +158,7 @@
         </section>
     </div>
 </div>
+{% endwith %}
 
 {% endblock %}
 

@@ -194,13 +194,15 @@ def update_view(request, pk):
             form.save()
             return redirect('hosp:mostrar', pk=paciente.pk)
         
+@require_POST # Garante que esta view SÓ possa ser acessada via POST
 @login_required
+@admin_required
 def delete_view(request, pk):
-    paciente = Paciente.objects.get(pk = pk)
-    if paciente:
-        paciente.delete()
-        request.status_code = 204
-        return redirect('hosp:listar')
+    paciente_a_deletar = get_object_or_404(Paciente, pk=pk)
+    nome_paciente = paciente_a_deletar.nome
+    paciente_a_deletar.delete()
+    messages.success(request, f'O paciente "{nome_paciente}" foi removido com sucesso.')
+    return redirect('hosp:painel_gestao')
     
 @login_required
 def dashboard_view(request):
@@ -433,3 +435,77 @@ def gestao_view(request):
     }
     
     return render(request, 'site/gestao.html', context)
+
+@login_required
+@admin_required # Protege a view, apenas Admins podem acessá-la
+def ver_perfil_usuario_view(request, pk):
+    """
+    Exibe o perfil de um usuário específico para um administrador.
+    """
+    # Busca o usuário pelo ID fornecido na URL ou retorna um erro 404
+    usuario_selecionado = get_object_or_404(CustomUser, pk=pk)
+    
+    context = {
+        'perfil_usuario': usuario_selecionado, # Enviamos o usuário selecionado para o template
+    }
+    
+    # Lógica para buscar o histórico de pacientes (igual à da perfil_view)
+    if usuario_selecionado.tipo_usuario == 'MEDICO':
+        pacientes_do_usuario = usuario_selecionado.pacientes_atendidos.all().order_by('-id')
+        context['titulo_historico'] = f'Histórico de Pacientes Atendidos por {usuario_selecionado.nome_completo}'
+        context['historico_pacientes'] = pacientes_do_usuario
+
+    elif usuario_selecionado.tipo_usuario == 'ATENDENTE':
+        pacientes_do_usuario = usuario_selecionado.pacientes_criados.all().order_by('-id')
+        context['titulo_historico'] = f'Pacientes Registrados por {usuario_selecionado.nome_completo}'
+        context['historico_pacientes'] = pacientes_do_usuario
+        
+    # Lógica para buscar os feedbacks feitos pelo usuário
+    feedbacks_do_usuario = FeedbackTriagem.objects.filter(usuario=usuario_selecionado).order_by('-data_criacao')
+    context['feedbacks_do_usuario'] = feedbacks_do_usuario
+    
+    # Reutilizaremos o template perfil.html para mostrar as informações
+    return render(request, 'site/perfil.html', context)
+
+@require_POST # Garante que esta view SÓ possa ser acessada via POST
+@login_required
+@admin_required
+def delete_user_view(request, pk):
+    usuario_a_deletar = get_object_or_404(CustomUser, pk=pk)
+    
+    if request.user == usuario_a_deletar:
+        messages.error(request, 'Você não pode remover sua própria conta de administrador.')
+        return redirect('hosp:painel_gestao')
+
+    nome_usuario = usuario_a_deletar.username
+    usuario_a_deletar.delete()
+    messages.success(request, f'O usuário "{nome_usuario}" foi removido com sucesso.')
+    return redirect('hosp:painel_gestao')
+
+@login_required
+def partial_patient_list_view(request):
+    """
+    Esta view retorna apenas o HTML do corpo da tabela de pacientes,
+    para ser usada pela chamada AJAX.
+    """
+    # Reutilizamos EXATAMENTE a mesma lógica de ordenação da index_view
+    prioridade_classificacao = Case(
+        When(classificacao='Vermelho', then=Value(1)),
+        When(classificacao='Laranja', then=Value(2)),
+        When(classificacao='Amarelo', then=Value(3)),
+        When(classificacao='Verde', then=Value(4)),
+        When(classificacao='Azul', then=Value(5)),
+        default=Value(6),
+        output_field=IntegerField()
+    )
+    
+    lista_pacientes_priorizada = Paciente.objects.exclude(status='Concluido').annotate(
+        prioridade=prioridade_classificacao
+    ).order_by('prioridade', 'hora_chegada')
+
+    context = {
+        'pacientes': lista_pacientes_priorizada,
+    }
+    
+    # Renderiza um novo template "parcial" que só contém as linhas da tabela
+    return render(request, 'site/partials/_patient_list_partial.html', context)

@@ -77,8 +77,15 @@
                     </form>
                 {% endif %}
 
-                {% if paciente.status != 'Aguardando' %}
-                    <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn-feedback">Dar Feedback</a>
+                <a href="{% url 'hosp:dar_feedback' pk=paciente.pk %}" class="btn-feedback">Dar Feedback</a>
+
+                {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+                    <form action="{% url 'hosp:deletar' pk=paciente.pk %}" method="post" style="display: inline; margin-left: 10px;" onsubmit="return confirm('Tem certeza que deseja remover permanentemente o paciente \'{{ paciente.nome|addslashes }}\'? Todo o seu histórico será perdido.');">
+                        {% csrf_token %}
+                        <button type="submit" class="button-delete" style="background-color: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">
+                            Remover Paciente
+                        </button>
+                    </form>
                 {% endif %}
             </div>
         </div>

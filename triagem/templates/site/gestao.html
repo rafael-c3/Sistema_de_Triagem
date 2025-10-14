@@ -188,7 +188,7 @@
                                 <a href="{% url 'hosp:mostrar' pk=paciente.pk %}" class="action-icon" title="Ver Prontuário">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <form action="{% url 'hosp:deletar' pk=paciente.pk %}" method="post" onsubmit="return confirm('Tem certeza?');">
+                                <form action="{% url 'hosp:deletar' pk=paciente.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o paciente \'{{ paciente.nome|addslashes }}\'?');">
                                     {% csrf_token %}
                                     <button type="submit" class="action-icon-delete" title="Remover">
                                         <i class="fas fa-trash-alt"></i>
@@ -231,8 +231,13 @@
                             <td>{{ medico.email }}</td>
                             <td>{{ medico.registro_profissional|default:"-" }}</td>
                             <td>Cardiologia</td> <td class="actions">
-                                <a href="{% url 'admin:triagem_customuser_change' medico.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                <a href="{% url 'admin:triagem_customuser_delete' medico.pk %}" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
+                                <a href="{% url 'hosp:ver_perfil_usuario' pk=medico.pk %}" class="action-icon" title="Ver Perfil"><i class="fas fa-eye"></i></a>
+                                <form action="{% url 'hosp:remover_usuario' pk=medico.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o médico \'{{ medico.nome_completo|addslashes }}\'?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-icon-delete" title="Remover">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         {% empty %}
@@ -312,8 +317,13 @@
                             <td>{{ atendente.cpf }}</td>
                             <td>{{ atendente.email }}</td>
                             <td class="actions">
-                                <a href="{% url 'admin:triagem_customuser_change' atendente.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                <a href="{% url 'admin:triagem_customuser_delete' atendente.pk %}" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
+                                <a href="{% url 'hosp:ver_perfil_usuario' pk=atendente.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
+                                    <form action="{% url 'hosp:remover_usuario' pk=atendente.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o atendente \'{{ atendente.nome_completo|addslashes }}\'?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-icon-delete" title="Remover">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         {% empty %}
