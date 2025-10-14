@@ -21,7 +21,7 @@
         {% csrf_token %}
         
         <div class="form-group">
-            <label for="{{ form.username.id_for_label }}">Nome de Usuário</label>
+            <label for="{{ form.username.id_for_label }}">Nome de Usuário (ou email)</label>
             {{ form.username }}
             {% if form.username.errors %}<div class="error-text">{{ form.username.errors.as_text }}</div>{% endif %}
         </div>

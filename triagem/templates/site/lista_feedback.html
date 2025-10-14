@@ -81,8 +81,8 @@
                     <th>Classificação Original</th>
                     <th>Avaliação do Profissional</th>
                     <th>Avaliador</th>
-                    <th>Tipo de Usuário</th>
                     <th>Data</th>
+                    <th>Status</th>
                     <th>Ações</th>
 
                 </tr>
@@ -116,9 +116,12 @@
                         {% endif %}
                     </td>
                     <td>{{ fb.usuario.nome_completo }}</td>
-                    <td><span class="tag-user">{{ fb.usuario.get_tipo_usuario_display }}</span></td>
                     <td>{{ fb.data_criacao|date:"d/m/Y" }}</td>
-
+                    <td>
+                        <span class="status-feedback-{{ fb.status|lower }}">
+                            {{ fb.get_status_display }}
+                        </span>
+                    </td>
                     <td>
                         <button class="btn-ver" 
                                 data-paciente-nome="{{ fb.paciente.nome }}"

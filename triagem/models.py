@@ -100,7 +100,10 @@ class Paciente(models.Model):
     sexo = models.CharField(choices=Sexualidade, max_length=50)
     cpf = models.CharField(unique=True, max_length=14)
     convenio = models.CharField(choices=Convenios, max_length=50)
-    
+
+    nome_responsavel = models.CharField(max_length=100, blank=True, null=True, verbose_name="Nome do Responsável")
+    cpf_responsavel = models.CharField(max_length=11, blank=True, null=True, verbose_name="CPF do Responsável")
+
     temperatura = models.FloatField(max_length=3)
     pressao_sistolica = models.CharField(max_length=3) # Valor maior
     pressao_diastolica = models.CharField(max_length=3) # Valor menor
@@ -254,6 +257,23 @@ class FeedbackTriagem(models.Model):
     motivo = models.TextField(blank=True, null=True, verbose_name="Motivo da reclassificação")
 
     # Data de criação do feedback
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback para {self.paciente.nome} por {self.usuario.username}"
+    
+    class StatusFeedback(models.TextChoices):
+        EM_ANALISE = 'EM_ANALISE', 'Em Análise'
+        ACATADO = 'ACATADO', 'Acatado'
+        NAO_ACATADO = 'NAO_ACATADO', 'Não Acatado'
+
+    status = models.CharField(
+        max_length=20,
+        choices=StatusFeedback.choices,
+        default=StatusFeedback.EM_ANALISE, # Todo novo feedback começa "Em Análise"
+        verbose_name="Status do Feedback"
+    )
+
     data_criacao = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

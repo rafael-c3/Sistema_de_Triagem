@@ -49,7 +49,7 @@
                     <span>{{ user.get_tipo_usuario_display }}</span>
                 </div>
                 <a href="{% url 'hosp:perfil' %}" class="dropdown-item">Meu Perfil</a>
-                <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;">
+                <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;" onsubmit="return confirm('Tem certeza que deseja sair da sua conta?');">
                     {% csrf_token %}
                     <button type="submit" class="dropdown-item logout-button">Sair </button>
                 </form>
@@ -64,7 +64,7 @@
     </main>
 
     <footer>
-        <p>© {% now "Y" %} Sistema de Triagem - Desenvolvido por José Vieira e Rafael Lucas</p>
+        <p>© {% now "Y" %} Sistema de Triagem - Desenvolvido por Equipe MedTriagem</p>
     </footer>
 
     <script src="{% static 'front/js/base.js' %}?v=5"></script>

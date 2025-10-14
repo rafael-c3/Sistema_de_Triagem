@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Paciente
+from .models import CustomUser, Paciente, FeedbackTriagem
 
 # --- Personalização para o modelo de Usuário (CustomUser) ---
 
@@ -83,3 +83,33 @@ class PacienteAdmin(admin.ModelAdmin):
         return "N/A"
     hora_chegada_formatada.admin_order_field = 'hora_chegada'
     hora_chegada_formatada.short_description = 'Hora da Chegada'
+
+@admin.register(FeedbackTriagem)
+class FeedbackTriagemAdmin(admin.ModelAdmin):
+    # Campos que aparecerão na lista de feedbacks
+    list_display = ('paciente', 'usuario', 'triagem_correta', 'status', 'data_criacao')
+    
+    # Adiciona filtros para encontrar feedbacks facilmente
+    list_filter = ('status', 'triagem_correta', 'usuario__tipo_usuario')
+    
+    # Torna o campo 'status' editável diretamente na lista
+    list_editable = ('status',)
+    
+    # Campos de busca
+    search_fields = ('paciente__nome', 'usuario__username')
+    
+    # Campos que não podem ser editados (são registros fixos)
+    readonly_fields = ('paciente', 'usuario', 'data_criacao')
+
+    # Organiza a página de edição
+    fieldsets = (
+        ('Detalhes do Feedback', {
+            'fields': ('paciente', 'usuario', 'data_criacao')
+        }),
+        ('Avaliação do Profissional', {
+            'fields': ('triagem_correta', 'classificacao_correta', 'motivo')
+        }),
+        ('Gestão do Feedback (Ação do Admin)', {
+            'fields': ('status',)
+        }),
+    )

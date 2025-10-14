@@ -71,7 +71,7 @@
                     </li>
                 </ul>
 
-                <form action="{% url 'hosp:logout' %}" method="post">
+                <form action="{% url 'hosp:logout' %}" method="post" onsubmit="return confirm('Tem certeza que deseja sair da sua conta?');">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn">
                         <span class="icon">→</span> Sair (Logout)

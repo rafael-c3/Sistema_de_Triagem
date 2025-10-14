@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import Paciente, CustomUser, FeedbackTriagem, EntradaProntuario
+from validate_docbr import CPF
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -15,6 +16,9 @@ class PacienteForm(forms.ModelForm):
             'cpf': 'CPF',
             'convenio': 'Convenio',
             'hora_chegada': 'Hora de Chegada',
+
+            'nome_responsavel': 'Nome do Responsável',
+            'cpf_responsavel': 'CPF do Responsável',
 
             'temperatura': 'Temperatura',
             'pressao_sistolica': 'Pressão Sistólica',
@@ -44,6 +48,9 @@ class PacienteForm(forms.ModelForm):
             'convenio': forms.Select(attrs={'class': 'form-control'}),
             'hora_chegada': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
 
+            'nome_responsavel': forms.TextInput(attrs={'class': 'form-control'}),
+            'cpf_responsavel': forms.TextInput(attrs={'class': 'form-control'}),
+
             'temperatura': forms.NumberInput(attrs={'class': 'form-control'}),
             'pressao_sistolica': forms.NumberInput(attrs={'class': 'form-control'}),
             'pressao_diastolica': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -63,6 +70,23 @@ class PacienteForm(forms.ModelForm):
 
             'status_atendimento': forms.Select(attrs={'class': 'form-control'}),
         }
+    
+    def clean_cpf(self):
+        # Pega o valor do CPF que o usuário digitou
+        cpf_value = self.cleaned_data.get('cpf')
+        
+        if cpf_value:
+            # Cria uma instância do validador
+            cpf_validator = CPF()
+            
+            # A biblioteca automaticamente remove pontos e traços
+            # e verifica se o CPF é matematicamente válido.
+            if not cpf_validator.validate(cpf_value):
+                # Se não for válido, levanta um erro de validação
+                raise forms.ValidationError("O CPF informado não é válido.")
+        
+        # Se for válido, retorna o valor para o Django continuar
+        return cpf_value
     
 class CustomUserCreationForm(UserCreationForm):
 
@@ -115,6 +139,14 @@ class CustomUserCreationForm(UserCreationForm):
                 self.add_error('especializacao', 'Este campo é obrigatório para médicos.')
         
         return cleaned_data
+    
+    def clean_cpf(self):
+        cpf_value = self.cleaned_data.get('cpf')
+        if cpf_value:
+            cpf_validator = CPF()
+            if not cpf_validator.validate(cpf_value):
+                raise forms.ValidationError("O CPF informado não é válido.")
+        return cpf_value
 
 class FeedbackTriagemForm(forms.ModelForm):
     class Meta:
