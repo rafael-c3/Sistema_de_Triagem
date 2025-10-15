@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import list_view, index_view, create_view, delete_view, detail_view, update_view, triagem_view, dashboard_view, registro_view, perfil_view, mudar_status_view, feedback_view, lista_feedback_view, gestao_view, ver_perfil_usuario_view, delete_user_view, partial_patient_list_view
+from .views import list_view, index_view, create_view, delete_view, detail_view, update_view, triagem_view, dashboard_view, registro_view, perfil_view, mudar_status_view, feedback_view, lista_feedback_view, gestao_view, ver_perfil_usuario_view, delete_user_view, partial_patient_list_view, validacao_triagem_view, confirmar_triagem_view, desativar_usuario_view, reativar_usuario_view
 from django.contrib.auth import views as auth_views
 
 app_name = 'hosp'
@@ -24,6 +24,11 @@ urlpatterns = [
     path('gestao/', gestao_view, name='painel_gestao'),
     path('gestao/ver-perfil/<int:pk>/', ver_perfil_usuario_view, name='ver_perfil_usuario'),
     path('gestao/remover-usuario/<int:pk>/', delete_user_view, name='remover_usuario'),
+    path('validacao/', validacao_triagem_view, name='validacao_triagem'),
+    path('validacao/confirmar/<int:pk>/', confirmar_triagem_view, name='confirmar_triagem'),
+
+    path('gestao/desativar-usuario/<int:pk>/', desativar_usuario_view, name='desativar_usuario'),
+    path('gestao/reativar-usuario/<int:pk>/', reativar_usuario_view, name='reativar_usuario'),
 
     path('partials/patient-list/', partial_patient_list_view, name='partial_patient_list'),
 ]

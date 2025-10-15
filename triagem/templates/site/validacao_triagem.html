@@ -1,0 +1,31 @@
+{% extends "site/headerBase.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Triagens Pendentes de Validação</h2>
+    <p>Revise as classificações sugeridas pela IA e confirme para que os pacientes entrem na fila de atendimento.</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Hora da Chegada</th>
+                <th>Classificação Sugerida (IA)</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes_pendentes %}
+            <tr>
+                <td>{{ paciente.nome }}</td>
+                <td>{{ paciente.hora_chegada|date:"H:i" }}</td>
+                <td>{{ paciente.get_classificacao_display }}</td>
+                <td>
+                    <a href="{% url 'hosp:confirmar_triagem' pk=paciente.pk %}" class="btn btn-primary btn-sm">Validar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">Nenhuma triagem pendente.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

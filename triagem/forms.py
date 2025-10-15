@@ -188,3 +188,12 @@ class EntradaProntuarioForm(forms.ModelForm):
         labels = {
             'texto': '' # Deixamos o label vazio para um visual mais limpo
         }
+
+class ValidacaoTriagemForm(forms.ModelForm):
+    class Meta:
+        model = Paciente
+        # O técnico só precisa poder alterar a classificação
+        fields = ['classificacao']
+        labels = {
+            'classificacao': 'Se a classificação estiver incorreta, selecione a correta:'
+        }

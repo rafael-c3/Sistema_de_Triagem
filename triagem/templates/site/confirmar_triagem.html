@@ -1,0 +1,17 @@
+{% extends "site/headerBase.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Validar Triagem: {{ paciente.nome }}</h2>
+    <p>A classificação de risco sugerida pelo sistema foi: <strong>{{ paciente.get_classificacao_display }}</strong></p>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        <p>A classificação está correta?</p>
+        
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-success">Confirmar e Enviar para Fila</button>
+        <a href="{% url 'hosp:validacao_triagem' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

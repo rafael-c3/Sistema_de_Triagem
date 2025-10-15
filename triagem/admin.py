@@ -25,7 +25,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
     # Define as colunas que aparecerão na lista de usuários
-    list_display = ('username', 'nome_completo', 'tipo_usuario', 'is_staff')
+    list_display = ('username', 'nome_completo', 'tipo_usuario', 'is_active', 'is_staff')
     
     # Adiciona uma barra de filtros à direita
     list_filter = ('tipo_usuario', 'is_staff', 'is_superuser', 'especializacao')

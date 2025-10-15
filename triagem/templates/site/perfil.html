@@ -32,6 +32,11 @@
                 <h3>Dr. {{ usuario.nome_completo }}</h3>
                 <p class="username">@{{ usuario.username }}</p>
                 <span class="user-role">{{ usuario.get_tipo_usuario_display }}</span>
+                {% with usuario=perfil_usuario|default:user %}
+                    {% if not usuario.is_active %}
+                        <span class="user-role" style="background-color: #e74c3c; color: white;">Conta fora do sistema</span>
+                    {% endif %}
+                {% endwith %}
 
                 <ul class="profile-details">
                     <li>
@@ -71,12 +76,38 @@
                     </li>
                 </ul>
 
+                {% if user.is_superuser or user.tipo_usuario == 'ADMIN' and usuario != user %}
+                    <hr>
+                    
+                    {% comment %} Mostra o botão DESATIVAR se o usuário estiver ATIVO {% endcomment %}
+                    {% if usuario.is_active %}
+                        <form action="{% url 'hosp:desativar_usuario' pk=usuario.pk %}" method="post" onsubmit="return confirm('Tem certeza que deseja desativar a conta de \'{{ usuario.nome_completo|addslashes }}\'? Ele(a) não poderá mais fazer login.');">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-btn" style="background-color: #f39c12;">
+                                <span class="icon">🚫</span> Desativar Conta
+                            </button>
+                        </form>
+
+                    {% comment %} Mostra o botão REATIVAR se o usuário estiver INATIVO {% endcomment %}
+                    {% else %}
+                        <form action="{% url 'hosp:reativar_usuario' pk=usuario.pk %}" method="post" onsubmit="return confirm('Tem certeza que deseja reativar a conta de \'{{ usuario.nome_completo|addslashes }}\'? Ele(a) poderá fazer login novamente.');">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-btn" style="background-color: #2ecc71;">
+                                <span class="icon">✅</span> Reativar Conta
+                            </button>
+                        </form>
+                    {% endif %}
+
+                {% endif %}
+
+                {% if usuario == user %}
                 <form action="{% url 'hosp:logout' %}" method="post" onsubmit="return confirm('Tem certeza que deseja sair da sua conta?');">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn">
                         <span class="icon">→</span> Sair (Logout)
                     </button>
                 </form>
+                {% endif %}
             </div>
         </aside>
 

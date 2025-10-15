@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario
-from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm
+from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm
 from collections import Counter
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 import json
 from .ml.predict import predict_from_dict
 from django.contrib.auth.decorators import login_required
-from .decorators import admin_required, medico_required, atendente_required
+from .decorators import admin_required, medico_required, atendente_required, tecnico_enfermagem_required, pode_realizar_triagem_required
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField, Count
@@ -22,11 +22,19 @@ def index_view(request):
     # --- 1. Dados para a Análise ---
     hoje = timezone.now().date()
     
-    pacientes_aguardando = Paciente.objects.filter(status='Aguardando')
-    total_aguardando = pacientes_aguardando.count()
+    pacientes_aguardando_hoje = Paciente.objects.filter(
+        status='Aguardando', 
+        hora_chegada__date=hoje
+    )
+    
+    # --- 2. Dados para a Análise (Cards de Resumo) ---
+    # Métricas baseadas na fila de hoje
+    total_aguardando = pacientes_aguardando_hoje.count()
+    vermelhos_aguardando = pacientes_aguardando_hoje.filter(classificacao='Vermelho').count()
+    laranjas_aguardando = pacientes_aguardando_hoje.filter(classificacao='Laranja').count()
+
+    # Métricas de "snapshot" do sistema (não precisam ser filtradas por "hoje")
     total_em_atendimento = Paciente.objects.filter(status='Em atendimento').count()
-    vermelhos_aguardando = pacientes_aguardando.filter(classificacao='Vermelho').count()
-    laranjas_aguardando = pacientes_aguardando.filter(classificacao='Laranja').count()
     chegadas_hoje = Paciente.objects.filter(hora_chegada__date=hoje).count()
     concluidos_hoje = Paciente.objects.filter(
         status='Concluido', 
@@ -87,7 +95,7 @@ def index_view(request):
         output_field=IntegerField()
     )
     
-    lista_pacientes_priorizada = Paciente.objects.exclude(status='Concluido').annotate(
+    lista_pacientes_priorizada = pacientes_aguardando_hoje.annotate(
         prioridade=prioridade_classificacao
     ).order_by('prioridade', 'hora_chegada')
 
@@ -106,7 +114,7 @@ def index_view(request):
     
     return render(request, 'site/index.html', context)
 
-@atendente_required
+@pode_realizar_triagem_required 
 @login_required
 def create_view(request):
     if request.method == 'GET':
@@ -134,15 +142,13 @@ def create_view(request):
 
 @login_required        
 def list_view(request):
-    pacientes = Paciente.objects.all()
+    # A MUDANÇA ESTÁ AQUI: Excluímos os pacientes com status 'Pendente'
+    pacientes = Paciente.objects.exclude(status='Pendente').order_by('-id')
     status_contagem = Counter(p.status for p in pacientes)
-    context = {
+    return render(request, 'site/listar.html', {
         'pacientes': pacientes,
-        'status_contagem': status_contagem,
-        'pagina_ativa': 'pacientes', # <-- ADICIONADO
-    }
-    return render(request, 'site/listar.html', context)
-
+        'status_contagem': status_contagem
+    })
 
 @login_required
 def detail_view(request, pk):
@@ -509,3 +515,66 @@ def partial_patient_list_view(request):
     
     # Renderiza um novo template "parcial" que só contém as linhas da tabela
     return render(request, 'site/partials/_patient_list_partial.html', context)
+
+@login_required
+@tecnico_enfermagem_required
+def validacao_triagem_view(request):
+    pacientes_pendentes = Paciente.objects.filter(status='Pendente').order_by('hora_chegada')
+    context = {
+        'pacientes_pendentes': pacientes_pendentes
+    }
+    return render(request, 'site/validacao_triagem.html', context)
+
+@login_required
+@tecnico_enfermagem_required
+def confirmar_triagem_view(request, pk):
+    paciente = get_object_or_404(Paciente, pk=pk)
+    if request.method == 'POST':
+        form = ValidacaoTriagemForm(request.POST, instance=paciente)
+        if form.is_valid():
+            paciente_validado = form.save(commit=False)
+            paciente_validado.status = 'Aguardando' # Move o paciente para a fila oficial
+            paciente_validado.save()
+            messages.success(request, f'Triagem do paciente "{paciente.nome}" validada com sucesso.')
+            return redirect('hosp:validacao_triagem')
+    else:
+        form = ValidacaoTriagemForm(instance=paciente)
+    
+    context = {
+        'paciente': paciente,
+        'form': form
+    }
+    return render(request, 'site/confirmar_triagem.html', context)
+
+@require_POST # Ação de mudança de estado deve ser sempre POST
+@login_required
+@admin_required # Apenas Admins podem desativar contas
+def desativar_usuario_view(request, pk):
+    usuario_a_desativar = get_object_or_404(CustomUser, pk=pk)
+
+    # Medida de segurança: impede que um admin desative a si mesmo
+    if request.user == usuario_a_desativar:
+        messages.error(request, 'Você não pode desativar sua própria conta.')
+        return redirect('hosp:ver_perfil_usuario', pk=pk)
+
+    # Ação principal: desativa o usuário
+    usuario_a_desativar.is_active = False
+    usuario_a_desativar.save()
+
+    messages.success(request, f'A conta do usuário "{usuario_a_desativar.username}" foi desativada com sucesso.')
+    # Redireciona de volta para o perfil que acabou de ser alterado
+    return redirect('hosp:ver_perfil_usuario', pk=pk)
+
+@require_POST
+@login_required
+@admin_required
+def reativar_usuario_view(request, pk):
+    usuario_a_reativar = get_object_or_404(CustomUser, pk=pk)
+
+    # Ação principal: reativa o usuário
+    usuario_a_reativar.is_active = True
+    usuario_a_reativar.save()
+
+    messages.success(request, f'A conta do usuário "{usuario_a_reativar.username}" foi reativada com sucesso.')
+    # Redireciona de volta para o perfil que acabou de ser alterado
+    return redirect('hosp:ver_perfil_usuario', pk=pk)

@@ -163,6 +163,9 @@
                         <div class="info-item">
                             <label>Responsável pela Triagem</label>
                             <p>{{ paciente.atendente.nome_completo }}</p>
+                            {% if not paciente.atendente.is_active %}
+                                <span style="color: #e74c3c; font-style: italic;">(Usuário inativo)</span>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -182,6 +185,9 @@
                         <div class="info-item">
                             <label>Médico Responsável</label>
                             <p>{{ paciente.medico_responsavel.nome_completo|default:"-" }}</p>
+                            {% if not paciente.medico_responsavel.is_active %}
+                                <span style="color: #e74c3c; font-style: italic;">(Usuário inativo)</span>
+                            {% endif %}
                         </div>
                 
                     </div>

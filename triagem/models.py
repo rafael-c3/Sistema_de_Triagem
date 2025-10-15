@@ -10,6 +10,7 @@ class CustomUser(AbstractUser):
     class TipoUsuario(models.TextChoices):
         ATENDENTE = 'ATENDENTE', 'Atendente'
         MEDICO = 'MEDICO', 'Médico'
+        TECNICO_ENFERMAGEM = 'TECNICO_ENFERMAGEM', 'Téc. de Enfermagem' # <-- NOVO TIPO
         ADMIN = 'ADMIN', 'Admin'
 
     Especializacoes = [
@@ -24,7 +25,7 @@ class CustomUser(AbstractUser):
     nome_completo = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     cpf = models.CharField(max_length=14, unique=True)
-    tipo_usuario = models.CharField(max_length=10, choices=TipoUsuario.choices, default=TipoUsuario.ATENDENTE)
+    tipo_usuario = models.CharField(max_length=20, choices=TipoUsuario.choices, default=TipoUsuario.ATENDENTE)
 
     registro_profissional = models.CharField(max_length=20, blank=True, null=True)   # Permite que o valor seja nulo no banco
     especializacao = models.CharField(max_length=50, choices=Especializacoes,blank=True,null=True)
@@ -48,6 +49,7 @@ class Paciente(models.Model):
     ]
 
     Status = [
+        ('Pendente', 'Pendente'),
         ('Aguardando', 'Aguardando'),
         ('Em atendimento', 'Em atendimento'),
         ('Concluido', 'Concluido'),
@@ -122,7 +124,7 @@ class Paciente(models.Model):
     justificativa = models.CharField(blank=True, null=True)
     encaminhamento = models.CharField(choices=Profissionais, max_length=50,blank=True, null=True)
 
-    status = models.CharField(max_length=20, choices=Status, default='Aguardando',blank=True, null=True)
+    status = models.CharField(max_length=30, choices=Status, default='Pendente',blank=True, null=True)
     hora_chegada = models.DateTimeField(default=timezone.now, blank=True)
     hora_inicio_atendimento = models.DateTimeField(null=True, blank=True)
     hora_fim_atendimento = models.DateTimeField(null=True, blank=True)
@@ -298,3 +300,4 @@ class EntradaProntuario(models.Model):
 
     def __str__(self):
         return f"Entrada em {self.data_criacao.strftime('%d/%m/%y %H:%M')} para {self.paciente.nome}"
+    
