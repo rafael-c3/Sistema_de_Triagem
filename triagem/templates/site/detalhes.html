@@ -202,6 +202,39 @@
                     </div>
                 </div>
 
+                <h3>Anexos do Paciente</h3>
+
+                {% if user.tipo_usuario == 'MEDICO' or user.is_superuser %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Anexar Novo Documento</h5>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form_anexo.as_p }}
+                            <button type="submit" name="submit_anexo" class="btn btn-info">Anexar Arquivo</button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+
+                <h4>Documentos Anexados</h4>
+                <ul class="list-group">
+                    {% for anexo in anexos %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ anexo.descricao }}</strong>
+                                <br>
+                                <small class="text-muted">Enviado por {{ anexo.autor.nome_completo }} em {{ anexo.data_upload|date:"d/m/Y H:i" }}</small>
+                            </div>
+                            <a href="{{ anexo.arquivo.url }}" class="btn btn-success btn-sm" download>Download</a>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Nenhum arquivo anexado a este prontuário.</li>
+                    {% endfor %}
+                </ul>
+
+                <button type="submit" name="submit_prontuario" class="btn btn-primary">Adicionar ao Prontuário</button>
+
                 <div class="timeline-container">
                     <div class="timeline-header">
                         <h4>Linha do Tempo do Atendimento</h4>

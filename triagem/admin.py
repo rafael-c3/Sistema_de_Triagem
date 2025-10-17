@@ -21,7 +21,7 @@ class CustomUserAdmin(UserAdmin):
     
     # Adiciona campos customizados à página de criação de um novo usuário
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('nome_completo', 'email', 'cpf', 'tipo_usuario', 'registro_profissional', 'especializacao')}),
+        (None, {'fields': ('nome_completo', 'email', 'cpf', 'tipo_usuario', 'crm', 'coren', 'uf_registro', 'especializacao')}),
     )
 
     # Define as colunas que aparecerão na lista de usuários

@@ -25,18 +25,35 @@
         <aside class="profile-sidebar">
             <div class="profile-card">
                 <div class="profile-avatar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    </svg>
+                    {# Substituímos o SVG pela imagem real do usuário #}
+                    <img src="{{ usuario.foto_perfil.url }}" alt="Foto de Perfil de {{ usuario.nome_completo }}" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover;">
                 </div>
+
                 <h3>Dr. {{ usuario.nome_completo }}</h3>
                 <p class="username">@{{ usuario.username }}</p>
-                <span class="user-role">{{ usuario.get_tipo_usuario_display }}</span>
-                {% with usuario=perfil_usuario|default:user %}
-                    {% if not usuario.is_active %}
-                        <span class="user-role" style="background-color: #e74c3c; color: white;">Conta fora do sistema</span>
-                    {% endif %}
-                {% endwith %}
+
+                {% comment %} 
+                    Lógica corrigida para mostrar o status ou o tipo de conta, mas não os dois.
+                {% endcomment %}
+                {% if not usuario.is_active %}
+                    <span class="user-role" style="background-color: #e74c3c; color: white;">Conta fora do sistema</span>
+                {% else %}
+                    <span class="user-role">{{ usuario.get_tipo_usuario_display }}</span>
+                {% endif %}
+
+                {% if usuario == user %}
+                    <div class="form-upload-foto">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <label for="id_foto_perfil">Alterar foto:</label>
+                            {{ form_foto.foto_perfil }}
+                            
+                            <button type="submit" class="btn-salvar-foto">Salvar Nova Foto</button>
+                        </form>
+                    </div>
+                    <hr>
+                {% endif %}
 
                 <ul class="profile-details">
                     <li>
@@ -60,13 +77,22 @@
                             <p>{{ usuario.cpf }}</p>
                         </div>
                     </li>
-                    <li>
+                    <!--<li>
                         <span class="icon">🏷️</span>
                         <div>
                             <small>Tipo de Conta</small>
                             <p>{{ usuario.get_tipo_usuario_display }}</p>
                         </div>
+                    </li>-->
+                    {% if usuario.tipo_usuario == 'MEDICO' or usuario.tipo_usuario == 'TECNICO_ENFERMAGEM' %}
+                    <li>
+                        <span class="icon">📜</span>
+                        <div>
+                            <small>Registro Profissional</small>
+                            <p>{{ usuario.registro_formatado }}</p>
+                        </div>
                     </li>
+                    {% endif %}
                     <li>
                         <span class="icon">📅</span>
                         <div>

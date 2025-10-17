@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Paciente, CustomUser, FeedbackTriagem, EntradaProntuario
+from .models import Paciente, CustomUser, FeedbackTriagem, EntradaProntuario, AnexoPaciente
 from validate_docbr import CPF
 
 class PacienteForm(forms.ModelForm):
@@ -96,7 +96,7 @@ class CustomUserCreationForm(UserCreationForm):
     )
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('username', 'nome_completo', 'email', 'cpf', 'tipo_usuario', 'registro_profissional', 'especializacao')
+        fields = ('username', 'nome_completo', 'email', 'cpf', 'tipo_usuario', 'crm', 'coren', 'uf_registro', 'especializacao')
 
         # === ESTA É A PARTE CRUCIAL QUE FALTAVA ===
         widgets = {
@@ -128,15 +128,26 @@ class CustomUserCreationForm(UserCreationForm):
         tipo_usuario = cleaned_data.get('tipo_usuario')
 
         # Se o usuário for um médico, verifique os campos extras
-        if tipo_usuario == 'MEDICO':
-            registro = cleaned_data.get('registro_profissional')
+        if tipo_usuario == CustomUser.TipoUsuario.MEDICO:
+            crm = cleaned_data.get('crm')
+            uf = cleaned_data.get('uf_registro')
             especializacao = cleaned_data.get('especializacao')
 
-            if not registro:
-                self.add_error('registro_profissional', 'Este campo é obrigatório para médicos.')
-            
+            if not crm:
+                self.add_error('crm', 'O CRM é obrigatório para médicos.')
+            if not uf:
+                self.add_error('uf_registro', 'A UF do CRM é obrigatória para médicos.')
             if not especializacao:
-                self.add_error('especializacao', 'Este campo é obrigatório para médicos.')
+                self.add_error('especializacao', 'A especialização é obrigatória para médicos.')
+        
+        elif tipo_usuario == CustomUser.TipoUsuario.TECNICO_ENFERMAGEM:
+            coren = cleaned_data.get('coren')
+            uf = cleaned_data.get('uf_registro')
+
+            if not coren:
+                self.add_error('coren', 'O COREN é obrigatório para técnicos de enfermagem.')
+            if not uf:
+                self.add_error('uf_registro', 'A UF do COREN é obrigatória para técnicos de enfermagem.')
         
         return cleaned_data
     
@@ -196,4 +207,22 @@ class ValidacaoTriagemForm(forms.ModelForm):
         fields = ['classificacao']
         labels = {
             'classificacao': 'Se a classificação estiver incorreta, selecione a correta:'
+        }
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['foto_perfil']
+        labels = {
+            'foto_perfil': 'Alterar foto de perfil'
+        }
+
+class AnexoPacienteForm(forms.ModelForm):
+    class Meta:
+        model = AnexoPaciente
+        # O usuário preencherá a descrição e escolherá o arquivo
+        fields = ['descricao', 'arquivo']
+        labels = {
+            'descricao': 'Descrição do Arquivo (Ex: Hemograma, Raio-X do Tórax)',
+            'arquivo': 'Selecione o arquivo'
         }

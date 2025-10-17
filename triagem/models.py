@@ -13,6 +13,15 @@ class CustomUser(AbstractUser):
         TECNICO_ENFERMAGEM = 'TECNICO_ENFERMAGEM', 'Téc. de Enfermagem' # <-- NOVO TIPO
         ADMIN = 'ADMIN', 'Admin'
 
+    UF_CHOICES = [
+        ('AC', 'AC'), ('AL', 'AL'), ('AP', 'AP'), ('AM', 'AM'), ('BA', 'BA'), 
+        ('CE', 'CE'), ('DF', 'DF'), ('ES', 'ES'), ('GO', 'GO'), ('MA', 'MA'), 
+        ('MT', 'MT'), ('MS', 'MS'), ('MG', 'MG'), ('PA', 'PA'), ('PB', 'PB'), 
+        ('PR', 'PR'), ('PE', 'PE'), ('PI', 'PI'), ('RJ', 'RJ'), ('RN', 'RN'), 
+        ('RS', 'RS'), ('RO', 'RO'), ('RR', 'RR'), ('SC', 'SC'), ('SP', 'SP'), 
+        ('SE', 'SE'), ('TO', 'TO'),
+    ]
+
     Especializacoes = [
         ('CLINICA_GERAL', 'Clínica Geral'),
         ('CARDIOLOGIA', 'Cardiologia'),
@@ -27,9 +36,24 @@ class CustomUser(AbstractUser):
     cpf = models.CharField(max_length=14, unique=True)
     tipo_usuario = models.CharField(max_length=20, choices=TipoUsuario.choices, default=TipoUsuario.ATENDENTE)
 
-    registro_profissional = models.CharField(max_length=20, blank=True, null=True)   # Permite que o valor seja nulo no banco
+    crm = models.CharField(max_length=20, blank=True, null=True, verbose_name="CRM (Apenas para Médicos)")    
     especializacao = models.CharField(max_length=50, choices=Especializacoes,blank=True,null=True)
 
+    coren = models.CharField(max_length=20, blank=True, null=True, verbose_name="COREN (Apenas para Téc. de Enfermagem)")
+
+    uf_registro = models.CharField(max_length=2, choices=UF_CHOICES, blank=True, null=True, verbose_name="UF do Registro Profissional")
+
+    foto_perfil = models.ImageField(upload_to='fotos_perfil/', default='fotos_perfil/default.jpg', null=True,blank=True,verbose_name="Foto de Perfil")
+    
+    @property
+    def registro_formatado(self):
+        """Retorna o registro profissional (CRM ou COREN) formatado com a UF."""
+        if self.tipo_usuario == self.TipoUsuario.MEDICO and self.crm and self.uf_registro:
+            return f"CRM-{self.uf_registro} {self.crm}"
+        elif self.tipo_usuario == self.TipoUsuario.TECNICO_ENFERMAGEM and self.coren and self.uf_registro:
+            return f"COREN-{self.uf_registro} {self.coren}"
+        return "-" # Retorna um traço se não houver registro aplicável
+    
     USERNAME_FIELD = 'username' 
     REQUIRED_FIELDS = ['email', 'nome_completo', 'cpf']
 
@@ -301,3 +325,12 @@ class EntradaProntuario(models.Model):
     def __str__(self):
         return f"Entrada em {self.data_criacao.strftime('%d/%m/%y %H:%M')} para {self.paciente.nome}"
     
+class AnexoPaciente(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='anexos')
+    autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    descricao = models.CharField(max_length=100, verbose_name="Descrição do Arquivo")
+    arquivo = models.FileField(upload_to='anexos_pacientes/')
+    data_upload = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.descricao} - {self.paciente.nome}"

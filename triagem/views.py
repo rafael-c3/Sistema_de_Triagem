@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario
-from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm
+from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente
+from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm
 from collections import Counter
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField, Count
 from django.urls import reverse
 import datetime
+from django.core.paginator import Paginator
 
 
 @login_required
@@ -157,25 +158,39 @@ def detail_view(request, pk):
     # Lógica para o botão "Voltar" que já tínhamos
     fallback_url = reverse('hosp:listar')
     voltar_para_url = request.META.get('HTTP_REFERER', fallback_url)
+
+    form_prontuario = EntradaProntuarioForm()
+    form_anexo = AnexoPacienteForm()
     
     # Lógica para processar o formulário de nova entrada no prontuário
     # Apenas aceita POST de um usuário Médico
-    if request.method == 'POST' and request.user.tipo_usuario == 'MEDICO':
-        form_prontuario = EntradaProntuarioForm(request.POST)
-        if form_prontuario.is_valid():
-            nova_entrada = form_prontuario.save(commit=False)
-            nova_entrada.paciente = paciente
-            nova_entrada.autor = request.user # Associa o médico logado
-            nova_entrada.save()
-            messages.success(request, 'Nova observação adicionada ao prontuário.')
-            # Redireciona para a mesma página para limpar o formulário e evitar reenvio
-            return redirect('hosp:mostrar', pk=paciente.pk)
-    else:
-        # Se for um GET, apenas mostra o formulário em branco
-        form_prontuario = EntradaProntuarioForm()
+    if request.method == 'POST' and (request.user.tipo_usuario == 'MEDICO' or request.user.is_superuser):
+        
+        # NOVO: Verificamos qual botão de submit foi clicado
+        if 'submit_prontuario' in request.POST:
+            form_prontuario = EntradaProntuarioForm(request.POST) # Preenche o form de prontuário
+            if form_prontuario.is_valid():
+                nova_entrada = form_prontuario.save(commit=False)
+                nova_entrada.paciente = paciente
+                nova_entrada.autor = request.user
+                nova_entrada.save()
+                messages.success(request, 'Nova observação adicionada ao prontuário.')
+                return redirect('hosp:mostrar', pk=paciente.pk)
+
+        # NOVO: Adicionamos a lógica para o formulário de anexo
+        elif 'submit_anexo' in request.POST:
+            form_anexo = AnexoPacienteForm(request.POST, request.FILES) # Preenche o form de anexo
+            if form_anexo.is_valid():
+                novo_anexo = form_anexo.save(commit=False)
+                novo_anexo.paciente = paciente
+                novo_anexo.autor = request.user
+                novo_anexo.save()
+                messages.success(request, 'Arquivo anexado com sucesso.')
+                return redirect('hosp:mostrar', pk=paciente.pk)
 
     # Busca o histórico de prontuário do paciente usando o related_name
     historico = paciente.historico_prontuario.all()
+    anexos = paciente.anexos.all() # NOVO: Busca os anexos do paciente
 
     context = {
         'paciente': paciente,
@@ -183,7 +198,8 @@ def detail_view(request, pk):
         'historico': historico,
         'form_prontuario': form_prontuario,
         'pagina_ativa': 'pacientes',
-        
+        'anexos': anexos,
+        'form_anexo': form_anexo,
     }
     
     return render(request, 'site/detalhes.html', context)
@@ -253,6 +269,17 @@ def perfil_view(request):
     # Pega o usuário logado
     usuario_logado = request.user
     
+    # Lógica para o formulário de upload de foto
+    if request.method == 'POST':
+        # Passamos request.FILES para lidar com o upload do arquivo
+        form_foto = ProfilePictureForm(request.POST, request.FILES, instance=usuario_logado)
+        if form_foto.is_valid():
+            form_foto.save()
+            messages.success(request, 'Sua foto de perfil foi atualizada com sucesso!')
+            return redirect('hosp:perfil') # Redireciona para limpar o POST
+    else:
+        form_foto = ProfilePictureForm(instance=usuario_logado)
+
     # 1. VERIFICA O TIPO DE USUÁRIO E BUSCA O HISTÓRICO CORRESPONDENTE
     if usuario_logado.tipo_usuario == 'MEDICO':
         # Usa o 'related_name' que definimos no modelo Paciente
@@ -267,8 +294,11 @@ def perfil_view(request):
         context['historico_pacientes'] = pacientes_do_usuario
 
     feedbacks_do_usuario = FeedbackTriagem.objects.filter(usuario=usuario_logado).order_by('-data_criacao')
-    context['feedbacks_do_usuario'] = feedbacks_do_usuario
-        
+    context = {
+        'feedbacks_do_usuario': feedbacks_do_usuario,
+        'form_foto': form_foto,
+    }
+
     # 2. RENDERIZA O TEMPLATE COM O CONTEXTO ATUALIZADO
     return render(request, 'site/perfil.html', context)
 
@@ -337,6 +367,10 @@ def lista_feedback_view(request):
         ) \
         .order_by('-data_criacao')
     
+    paginator = Paginator(todos_os_feedbacks, 20) # Divide a lista em páginas de 20
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     total_feedbacks = todos_os_feedbacks.count()
     
     # Filtramos a lista que já temos em memória, sem precisar ir ao banco de novo
@@ -353,6 +387,7 @@ def lista_feedback_view(request):
     
     context = {
         'feedbacks': todos_os_feedbacks,
+        'page_obj': page_obj, # <-- ADICIONE ESTA LINHA EM SEU LUGAR
         
         # ADICIONADO: Enviando a lista de opções de classificação para o template
         'classificacao_choices': Paciente.Risco,
@@ -389,8 +424,14 @@ def gestao_view(request):
     total_medicos = todos_medicos.count()
     todos_enfermeiros = CustomUser.objects.filter(tipo_usuario='ENFERMEIRO').order_by('nome_completo')
     total_enfermeiros = todos_enfermeiros.count()
+    todos_tecnicos = CustomUser.objects.filter(tipo_usuario='TECNICO_ENFERMAGEM').order_by('nome_completo')
+    total_tecnicos = todos_tecnicos.count()
     todos_atendentes = CustomUser.objects.filter(tipo_usuario='ATENDENTE').order_by('nome_completo')
     total_atendentes = todos_atendentes.count()
+
+    paginator = Paginator(todos_pacientes_para_tabela, 20) # Divide a lista em páginas de 20
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     # =========================================================
     #  NOVO: LÓGICA PARA ATIVIDADE RECENTE
@@ -425,13 +466,16 @@ def gestao_view(request):
         'pacientes': todos_pacientes_para_tabela,
         'medicos': todos_medicos,
         'enfermeiros': todos_enfermeiros,
+        'tecnicos': todos_tecnicos,
         'atendentes': todos_atendentes,
         'total_pacientes_hoje': pacientes_hoje_count,
         'pacientes_esta_semana': pacientes_esta_semana,
         'total_pacientes': total_pacientes,
         'total_medicos': total_medicos,
         'total_enfermeiros': total_enfermeiros,
+        'total_tecnicos': total_tecnicos,
         'total_atendentes': total_atendentes,
+        'page_obj': page_obj, # <-- ADICIONE ESTA LINHA EM SEU LUGAR
 
         # Novas variáveis para Atividade Recente
         'novos_usuarios_7_dias': novos_usuarios_7_dias,

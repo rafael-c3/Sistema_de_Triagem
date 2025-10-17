@@ -201,6 +201,26 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <div class="pagination" style="margin-top: 20px; text-align: center;">
+                    <span class="step-links">
+                        {# Botão "Anterior" #}
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; primeira</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+                        {% endif %}
+
+                        {# Mostra a página atual e o total de páginas #}
+                        <span class="current">
+                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                        </span>
+
+                        {# Botão "Próxima" #}
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">próxima</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
             </div>
 
             <div id="medicos" class="tab-content">
@@ -229,7 +249,7 @@
                             <td>{{ medico.nome_completo|default:medico.username }}</td>
                             <td>{{ medico.cpf }}</td>
                             <td>{{ medico.email }}</td>
-                            <td>{{ medico.registro_profissional|default:"-" }}</td>
+                            <td>{{ medico.registro_formatado|default:"-" }}</td>
                             <td>Cardiologia</td> <td class="actions">
                                 <a href="{% url 'hosp:ver_perfil_usuario' pk=medico.pk %}" class="action-icon" title="Ver Perfil"><i class="fas fa-eye"></i></a>
                                 <form action="{% url 'hosp:remover_usuario' pk=medico.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o médico \'{{ medico.nome_completo|addslashes }}\'?');">
@@ -266,28 +286,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for tecnico in tecnicos %}
                         <tr>
-                            <td>3</td>
-                            <td>Enf. José Santos</td>
-                            <td>444.555.666-77</td>
-                            <td>jose.santos@hospital.com.br</td>
-                            <td>COREN 78012</td>
+                            <td>{{ tecnico.id }}</td>
+                            <td>{{ tecnico.nome_completo|default:tecnico.username }}</td>
+                            <td>{{ tecnico.cpf }}</td>
+                            <td>{{ tecnico.email }}</td>
+                            <td>{{ tecnico.registro_formatado|default:"-" }}</td>
                             <td class="actions">
-                                <a href="#" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
+                                <a href="{% url 'hosp:ver_perfil_usuario' pk=tecnico.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
+                                    <form action="{% url 'hosp:remover_usuario' pk=tecnico.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o atendente \'{{ atendente.nome_completo|addslashes }}\'?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-icon-delete" title="Remover">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Enf. Maria Oliveira</td>
-                            <td>555.666.777-88</td>
-                            <td>maria.oliveira@hospital.com.br</td>
-                            <td>COREN 890123</td>
-                            <td class="actions">
-                                <a href="#" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="action-icon-delete" title="Remover"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" style="text-align: center;">Nenhum técnico de enfermagem cadastrado.</td></tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
