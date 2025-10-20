@@ -16,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
     # Organizando-os em seções (fieldsets)
     fieldsets = UserAdmin.fieldsets + (
         ('Informações Pessoais', {'fields': ('nome_completo', 'cpf')}),
-        ('Perfil Profissional', {'fields': ('tipo_usuario', 'registro_profissional', 'especializacao')}),
+        ('Perfil Profissional', {'fields': ('tipo_usuario', 'especializacao')}),
     )
     
     # Adiciona campos customizados à página de criação de um novo usuário
@@ -31,7 +31,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('tipo_usuario', 'is_staff', 'is_superuser', 'especializacao')
     
     # Adiciona uma barra de busca
-    search_fields = ('username', 'nome_completo', 'email', 'registro_profissional')
+    search_fields = ('username', 'nome_completo', 'email')
 
 
 # --- Personalização para o modelo de Paciente ---
@@ -105,7 +105,7 @@ class FeedbackTriagemAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Detalhes do Feedback', {
             'fields': ('paciente', 'usuario', 'data_criacao')
-        }),
+        }), 
         ('Avaliação do Profissional', {
             'fields': ('triagem_correta', 'classificacao_correta', 'motivo')
         }),

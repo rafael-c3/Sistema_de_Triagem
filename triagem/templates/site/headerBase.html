@@ -39,7 +39,7 @@
             </a>
 
             {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
-                <a href="{% url 'hosp:painel_gestao' %}"class="{% if pagina_ativa == 'gestao' %}active{% endif %}">
+                <a href="{% url 'hosp:painel_gestao' %}" class="{% if pagina_ativa == 'gestao' %}active{% endif %}">
                     Painel de Gestão
                 </a>
             {% endif %}

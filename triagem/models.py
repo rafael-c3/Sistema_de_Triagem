@@ -334,3 +334,24 @@ class AnexoPaciente(models.Model):
 
     def __str__(self):
         return f"{self.descricao} - {self.paciente.nome}"
+    
+class LogAcao(models.Model):
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.SET_NULL, # Mantém o log mesmo se o usuário for deletado
+        null=True, 
+        blank=True, 
+        verbose_name="Usuário"
+    )
+    acao = models.CharField(max_length=255, verbose_name="Ação Realizada")
+    detalhes = models.TextField(blank=True, null=True, verbose_name="Detalhes Adicionais")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Data/Hora")
+
+    class Meta:
+        ordering = ['-timestamp'] # Ordena do mais recente para o mais antigo
+        verbose_name = "Registro de Auditoria"
+        verbose_name_plural = "Registros de Auditoria"
+
+    def __str__(self):
+        user_display = self.usuario.username if self.usuario else "Sistema"
+        return f"{self.timestamp.strftime('%d/%m/%y %H:%M')} - {user_display} - {self.acao}"

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Log de Auditoria</title>
+    <style>
+        /* Reutilize os estilos da sua tabela de gestão ou crie novos */
+        body { font-family: sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 8px 10px; border: 1px solid #ddd; text-align: left; font-size: 0.9em;}
+        thead { background-color: #34495e; color: white; }
+        tbody tr:nth-child(even) { background-color: #f2f2f2; }
+        .pagination { margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Log de Auditoria do Sistema</h1>
+    <p>Registro de ações importantes realizadas pelos usuários.</p>
+    <p><a href="{% url 'hosp:painel_gestao' %}">Voltar para o Painel de Gestão</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Data/Hora</th>
+                <th>Usuário</th>
+                <th>Ação Realizada</th>
+                <th>Detalhes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in page_obj %}
+            <tr>
+                <td>{{ log.timestamp|date:"d/m/Y H:i:s" }}</td>
+                <td>{{ log.usuario.username|default:"Sistema" }}</td>
+                <td>{{ log.acao }}</td>
+                <td>{{ log.detalhes|default:"" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center;">Nenhum registro de auditoria encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+            {% endif %}
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">próxima</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+</body>
+</html>

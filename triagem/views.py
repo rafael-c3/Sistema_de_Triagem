@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente
+from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente, LogAcao
 from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm, PacienteAdminEditForm
 from collections import Counter
 from django.http import JsonResponse
@@ -649,3 +649,18 @@ def ajuda_view(request):
     context = {'pagina_ativa': 'ajuda'} 
     return render(request, 'site/ajuda.html', context)
 
+@login_required
+@admin_required # Protege a view
+def log_auditoria_view(request):
+    log_list = LogAcao.objects.all() # Pega todos os logs (já ordenados pelo Meta)
+    
+    # Paginação (igual às outras listas)
+    paginator = Paginator(log_list, 50) # Mostra 50 logs por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'pagina_ativa': 'gestao', # Ou crie um 'log' se quiser
+    }
+    return render(request, 'site/log_auditoria.html', context)
