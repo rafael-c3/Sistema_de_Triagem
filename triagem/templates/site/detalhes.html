@@ -87,6 +87,12 @@
                         </button>
                     </form>
                 {% endif %}
+
+                {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+                    <a href="{% url 'hosp:editar_prontuario_admin' pk=paciente.pk %}" class="button-editar" style="background-color: #ffc107; color: #333; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; margin-left: 10px;">
+                        Editar Prontuário (Admin)
+                    </a>
+                {% endif %}
             </div>
         </div>
 

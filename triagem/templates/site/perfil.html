@@ -156,7 +156,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for paciente in historico_pacientes %}
+                            {% for paciente in page_obj_historico %}
                             <tr>
                                 <td><a href="{% url 'hosp:mostrar' pk=paciente.pk %}">{{ paciente.nome }}</a></td>
                                 <td>🗓️ {{ paciente.hora_chegada|date:"d/m/Y" }}</td>
@@ -172,6 +172,26 @@
                 </div>
             </div>
 
+            {% if page_obj_historico and page_obj_historico.paginator.num_pages > 1 %}
+                <div class="pagination" style="margin-top: 20px; text-align: center;">
+                    <span class="step-links">
+                        {% if page_obj_historico.has_previous %}
+                            <a href="?page=1">&laquo; primeira</a>
+                            <a href="?page={{ page_obj_historico.previous_page_number }}">anterior</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Página {{ page_obj_historico.number }} de {{ page_obj_historico.paginator.num_pages }}.
+                        </span>
+
+                        {% if page_obj_historico.has_next %}
+                            <a href="?page={{ page_obj_historico.next_page_number }}">próxima</a>
+                            <a href="?page={{ page_obj_historico.paginator.num_pages }}">última &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+
             <div id="feedbacks" class="tab-content">
                 <div class="content-card">
                     <h4>Meus Feedbacks</h4>
@@ -186,7 +206,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for feedback in feedbacks_do_usuario %}
+                            {% for feedback in page_obj_feedbacks %}
                             <tr>
                                 <td><a href="{% url 'hosp:mostrar' pk=feedback.paciente.pk %}">{{ feedback.paciente.nome }}</a></td>
                                 <td><span class="tag {{ feedback.paciente.classificacao|slugify }}">{{ feedback.paciente.get_classificacao_display }}</span></td>
@@ -209,6 +229,29 @@
                             </tr>
                             {% endfor %}
                         </tbody>
+
+                        {# ADICIONADO: Controles de Paginação para os Feedbacks #}
+                        {% if page_obj_feedbacks and page_obj_feedbacks.paginator.num_pages > 1 %}
+                            <div class="pagination" style="margin-top: 20px; text-align: center;">
+                                <span class="step-links">
+                                    {% if page_obj_feedbacks.has_previous %}
+                                        {# Os links usam ?fpage=... #}
+                                        <a href="?fpage=1">&laquo; primeira</a>
+                                        <a href="?fpage={{ page_obj_feedbacks.previous_page_number }}">anterior</a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        Página {{ page_obj_feedbacks.number }} de {{ page_obj_feedbacks.paginator.num_pages }}.
+                                    </span>
+
+                                    {% if page_obj_feedbacks.has_next %}
+                                        {# Os links usam ?fpage=... #}
+                                        <a href="?fpage={{ page_obj_feedbacks.next_page_number }}">próxima</a>
+                                        <a href="?fpage={{ page_obj_feedbacks.paginator.num_pages }}">última &raquo;</a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        {% endif %}
                     </table>
                 </div>
             </div>

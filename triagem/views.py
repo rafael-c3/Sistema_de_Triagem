@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente
-from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm
+from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm, PacienteAdminEditForm
 from collections import Counter
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -279,25 +279,38 @@ def perfil_view(request):
             return redirect('hosp:perfil') # Redireciona para limpar o POST
     else:
         form_foto = ProfilePictureForm(instance=usuario_logado)
+    context['form_foto'] = form_foto # NOVO: Adiciona ao context logo após a lógica
 
     # 1. VERIFICA O TIPO DE USUÁRIO E BUSCA O HISTÓRICO CORRESPONDENTE
+    historico_pacientes_qs = None # Inicializa como None
     if usuario_logado.tipo_usuario == 'MEDICO':
-        # Usa o 'related_name' que definimos no modelo Paciente
-        pacientes_do_usuario = usuario_logado.pacientes_atendidos.all().order_by('-id')
+        historico_pacientes_qs = usuario_logado.pacientes_atendidos.all().order_by('-id')
         context['titulo_historico'] = 'Histórico de Pacientes Atendidos'
-        context['historico_pacientes'] = pacientes_do_usuario
-
     elif usuario_logado.tipo_usuario == 'ATENDENTE':
-        # Usa o outro 'related_name' que já existia no modelo
-        pacientes_do_usuario = usuario_logado.pacientes_criados.all().order_by('-id')
+        historico_pacientes_qs = usuario_logado.pacientes_criados.all().order_by('-id')
         context['titulo_historico'] = 'Pacientes Registrados na Triagem'
-        context['historico_pacientes'] = pacientes_do_usuario
+    else:
+        context['titulo_historico'] = 'Histórico'
 
-    feedbacks_do_usuario = FeedbackTriagem.objects.filter(usuario=usuario_logado).order_by('-data_criacao')
-    context = {
-        'feedbacks_do_usuario': feedbacks_do_usuario,
-        'form_foto': form_foto,
-    }
+    if historico_pacientes_qs: # Só pagina se a QuerySet existir
+        paginator = Paginator(historico_pacientes_qs, 20) # 20 por página
+        page_number = request.GET.get('page')
+        page_obj_historico = paginator.get_page(page_number)
+        context['page_obj_historico'] = page_obj_historico # Envia o objeto da página
+    else:
+        context['page_obj_historico'] = None
+        
+    feedbacks_do_usuario_qs = FeedbackTriagem.objects.filter(usuario=usuario_logado).order_by('-data_criacao')
+    
+    # 2. Pagina a lista
+    paginator_feedbacks = Paginator(feedbacks_do_usuario_qs, 20) # 20 feedbacks por página
+    
+    # 3. Pega o número da página usando o parâmetro 'fpage'
+    feedback_page_number = request.GET.get('fpage') 
+    page_obj_feedbacks = paginator_feedbacks.get_page(feedback_page_number)
+    
+    # Adiciona o objeto da página de feedbacks ao contexto
+    context['page_obj_feedbacks'] = page_obj_feedbacks    
 
     # 2. RENDERIZA O TEMPLATE COM O CONTEXTO ATUALIZADO
     return render(request, 'site/perfil.html', context)
@@ -309,6 +322,8 @@ def perfil_view(request):
 def mudar_status_view(request, pk):
     # Encontra o paciente ou retorna erro 404
     paciente = get_object_or_404(Paciente, pk=pk)
+
+    mudanca_realizada = False # Flag para saber se precisamos salvar
     
     # Lógica de transição de status
     if paciente.status == 'Aguardando':
@@ -319,13 +334,21 @@ def mudar_status_view(request, pk):
         paciente.hora_inicio_atendimento = timezone.now() 
     
     elif paciente.status == 'Em atendimento':
-        # Muda o status para "Concluído"
-        paciente.status = 'Concluido'
-        paciente.hora_fim_atendimento = timezone.now()
+        if request.user == paciente.medico_responsavel or request.user.is_superuser:
+            # Se for, permite a finalização
+            paciente.status = 'Concluido'
+            paciente.hora_fim_atendimento = timezone.now()
+            mudanca_realizada = True
+            messages.success(request, f'Atendimento do paciente "{paciente.nome}" finalizado com sucesso.')
+        else:
+            # Se NÃO for, mostra um erro e NÃO faz nenhuma alteração
+            messages.error(request, 'Apenas o médico responsável ou um administrador pode finalizar este atendimento.')
+            # Não definimos mudanca_realizada = True, então nada será salvo.
 
     
     # Salva as alterações no banco de dados
-    paciente.save()
+    if mudanca_realizada:
+        paciente.save()
     
     # Redireciona o usuário de volta para a página de detalhes do paciente
     return redirect('hosp:mostrar', pk=paciente.pk)
@@ -622,3 +645,25 @@ def reativar_usuario_view(request, pk):
     messages.success(request, f'A conta do usuário "{usuario_a_reativar.username}" foi reativada com sucesso.')
     # Redireciona de volta para o perfil que acabou de ser alterado
     return redirect('hosp:ver_perfil_usuario', pk=pk)
+
+@login_required
+@admin_required
+def edit_prontuario_admin_view(request, pk):
+    paciente = get_object_or_404(Paciente, pk=pk)
+
+    if request.method == 'POST':
+        # Use o NOVO formulário aqui
+        form = PacienteAdminEditForm(request.POST, instance=paciente) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Dados cadastrais de "{paciente.nome}" atualizados com sucesso.')
+            return redirect('hosp:mostrar', pk=paciente.pk)
+    else:
+        # Use o NOVO formulário aqui também
+        form = PacienteAdminEditForm(instance=paciente) 
+
+    context = {
+        'paciente': paciente,
+        'form': form
+    }
+    return render(request, 'site/edit_prontuario_admin.html', context)

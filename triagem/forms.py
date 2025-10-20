@@ -226,3 +226,57 @@ class AnexoPacienteForm(forms.ModelForm):
             'descricao': 'Descrição do Arquivo (Ex: Hemograma, Raio-X do Tórax)',
             'arquivo': 'Selecione o arquivo'
         }
+
+class PacienteAdminEditForm(forms.ModelForm):
+    class Meta:
+        model = Paciente
+        # LISTE AQUI APENAS OS CAMPOS QUE O ADMIN PODE EDITAR:
+        fields = [
+            'nome', 
+            'data_nascimento', 
+            'sexo', 
+            'cpf', 
+            'convenio',
+            # Campos do Responsável
+            'nome_responsavel',
+            'cpf_responsavel',
+            # Talvez a observação inicial da triagem? (Opcional)
+            'observacoes', 
+        ]
+
+        # Copie os labels e widgets correspondentes do seu PacienteForm
+        # para manter a consistência visual.
+        labels = {
+            'nome': 'Nome',
+            'data_nascimento': 'Data de Nascimento',
+            'sexo': 'Gênero',
+            'cpf': 'CPF',
+            'convenio': 'Convenio',
+
+            'nome_responsavel': 'Nome do Responsável',
+            'cpf_responsavel': 'CPF do Responsável',
+
+            'inicio_sintomas': 'Inicio dos sintomas',
+            
+            'observacoes': 'Observações',
+        }
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'data_nascimento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'sexo': forms.Select(attrs={'class': 'form-control'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control'}),
+            'convenio': forms.Select(attrs={'class': 'form-control'}),
+            'nome_responsavel': forms.TextInput(attrs={'class': 'form-control'}),
+            'cpf_responsavel': forms.TextInput(attrs={'class': 'form-control'}),
+            'observacoes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+        
+    # Adicione a validação de CPF aqui também, se desejar
+    def clean_cpf(self):
+        cpf_value = self.cleaned_data.get('cpf')
+        if cpf_value:
+            from validate_docbr import CPF # Import local para evitar dependência no topo se não usar sempre
+            cpf_validator = CPF()
+            if not cpf_validator.validate(cpf_value):
+                raise forms.ValidationError("O CPF informado não é válido.")
+        return cpf_value
