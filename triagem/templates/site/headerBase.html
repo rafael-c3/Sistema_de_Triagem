@@ -18,7 +18,7 @@
         <h1><a href="{% url 'hosp:index' %}">MedTriagem</a></h1>
         <nav class="menu-links">
             <a href="{% url 'hosp:index' %}" class="{% if pagina_ativa == 'home' %}active{% endif %}">
-                Home
+                Início
             </a>
 
             {% if user.tipo_usuario != 'MEDICO' %}
@@ -54,6 +54,7 @@
                     <span>{{ user.get_tipo_usuario_display }}</span>
                 </div>
                 <a href="{% url 'hosp:perfil' %}" class="dropdown-item">Meu Perfil</a>
+                <a href="{% url 'hosp:ajuda' %}" class="dropdown-item">Ajuda</a>
                 <form action="{% url 'hosp:logout' %}" method="post" style="margin: 0;" onsubmit="return confirm('Tem certeza que deseja sair da sua conta?');">
                     {% csrf_token %}
                     <button type="submit" class="dropdown-item logout-button">Sair </button>

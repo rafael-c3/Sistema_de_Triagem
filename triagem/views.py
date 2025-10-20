@@ -203,18 +203,6 @@ def detail_view(request, pk):
     }
     
     return render(request, 'site/detalhes.html', context)
-
-@login_required
-def update_view(request, pk):
-    paciente = get_object_or_404(Paciente, pk=pk)
-    if request.method == 'GET':
-        form = PacienteForm(instance=paciente)
-        return render(request, 'site/atualizar.html', {'paciente': paciente, 'form': form})
-    elif request.method == 'POST':
-        form = PacienteForm(request.POST, instance=paciente)
-        if form.is_valid():
-            form.save()
-            return redirect('hosp:mostrar', pk=paciente.pk)
         
 @require_POST # Garante que esta view SÓ possa ser acessada via POST
 @login_required
@@ -225,19 +213,6 @@ def delete_view(request, pk):
     paciente_a_deletar.delete()
     messages.success(request, f'O paciente "{nome_paciente}" foi removido com sucesso.')
     return redirect('hosp:painel_gestao')
-    
-@login_required
-def dashboard_view(request):
-    pacientes = Paciente.objects.all()
-    status_contagem = Counter(p.status for p in pacientes)
-
-    return render(request, 'site/dashboard.html', {
-        'pacientes': pacientes,
-        'status_contagem': status_contagem
-    })
-    
-def triagem_view(request):
-    return render(request, 'site/triagem.html')
 
 @csrf_exempt
 def predict_view(request):
@@ -667,3 +642,10 @@ def edit_prontuario_admin_view(request, pk):
         'form': form
     }
     return render(request, 'site/edit_prontuario_admin.html', context)
+
+@login_required # Garante que apenas usuários logados vejam a ajuda
+def ajuda_view(request):
+    # Opcional: Adiciona 'pagina_ativa' se você usa isso para destacar o menu
+    context = {'pagina_ativa': 'ajuda'} 
+    return render(request, 'site/ajuda.html', context)
+
