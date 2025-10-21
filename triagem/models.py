@@ -6,7 +6,16 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import date
 
+class UnidadeSaude(models.Model):
+    nome = models.CharField(max_length=150, unique=True)
+    # Adicione outros campos relevantes: CNPJ, endereço, telefone, etc.
+    # ...
+
+    def __str__(self):
+        return self.nome
+
 class CustomUser(AbstractUser):
+    unidade_saude = models.ForeignKey(UnidadeSaude, on_delete=models.CASCADE, null=True) # Campo OBRIGATÓRIO
     class TipoUsuario(models.TextChoices):
         ATENDENTE = 'ATENDENTE', 'Atendente'
         MEDICO = 'MEDICO', 'Médico'
@@ -59,6 +68,8 @@ class CustomUser(AbstractUser):
 
 
 class Paciente(models.Model):
+    unidade_saude = models.ForeignKey(UnidadeSaude, on_delete=models.CASCADE, null=True) # Campo OBRIGATÓRIO
+
     Sexualidade = [
         ('Masculino', 'Masculino'),
         ('Feminino', 'Feminino'),
@@ -271,6 +282,8 @@ class Paciente(models.Model):
         return self.nome
     
 class FeedbackTriagem(models.Model):
+    unidade_saude = models.ForeignKey(UnidadeSaude, on_delete=models.CASCADE, null=True) # Campo OBRIGATÓRIO
+
     # Usamos OneToOneField para garantir que cada paciente só tenha UM feedback
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     
@@ -306,6 +319,8 @@ class FeedbackTriagem(models.Model):
         return f"Feedback para {self.paciente.nome} por {self.usuario.username}"
     
 class EntradaProntuario(models.Model):
+    unidade_saude = models.ForeignKey(UnidadeSaude, on_delete=models.CASCADE, null=True) # Campo OBRIGATÓRIO
+
     # Relação com o Paciente. Se o paciente for deletado, as anotações vão junto.
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='historico_prontuario')
     
@@ -326,6 +341,8 @@ class EntradaProntuario(models.Model):
         return f"Entrada em {self.data_criacao.strftime('%d/%m/%y %H:%M')} para {self.paciente.nome}"
     
 class AnexoPaciente(models.Model):
+    unidade_saude = models.ForeignKey(UnidadeSaude, on_delete=models.CASCADE, null=True) # Campo OBRIGATÓRIO
+
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='anexos')
     autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     descricao = models.CharField(max_length=100, verbose_name="Descrição do Arquivo")
@@ -336,6 +353,8 @@ class AnexoPaciente(models.Model):
         return f"{self.descricao} - {self.paciente.nome}"
     
 class LogAcao(models.Model):
+    unidade_saude = models.ForeignKey(UnidadeSaude, on_delete=models.CASCADE, null=True) # Campo OBRIGATÓRIO
+
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.SET_NULL, # Mantém o log mesmo se o usuário for deletado

@@ -1,5 +1,6 @@
+from urllib import request
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente, LogAcao
+from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente, LogAcao, UnidadeSaude
 from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm, PacienteAdminEditForm
 from collections import Counter
 from django.http import JsonResponse
@@ -19,11 +20,13 @@ from django.core.paginator import Paginator
 
 @login_required
 def index_view(request):
-    
+    unidade_atual = request.user.unidade_saude    
+
     # --- 1. Dados para a Análise ---
     hoje = timezone.now().date()
     
     pacientes_aguardando_hoje = Paciente.objects.filter(
+        unidade_saude=unidade_atual,
         status='Aguardando', 
         hora_chegada__date=hoje
     )
@@ -35,9 +38,10 @@ def index_view(request):
     laranjas_aguardando = pacientes_aguardando_hoje.filter(classificacao='Laranja').count()
 
     # Métricas de "snapshot" do sistema (não precisam ser filtradas por "hoje")
-    total_em_atendimento = Paciente.objects.filter(status='Em atendimento').count()
-    chegadas_hoje = Paciente.objects.filter(hora_chegada__date=hoje).count()
+    total_em_atendimento = Paciente.objects.filter(status='Em atendimento', unidade_saude=unidade_atual).count()
+    chegadas_hoje = Paciente.objects.filter(hora_chegada__date=hoje, unidade_saude=unidade_atual).count()
     concluidos_hoje = Paciente.objects.filter(
+        unidade_saude=unidade_atual,
         status='Concluido', 
         hora_fim_atendimento__date=hoje
     ).count()
@@ -47,6 +51,7 @@ def index_view(request):
     # ==============================================================================
     # Primeiro, buscamos todos os pacientes que iniciaram atendimento hoje
     pacientes_atendidos_hoje = Paciente.objects.filter(
+        unidade_saude=unidade_atual, # <-- FILTRO ADICIONADO
         hora_inicio_atendimento__date=hoje,
         hora_chegada__isnull=False
     )
@@ -118,6 +123,8 @@ def index_view(request):
 @pode_realizar_triagem_required 
 @login_required
 def create_view(request):
+    unidade_atual = request.user.unidade_saude    
+
     if request.method == 'GET':
         form = PacienteForm()
         context = {
@@ -143,6 +150,7 @@ def create_view(request):
 
 @login_required        
 def list_view(request):
+    unidade_atual = request.user.unidade_saude    
     # A MUDANÇA ESTÁ AQUI: Excluímos os pacientes com status 'Pendente'
     pacientes = Paciente.objects.exclude(status='Pendente').order_by('-id')
     status_contagem = Counter(p.status for p in pacientes)
@@ -153,6 +161,7 @@ def list_view(request):
 
 @login_required
 def detail_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     paciente = get_object_or_404(Paciente, pk=pk)
     
     # Lógica para o botão "Voltar" que já tínhamos
@@ -208,6 +217,7 @@ def detail_view(request, pk):
 @login_required
 @admin_required
 def delete_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     paciente_a_deletar = get_object_or_404(Paciente, pk=pk)
     nome_paciente = paciente_a_deletar.nome
     paciente_a_deletar.delete()
@@ -216,6 +226,7 @@ def delete_view(request, pk):
 
 @csrf_exempt
 def predict_view(request):
+    unidade_atual = request.user.unidade_saude 
     if request.method != 'POST':
         return JsonResponse({'error':'Use POST'}, status=405)
     data = json.loads(request.body)
@@ -223,6 +234,7 @@ def predict_view(request):
     return JsonResponse({'classificacao': pred, 'probs': probs})
 
 def registro_view(request):
+    unidade_atual = request.user.unidade_saude 
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -238,6 +250,7 @@ def perfil_view(request):
     """
     Exibe as informações do usuário logado e seu histórico de pacientes.
     """
+    unidade_atual = request.user.unidade_saude 
     # Prepara um dicionário de contexto para enviar ao template
     context = {}
     
@@ -275,7 +288,7 @@ def perfil_view(request):
     else:
         context['page_obj_historico'] = None
         
-    feedbacks_do_usuario_qs = FeedbackTriagem.objects.filter(usuario=usuario_logado).order_by('-data_criacao')
+    feedbacks_do_usuario_qs = FeedbackTriagem.objects.filter(usuario=usuario_logado, unidade_saude=unidade_atual).order_by('-data_criacao')
     
     # 2. Pagina a lista
     paginator_feedbacks = Paginator(feedbacks_do_usuario_qs, 20) # 20 feedbacks por página
@@ -295,6 +308,7 @@ def perfil_view(request):
 @login_required
 # @medico_required # Use seu decorador aqui
 def mudar_status_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     # Encontra o paciente ou retorna erro 404
     paciente = get_object_or_404(Paciente, pk=pk)
 
@@ -330,10 +344,11 @@ def mudar_status_view(request, pk):
 
 @login_required
 def feedback_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     paciente = get_object_or_404(Paciente, pk=pk)
     
     # Impede que um feedback seja dado duas vezes para o mesmo paciente
-    if FeedbackTriagem.objects.filter(paciente=paciente, usuario=request.user).exists():
+    if FeedbackTriagem.objects.filter(paciente=paciente, usuario=request.user, unidade_saude=unidade_atual).exists():
         messages.error(request, 'Você já enviou um feedback para este paciente.')
         return redirect('hosp:listar')
 
@@ -358,6 +373,7 @@ def feedback_view(request, pk):
 
 @login_required
 def lista_feedback_view(request):
+    unidade_atual = request.user.unidade_saude 
     # Otimizamos a consulta E adicionamos a contagem de feedbacks por paciente
     todos_os_feedbacks = FeedbackTriagem.objects.select_related('paciente', 'usuario') \
         .annotate(
@@ -408,23 +424,24 @@ def lista_feedback_view(request):
 @login_required
 @admin_required # Garante que apenas usuários Admin possam acessar esta página
 def gestao_view(request):
+    unidade_atual = request.user.unidade_saude 
     hoje = timezone.now().date()
 
     # --- Lógica de Estatísticas de Pacientes (já feita) ---
     total_pacientes = Paciente.objects.count()
-    pacientes_hoje_count = Paciente.objects.filter(hora_chegada__date=hoje).count()
+    pacientes_hoje_count = Paciente.objects.filter(hora_chegada__date=hoje, unidade_saude=unidade_atual).count()
     inicio_semana = hoje - datetime.timedelta(days=hoje.weekday())
-    pacientes_esta_semana = Paciente.objects.filter(hora_chegada__date__gte=inicio_semana).count()
-    
+    pacientes_esta_semana = Paciente.objects.filter(hora_chegada__date__gte=inicio_semana, unidade_saude=unidade_atual).count()
+
     # --- Lógica para Profissionais (já feita) ---
-    todos_pacientes_para_tabela = Paciente.objects.all().order_by('-id')
-    todos_medicos = CustomUser.objects.filter(tipo_usuario='MEDICO').order_by('nome_completo')
+    todos_pacientes_para_tabela = Paciente.objects.filter(unidade_saude=unidade_atual).order_by('-id')
+    todos_medicos = CustomUser.objects.filter(tipo_usuario='MEDICO', unidade_saude=unidade_atual).order_by('nome_completo')
     total_medicos = todos_medicos.count()
-    todos_enfermeiros = CustomUser.objects.filter(tipo_usuario='ENFERMEIRO').order_by('nome_completo')
+    todos_enfermeiros = CustomUser.objects.filter(tipo_usuario='ENFERMEIRO', unidade_saude=unidade_atual).order_by('nome_completo')
     total_enfermeiros = todos_enfermeiros.count()
-    todos_tecnicos = CustomUser.objects.filter(tipo_usuario='TECNICO_ENFERMAGEM').order_by('nome_completo')
+    todos_tecnicos = CustomUser.objects.filter(tipo_usuario='TECNICO_ENFERMAGEM', unidade_saude=unidade_atual).order_by('nome_completo')
     total_tecnicos = todos_tecnicos.count()
-    todos_atendentes = CustomUser.objects.filter(tipo_usuario='ATENDENTE').order_by('nome_completo')
+    todos_atendentes = CustomUser.objects.filter(tipo_usuario='ATENDENTE', unidade_saude=unidade_atual).order_by('nome_completo')
     total_atendentes = todos_atendentes.count()
 
     paginator = Paginator(todos_pacientes_para_tabela, 20) # Divide a lista em páginas de 20
@@ -436,14 +453,15 @@ def gestao_view(request):
     # =========================================================
     # 1. Novos usuários nos últimos 7 dias
     data_inicio_ultimos_7_dias = hoje - datetime.timedelta(days=7)
-    novos_usuarios_7_dias = CustomUser.objects.filter(date_joined__date__gte=data_inicio_ultimos_7_dias).count()
+    novos_usuarios_7_dias = CustomUser.objects.filter(date_joined__date__gte=data_inicio_ultimos_7_dias, unidade_saude=unidade_atual).count()
 
     # 2. Novos usuários no período anterior (de 14 a 8 dias atrás)
     data_fim_periodo_anterior = data_inicio_ultimos_7_dias
     data_inicio_periodo_anterior = hoje - datetime.timedelta(days=14)
     novos_usuarios_periodo_anterior = CustomUser.objects.filter(
         date_joined__date__gte=data_inicio_periodo_anterior,
-        date_joined__date__lt=data_fim_periodo_anterior
+        date_joined__date__lt=data_fim_periodo_anterior,
+        unidade_saude=unidade_atual,
     ).count()
 
     # 3. Cálculo da Taxa de Crescimento
@@ -490,6 +508,7 @@ def ver_perfil_usuario_view(request, pk):
     """
     Exibe o perfil de um usuário específico para um administrador.
     """
+    unidade_atual = request.user.unidade_saude 
     # Busca o usuário pelo ID fornecido na URL ou retorna um erro 404
     usuario_selecionado = get_object_or_404(CustomUser, pk=pk)
     
@@ -509,7 +528,7 @@ def ver_perfil_usuario_view(request, pk):
         context['historico_pacientes'] = pacientes_do_usuario
         
     # Lógica para buscar os feedbacks feitos pelo usuário
-    feedbacks_do_usuario = FeedbackTriagem.objects.filter(usuario=usuario_selecionado).order_by('-data_criacao')
+    feedbacks_do_usuario = FeedbackTriagem.objects.filter(usuario=usuario_selecionado, unidade_saude=unidade_atual).order_by('-data_criacao')
     context['feedbacks_do_usuario'] = feedbacks_do_usuario
     
     # Reutilizaremos o template perfil.html para mostrar as informações
@@ -519,6 +538,7 @@ def ver_perfil_usuario_view(request, pk):
 @login_required
 @admin_required
 def delete_user_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     usuario_a_deletar = get_object_or_404(CustomUser, pk=pk)
     
     if request.user == usuario_a_deletar:
@@ -536,6 +556,7 @@ def partial_patient_list_view(request):
     Esta view retorna apenas o HTML do corpo da tabela de pacientes,
     para ser usada pela chamada AJAX.
     """
+    unidade_atual = request.user.unidade_saude 
     # Reutilizamos EXATAMENTE a mesma lógica de ordenação da index_view
     prioridade_classificacao = Case(
         When(classificacao='Vermelho', then=Value(1)),
@@ -561,7 +582,8 @@ def partial_patient_list_view(request):
 @login_required
 @tecnico_enfermagem_required
 def validacao_triagem_view(request):
-    pacientes_pendentes = Paciente.objects.filter(status='Pendente').order_by('hora_chegada')
+    unidade_atual = request.user.unidade_saude 
+    pacientes_pendentes = Paciente.objects.filter(status='Pendente', unidade_saude=unidade_atual).order_by('hora_chegada')
     context = {
         'pacientes_pendentes': pacientes_pendentes
     }
@@ -570,6 +592,7 @@ def validacao_triagem_view(request):
 @login_required
 @tecnico_enfermagem_required
 def confirmar_triagem_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     paciente = get_object_or_404(Paciente, pk=pk)
     if request.method == 'POST':
         form = ValidacaoTriagemForm(request.POST, instance=paciente)
@@ -592,6 +615,7 @@ def confirmar_triagem_view(request, pk):
 @login_required
 @admin_required # Apenas Admins podem desativar contas
 def desativar_usuario_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     usuario_a_desativar = get_object_or_404(CustomUser, pk=pk)
 
     # Medida de segurança: impede que um admin desative a si mesmo
@@ -611,6 +635,7 @@ def desativar_usuario_view(request, pk):
 @login_required
 @admin_required
 def reativar_usuario_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     usuario_a_reativar = get_object_or_404(CustomUser, pk=pk)
 
     # Ação principal: reativa o usuário
@@ -624,6 +649,7 @@ def reativar_usuario_view(request, pk):
 @login_required
 @admin_required
 def edit_prontuario_admin_view(request, pk):
+    unidade_atual = request.user.unidade_saude 
     paciente = get_object_or_404(Paciente, pk=pk)
 
     if request.method == 'POST':
@@ -645,6 +671,7 @@ def edit_prontuario_admin_view(request, pk):
 
 @login_required # Garante que apenas usuários logados vejam a ajuda
 def ajuda_view(request):
+    unidade_atual = request.user.unidade_saude 
     # Opcional: Adiciona 'pagina_ativa' se você usa isso para destacar o menu
     context = {'pagina_ativa': 'ajuda'} 
     return render(request, 'site/ajuda.html', context)
@@ -652,7 +679,8 @@ def ajuda_view(request):
 @login_required
 @admin_required # Protege a view
 def log_auditoria_view(request):
-    log_list = LogAcao.objects.all() # Pega todos os logs (já ordenados pelo Meta)
+    unidade_atual = request.user.unidade_saude 
+    log_list = LogAcao.objects.filter(unidade_saude=unidade_atual) # Pega todos os logs (já ordenados pelo Meta)
     
     # Paginação (igual às outras listas)
     paginator = Paginator(log_list, 50) # Mostra 50 logs por página

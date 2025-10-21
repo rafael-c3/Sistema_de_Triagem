@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Paciente, FeedbackTriagem
+from .models import CustomUser, Paciente, FeedbackTriagem, LogAcao, EntradaProntuario, AnexoPaciente, UnidadeSaude
 
 # --- Personalização para o modelo de Usuário (CustomUser) ---
 
@@ -25,7 +25,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
     # Define as colunas que aparecerão na lista de usuários
-    list_display = ('username', 'nome_completo', 'tipo_usuario', 'is_active', 'is_staff')
+    list_display = ('username', 'nome_completo', 'tipo_usuario', 'unidade_saude', 'is_active', 'is_staff')
     
     # Adiciona uma barra de filtros à direita
     list_filter = ('tipo_usuario', 'is_staff', 'is_superuser', 'especializacao')
@@ -42,7 +42,7 @@ class PacienteAdmin(admin.ModelAdmin):
     Configuração de administração para o modelo de Paciente.
     """
     # Define as colunas que aparecerão na lista de pacientes
-    list_display = ('nome', 'cpf', 'idade', 'classificacao', 'status', 'hora_chegada_formatada', 'medico_responsavel')
+    list_display = ('nome', 'cpf', 'idade', 'classificacao', 'status', 'hora_chegada_formatada', 'medico_responsavel', 'unidade_saude')
     
     # Adiciona uma barra de filtros à direita
     list_filter = ('status', 'classificacao', 'convenio')
@@ -87,7 +87,7 @@ class PacienteAdmin(admin.ModelAdmin):
 @admin.register(FeedbackTriagem)
 class FeedbackTriagemAdmin(admin.ModelAdmin):
     # Campos que aparecerão na lista de feedbacks
-    list_display = ('paciente', 'usuario', 'triagem_correta', 'status', 'data_criacao')
+    list_display = ('paciente', 'usuario', 'triagem_correta', 'status', 'data_criacao', 'unidade_saude')
     
     # Adiciona filtros para encontrar feedbacks facilmente
     list_filter = ('status', 'triagem_correta', 'usuario__tipo_usuario')
@@ -113,3 +113,29 @@ class FeedbackTriagemAdmin(admin.ModelAdmin):
             'fields': ('status',)
         }),
     )
+
+@admin.register(LogAcao)
+class LogAcaoAdmin(admin.ModelAdmin):
+    # Campos que aparecerão na lista de logs
+    list_display = ('usuario', 'acao')
+    list_filter = ('acao', 'usuario__tipo_usuario')
+    search_fields = ('usuario__username', 'acao')
+
+@admin.register(EntradaProntuario)
+class EntradaProntuarioAdmin(admin.ModelAdmin):
+    list_display = ('paciente', 'autor', 'data_criacao')
+    list_filter = ('autor__tipo_usuario',)
+    search_fields = ('paciente__nome', 'autor__username')
+    readonly_fields = ('paciente', 'autor', 'data_criacao', 'texto')
+
+@admin.register(AnexoPaciente)
+class AnexoPacienteAdmin(admin.ModelAdmin):
+    list_display = ('descricao', 'paciente', 'autor', 'data_upload')
+    list_filter = ('autor__tipo_usuario',)
+    search_fields = ('paciente__nome', 'autor__username', 'descricao')
+    readonly_fields = ('paciente', 'autor', 'data_upload', 'arquivo')
+
+@admin.register(UnidadeSaude)
+class UnidadeSaudeAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'id')
+    search_fields = ('nome',)
