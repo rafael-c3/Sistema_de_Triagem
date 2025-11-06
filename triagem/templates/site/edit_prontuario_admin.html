@@ -1,84 +1,90 @@
-{% comment %} triagem/templates/site/edit_prontuario_admin.html {% endcomment %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Prontuário (Admin) - {{ paciente.nome }}</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        .form-container { max-width: 800px; margin: auto; }
-        .form-field { margin-bottom: 15px; }
-        .form-field label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-field input, .form-field select, .form-field textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .form-actions { margin-top: 20px; }
-        .button { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
-        .button-save { background-color: #28a745; color: white; }
-        .button-cancel { background-color: #6c757d; color: white; margin-left: 10px; }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <h1>Editar Dados Cadastrais (Admin)</h1>
-        <h3>Paciente: {{ paciente.nome }}</h3>
-        <hr>
+{% extends 'site/headerBase.html' %}
+{% load static %}
 
+{% block title %}Editar Prontuário (Admin) - {{ paciente.nome }}{% endblock %}
+
+{% block styles %}
+    {# O headerBase.html já carrega os estilos globais. #}
+    {# Este link adiciona APENAS os estilos específicos deste formulário. #}
+    <link rel="stylesheet" href="{% static 'front/css/edit_prontuario.css' %}?v=3">
+{% endblock %}
+
+
+{% block content %}
+<div class="page-wrapper">
+    
+    {# Você pode adicionar um botão "Voltar" aqui se quiser, similar ao da tela de perfil #}
+    <a href="javascript:history.back()" class="btn-voltar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>Voltar</span>
+    </a>
+
+    <h1>Editar Dados Cadastrais (Admin)</h1>
+    <h3 class="paciente-subtitle">Paciente: {{ paciente.nome }}</h3>
+    <div class="form-container">
         <form method="post">
             {% csrf_token %}
             
-            {# Exibe erros gerais do formulário, se houver #}
             {{ form.non_field_errors }}
 
             <div class="form-section">
                 <h4>Dados Pessoais</h4>
-                <div class="form-field">
-                    {{ form.nome.label_tag }}
-                    {{ form.nome }}
-                    {{ form.nome.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.data_nascimento.label_tag }}
-                    {{ form.data_nascimento }}
-                    {{ form.data_nascimento.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.sexo.label_tag }}
-                    {{ form.sexo }}
-                    {{ form.sexo.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.cpf.label_tag }}
-                    {{ form.cpf }}
-                    {{ form.cpf.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.convenio.label_tag }}
-                    {{ form.convenio }}
-                    {{ form.convenio.errors }}
+                
+                <div class="form-grid">
+                    <div class="form-field">
+                        {{ form.nome.label_tag }}
+                        {{ form.nome }}
+                        {{ form.nome.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.data_nascimento.label_tag }}
+                        {{ form.data_nascimento }}
+                        {{ form.data_nascimento.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.sexo.label_tag }}
+                        {{ form.sexo }}
+                        {{ form.sexo.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.cpf.label_tag }}
+                        {{ form.cpf }}
+                        {{ form.cpf.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.convenio.label_tag }}
+                        {{ form.convenio }}
+                        {{ form.convenio.errors }}
+                    </div>
                 </div>
             </div>
 
             <div class="form-section">
                 <h4>Informações do Responsável (Opcional)</h4>
-                <div class="form-field">
-                    {{ form.nome_responsavel.label_tag }}
-                    {{ form.nome_responsavel }}
-                    {{ form.nome_responsavel.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.cpf_responsavel.label_tag }}
-                    {{ form.cpf_responsavel }}
-                    {{ form.cpf_responsavel.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.telefone_responsavel.label_tag }}
-                    {{ form.telefone_responsavel }}
-                    {{ form.telefone_responsavel.errors }}
+                
+                <div class="form-grid">
+                    <div class="form-field">
+                        {{ form.nome_responsavel.label_tag }}
+                        {{ form.nome_responsavel }}
+                        {{ form.nome_responsavel.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.cpf_responsavel.label_tag }}
+                        {{ form.cpf_responsavel }}
+                        {{ form.cpf_responsavel.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.telefone_responsavel.label_tag }}
+                        {{ form.telefone_responsavel }}
+                        {{ form.telefone_responsavel.errors }}
+                    </div>
                 </div>
             </div>
             
             <div class="form-section">
                 <h4>Observações da Triagem</h4>
-                 <div class="form-field">
+                
+                <div class="form-field">
                     {{ form.observacoes.label_tag }}
                     {{ form.observacoes }}
                     {{ form.observacoes.errors }}
@@ -86,10 +92,19 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="button button-save">Salvar Alterações</button>
+                {# O botão "Voltar" acima torna este "Cancelar" um pouco redundante, #}
+                {# mas o link explícito para 'mostrar' ainda é útil. #}
                 <a href="{% url 'hosp:mostrar' pk=paciente.pk %}" class="button button-cancel">Cancelar</a>
+                <button type="submit" class="button button-save">Salvar Alterações</button>
             </div>
         </form>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+    {# O headerBase.html já carrega os scripts globais. #}
+    {# Adicione aqui scripts JS específicos para esta página, se necessário #}
+    {# Ex: <script src="{% static 'js/form-masks.js' %}"></script> #}
+{% endblock %}

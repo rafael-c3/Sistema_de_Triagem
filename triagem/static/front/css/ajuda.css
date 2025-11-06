@@ -1,0 +1,156 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    
+    color: #212529;
+    line-height: 1.6;
+}
+
+.container-ajuda{
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.titulo-principal{
+    
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 2.2rem; 
+}
+
+.titulo-principal .bi {
+    color: #0d6efd; /* Cor principal (azul) */
+    font-size: 1.5em;
+}
+.subtitulo-principal {
+    
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+.divisor {
+    border: 0;
+    border-top: 1px solid #dee2e6;
+    margin: 24px 0;
+}
+.caixa-dica {
+    background-color: #e7f1ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.95rem;
+}
+.caixa-dica .bi {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    color: #004085;
+}
+
+.accordion-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaço entre os itens */
+}
+
+.accordion-item {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden; /* Importante para o border-radius */
+    transition: border-color 0.3s ease;
+}
+
+.accordion-header {
+    /* Reseta o estilo padrão do botão */
+    background-color: #fff;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 20px;
+    
+    /* Layout */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    
+    /* Texto */
+    text-align: left;
+    font-size: 1.1rem;
+    color: #333;
+
+    transition: background-color 0.2s ease;
+}
+.accordion-header > span {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.accordion-header .bi {
+    font-size: 1.25rem;
+    color: #6c757d; /* Cor do ícone (cinza) */
+}
+
+.accordion-header:hover {
+    background-color: #f8f9fa; /* Fundo cinza claro no hover */
+}
+
+.accordion-content {
+    /* A mágica da animação: */
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    
+    /* Estilo interno */
+    padding: 0 20px; /* Padding lateral existe, mas vertical é 0 */
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+/* Borda azul/roxa no item ativo (como no vídeo) */
+.accordion-item.active {
+    border-color: #0d6efd; /* Use a cor principal do seu sistema */
+}
+
+/* Cabeçalho ativo */
+.accordion-header.active {
+    color: #0d6efd; /* Cor do texto do botão */
+    border-bottom: 1px solid #dee2e6;
+}
+
+.accordion-header.active .bi {
+    color: #0d6efd; /* Cor do ícone */
+}
+
+/* Gira a seta */
+.accordion-header.active .icon-seta {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+.accordion-header .icon-seta {
+    transition: transform 0.3s ease;
+}
+
+/* Conteúdo ativo (aberto) */
+.accordion-content.active {
+    /* A altura será definida pelo JavaScript */
+    padding: 20px; /* Adiciona o padding vertical */
+}
+
+.caixa-rodape {
+    background-color: #f8f9fa; /* Cinza bem claro */
+    border: 1px solid #dee2e6; /* Borda cinza clara */
+    border-radius: 8px;
+    padding: 20px;
+    color: #6c757d; /* Cor do texto (cinza) */
+    font-size: 0.9rem;
+    /* Alinhamento à esquerda é o padrão */
+}

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import list_view, index_view, create_view, delete_view, detail_view, registro_view, perfil_view, mudar_status_view, feedback_view, lista_feedback_view, gestao_view, ver_perfil_usuario_view, delete_user_view, partial_patient_list_view, validacao_triagem_view, confirmar_triagem_view, desativar_usuario_view, reativar_usuario_view, edit_prontuario_admin_view, ajuda_view, log_auditoria_view
 from django.contrib.auth import views as auth_views
+from . import views
 
 app_name = 'hosp'
 urlpatterns = [
@@ -31,5 +32,7 @@ urlpatterns = [
 
     path('partials/patient-list/', partial_patient_list_view, name='partial_patient_list'),
     path('gestao/log-auditoria/', log_auditoria_view, name='log_auditoria'),
+    path('perfil/limpar-foto/ajax/', views.clear_profile_picture_ajax_view, name='clear_profile_picture_ajax'),
+    
     
 ]

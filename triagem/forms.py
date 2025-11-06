@@ -7,7 +7,7 @@ class PacienteForm(forms.ModelForm):
     class Meta:
         model = Paciente
         fields = '__all__'
-        exclude = ['atendente']
+        exclude = ['atendente','unidade_saude']
 
         labels = {
             'nome': 'Nome',
@@ -204,10 +204,24 @@ class ValidacaoTriagemForm(forms.ModelForm):
     class Meta:
         model = Paciente
         # O técnico só precisa poder alterar a classificação
-        fields = ['classificacao']
+        fields = ['classificacao', 'justificativa']
+
         labels = {
-            'classificacao': 'Se a classificação estiver incorreta, selecione a correta:'
+            'classificacao': 'Se a classificação estiver incorreta, selecione a correta:',
+            'justificativa': 'Justificativa da Validação'
         }
+
+        widgets = {
+            # O widget 'select' já é o padrão, mas podemos deixar explícito
+              'classificacao': forms.RadioSelect(attrs={'class': 'custom-radio-list'}), 
+            # Dizemos para a justificativa ser uma <textarea>
+            'justificativa': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Explique seu parecer sobre a classificação (opcional)'
+            }),
+            
+         }
+        
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:

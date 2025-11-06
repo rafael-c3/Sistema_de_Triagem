@@ -1,31 +1,142 @@
 {% extends "site/headerBase.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'front/css/validacao_triagem.css' %}?v=2">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2>Triagens Pendentes de Validação</h2>
-    <p>Revise as classificações sugeridas pela IA e confirme para que os pacientes entrem na fila de atendimento.</p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Paciente</th>
-                <th>Hora da Chegada</th>
-                <th>Classificação Sugerida (IA)</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for paciente in pacientes_pendentes %}
-            <tr>
-                <td>{{ paciente.nome }}</td>
-                <td>{{ paciente.hora_chegada|date:"H:i" }}</td>
-                <td>{{ paciente.get_classificacao_display }}</td>
-                <td>
-                    <a href="{% url 'hosp:confirmar_triagem' pk=paciente.pk %}" class="btn btn-primary btn-sm">Validar</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="4">Nenhuma triagem pendente.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container validacao-page">
+    
+    <div class="page-header">
+        <h2>Validação de Triagens</h2>
+        <p>Revise as classificações sugeridas pela IA e confirme para que os pacientes entrem na fila de atendimento.</p>
+    </div>
+    
+    <div class="row">
+        
+        <div class="col-md-5"> <div class="list-container-card">
+                
+                <div class="list-section">
+                    <div class="list-section-header">
+                        <h2><span class="icon-wrapper">🕑</span> Triagens Pendentes</h2>
+                        <p class="card-header-subtitle">{{ pacientes_pendentes.count }} pendentes de validação</p>
+                    </div>
+                    
+                    <div class="patient-list" id="lista-triagens" data-url-template="{% url 'hosp:confirmar_triagem' pk=9999 %}">
+                        
+                        {% for paciente in pacientes_pendentes %}
+                        <div class="patient-card item-triagem" 
+                        
+                            data-triagem-pk="{{ paciente.pk }}" 
+                            data-nome="{{ paciente.nome }}"
+                            data-hora="{{ paciente.hora_chegada|date:'H:i' }}"
+                            data-sugestao="{{ paciente.get_classificacao_display|slugify }}">
+                            
+                            <div class="patient-info">
+                                <span class="patient-name">{{ paciente.nome }}</span>
+                                <span class="patient-time">{{ paciente.hora_chegada|date:'H:i' }}</span>
+                            </div>
+
+                            <div class="patient-badge">
+                                <span class="classificacao-badge {{ paciente.get_classificacao_display|slugify }}">
+                                    {{ paciente.get_classificacao_display }}
+                                </span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="empty-list">Nenhuma triagem pendente.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="list-section">
+                    <div class="list-section-header">
+                        <h4><span class="icon-wrapper">✓</span> Validadas ({{ total_validados }})</h4>
+                    </div>
+
+                    <div class="patient-list-validated">
+
+                        {% for paciente in pacientes_validados_lista %}
+                        <div class="validated-item">
+                            <p>{{ paciente.nome }}</p>
+                            </div>
+                        {% empty %}
+                        <p class="empty-list" style="padding: 0 1rem;">Nenhum paciente validado ainda.</p>
+                        {% endfor %}
+
+                       
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-7"> 
+
+            <div class="detail-card">
+
+                <div class="detail-placeholder" id="placeholder-detalhe">
+                    <div class="placeholder-content">
+                        <span class="placeholder-icon">!</span>
+                        <h5>Selecione uma triagem para validar</h5>
+                    </div>
+                </div>
+
+                <form id="form-detalhe" method="POST" style="display: none;">
+                    {% csrf_token %}
+                    
+                    <h2>Validar Triagem</h2>
+                    <p class="patient-id-display card-header-subtitle">ID do Paciente: <span id="detalhe-id-paciente">...</span></p>
+
+                    
+                    <h3 class="form-section-title">Dados do Paciente</h3>
+                    <div class="patient-data-box">
+                        <div class="data-item">
+                            <span>Nome</span>
+                            <strong id="detalhe-nome">Carregando...</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Hora de Chegada</span>
+                            <strong id="detalhe-hora">--:--</strong>
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title">Classificação de Risco</h3>
+                    <div class="ai-suggestion-box">
+                        <label>Classificação sugerida pela IA:</label>
+                        <span id="detalhe-sugestao-ia" class="classificacao-badge">Carregando...</span>
+                    </div>
+
+                    <h3 class="form-section-title">{{ form.classificacao.label_tag }}</h3>
+                    <div class="form-group radio-group-wrapper">
+                        {% for radio in form.classificacao %}
+                        <div class="custom-radio-item">
+                            {{ radio.tag }}
+
+                            <label for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <h3 class="form-section-title">{{ form.justificativa.label }}</h3>
+                    <div class="form-group">
+                        {{ form.justificativa }}
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="#" id="btn-cancelar" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">Confirmar Validação</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'front/js/validacao_triagem.js' %}"></script>
 {% endblock %}

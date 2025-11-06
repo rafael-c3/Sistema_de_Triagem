@@ -1,0 +1,449 @@
+.container {
+    width: 100%;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    margin-right: auto;
+    margin-left: auto;
+    box-sizing: border-box;
+}
+
+.validacao-page {
+    
+    min-height: 100vh;
+    padding-top: 2.5rem; /* (NOVO) Adiciona espaço do topo */
+    padding-bottom: 2.5rem; /* (NOVO) Adiciona espaço de baixo */
+}
+/* Títulos */
+.page-header h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #2a2f45;
+}
+.page-header p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-top: -5px;
+}
+
+#form-detalhe h2,
+.list-section-header h2 {
+    font-size: 1.75rem; /* Tamanho do título "Validar Triagem" */
+    font-weight: 600;
+    color: #2a2f45;
+    margin-bottom: 0.25rem; /* Espaço pequeno para o subtexto */
+
+    /* Mantém o alinhamento do ícone da esquerda */
+    display: flex;
+    align-items: center;
+}
+
+/* Subtexto (Unifica o subtexto da Esquerda e Direita) */
+.card-header-subtitle {
+    font-size: 1rem; /* Tamanho do "ID do Paciente" */
+    color: #6c757d;
+    margin-bottom: 2rem; /* Espaço grande para o conteúdo abaixo */
+    display: block; /* Garante que a margem funcione */
+
+    /* A classe .patient-id-display não é mais necessária */
+    /* Mas a mantivemos no HTML por segurança. */
+}
+
+/* =================================
+   LAYOUT DE COLUNAS (CSS PURO)
+   ================================= */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-md-5, .col-md-7 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .col-md-5 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+    .col-md-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+}
+
+
+/* =================================
+   COLUNA DA ESQUERDA (LISTA)
+   ================================= */
+
+/* O card branco que segura as listas */
+.list-container-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e5ed;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    
+}
+
+.list-section {
+    margin-bottom: 2rem;
+}
+.list-section:last-child {
+    margin-bottom: 0;
+}
+
+.list-section-header {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 0.5rem;
+}
+.list-section-header h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2a2f45;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+
+.icon-wrapper {
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* O card de cada paciente */
+.patient-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e5ed;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+}
+
+.patient-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+}
+
+/* O item ATIVO (selecionado) */
+.patient-card.item-triagem.active {
+    border-color: #0d6efd; /* Azul (ou a cor principal do seu sistema) */
+    background-color: #f4f8ff;
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.1);
+}
+
+.patient-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    
+}
+
+
+.patient-name {
+    font-weight: 600;
+    color: #2a2f45;
+    
+    
+}
+.patient-time {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Lista de validados (cinza) */
+.validated-item {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+}
+.validated-item p {
+    margin: 0;
+    color: #6c757d;
+}
+
+
+/* =================================
+   BADGES DE CLASSIFICAÇÃO (Pílula)
+   ================================= */
+.classificacao-badge {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    font-size: .8rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 50rem; /* Pílula */
+}
+
+/* Cores (baseado em |slugify) */
+.classificacao-badge.emergencia { /* Vermelho */
+    background-color: #f8d7da; 
+    color: #842029;
+}
+.classificacao-badge.muito-urgente { /* Laranja */
+    background-color: #ffebd0; 
+    color: #995c00;
+}
+.classificacao-badge.urgente { /* Amarelo */
+    background-color: #fff3cd; 
+    color: #664d03;
+}
+.classificacao-badge.pouco-urgente { /* Verde */
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+.classificacao-badge.nao-urgente { /* Azul */
+    background-color: #cfe2ff;
+    color: #0a58ca;
+}
+
+/* Botões */
+.btn {
+    display: inline-block;
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+.btn-success {
+    color: #fff;
+    background-color: #198754;
+    border-color: #198754;
+}
+.btn-success:hover {
+    background-color: #157347;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+}
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-secondary:hover {
+    background-color: #5c636a;
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 1.5rem;
+    border-top: 1px solid #f1f1f1;
+    padding-top: 1.5rem;
+    
+}
+.form-actions .btn {
+    margin-left: 0.5rem;
+}
+
+.detail-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e5ed;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    min-height: 70vh; /* Garante uma altura mínima */
+}
+
+.detail-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #d0d8e6;
+    border-radius: 12px;
+    background-color: #fdfdff;
+    /* Removemos o min-height daqui, o card já dá a altura */
+    padding: 4rem 2rem; /* Apenas um padding interno */
+}
+.placeholder-content {
+    text-align: center;
+    color: #6c757d;
+}
+.placeholder-icon {
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: #e0e5ed;
+    color: #6c757d;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 3rem;
+    margin-bottom: 1rem;
+}
+.placeholder-content h5 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+
+
+/* Títulos de seção (H3) */
+.form-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2a2f45;
+    margin-bottom: 1rem;
+    margin-top: 2rem; /* Espaço entre seções */
+}
+/* O primeiro H3 não precisa de espaço em cima */
+#form-detalhe h3:first-of-type {
+    margin-top: 0;
+}
+
+.patient-data-box {
+    display: flex; /* Cria as colunas */
+    background-color: #f8f9fa; /* Cinza muito claro */
+    border: 1px solid #e0e5ed;
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+.data-item {
+    flex: 1; /* Cada item ocupa metade do espaço */
+}
+.data-item span {
+    display: block;
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+.data-item strong {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2a2f45;
+}
+
+
+/* --- Seção 2: Sugestão IA Box --- */
+.ai-suggestion-box {
+    background-color: #f0f7ff; /* Azul claro */
+    border: 1px solid #cce0ff;
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+.ai-suggestion-box label {
+    display: block;
+    font-size: 0.9rem;
+    color: #0a58ca;
+    margin-bottom: 0.5rem;
+}
+
+
+.custom-radio-item {
+    display: block;
+    position: relative; /* Chave para o posicionamento */
+    padding-left: 2.25rem; /* Espaço para o nosso círculo customizado */
+    margin-bottom: 0.5rem;
+    min-height: 1.5rem; /* Altura do círculo */
+    cursor: pointer;
+}
+.custom-radio-item:last-child {
+    margin-bottom: 0;
+}
+
+/* A label (texto) */
+.custom-radio-item label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2a2f45;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    
+}
+
+/* O input (real) - Fica invisível, mas por cima de tudo */
+.custom-radio-item input[type="radio"] {
+    position: absolute;
+    opacity: 0; /* Fica invisível */
+    cursor: pointer;
+    left: 0;
+    top: 0.15rem;;
+    width: 1.5rem; /* Cobre a área do círculo */
+    height: 1.5rem;
+    margin: 0;
+    z-index: 1; /* Fica na frente do círculo falso */
+}
+
+/* O círculo FALSO (desenhado na label) */
+.custom-radio-item label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.15rem; /* Alinha com o topo */
+
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #ced4da;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: all 0.2s;
+    box-sizing: border-box; /* Inclui a borda no tamanho */
+    z-index: 0; /* Fica atrás do input real */
+}
+
+/* Círculo FALSO quando o input REAL (escondido) está :checked */
+.custom-radio-item input[type="radio"]:checked + label::before {
+    border-color: #0d6efd; /* Azul */
+    /* Anel interno */
+    box-shadow: 0 0 0 4px #fff inset, 0 0 0 10px #0d6efd inset; 
+}
+
+/* Efeito de Foco (quando usa Tab) */
+.custom-radio-item input[type="radio"]:focus + label::before {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 4px #fff inset, 0 0 0 10px #0d6efd inset, 0 0 5px rgba(13, 110, 253, 0.5);
+}
+
+/* Cores das Labels (agora o seletor funciona) */
+.custom-radio-item input[value="Emergência"] + label { color: #dc3545; }
+.custom-radio-item input[value="Muito Urgente"] + label { color: #fd7e14; }
+.custom-radio-item input[value="Urgente"] + label { color: #ffc107; }
+.custom-radio-item input[value="Pouco Urgente"] + label { color: #198754; }
+.custom-radio-item input[value="Não Urgente"] + label { color: #0d6efd; }
+
+/* --- Seção 4: Justificativa (Textarea) --- */
+#form-detalhe .form-group {
+    margin-bottom: 1.5rem; 
+}
+#form-detalhe textarea {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: border-color .15s ease-in-out;
+    min-height: 140px;
+    resize: vertical;
+}
+#form-detalhe textarea:focus {
+    border-color: #0d6efd;
+    outline: 0;
+}

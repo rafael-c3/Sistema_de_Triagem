@@ -1,0 +1,157 @@
+.page-wrapper {
+    max-width: 900px;
+    margin: 30px auto; /* Centraliza na página */
+    padding: 0 20px; /* Adiciona um respiro nas laterais em telas menores */
+    box-sizing: border-box;
+}
+
+/* ESTILOS DOS ITENS FORA DO CARD
+*/
+.page-wrapper .btn-voltar {
+    text-decoration: none; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    margin-bottom: 20px; 
+    font-weight: 600; 
+    color: #333;
+    font-size: 1em;
+}
+.page-wrapper .btn-voltar svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5;
+}
+
+.page-wrapper .btn-voltar:hover {
+
+    color: #0d6efd;
+}
+
+.page-wrapper h1 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.8em;
+    
+}
+
+.page-wrapper .paciente-subtitle { /* Usei .paciente-subtitle para não afetar outros H3 */
+    font-weight: normal;
+    color: #555;
+    margin-top: 0;
+    margin-bottom: 25px; /* Espaço entre o subtítulo e o card */
+    border-bottom: 1px solid #eee; /* Define a linha */
+    padding-bottom: 15px;         /* Cria um espaço entre o texto e a linha */
+    
+    
+}
+
+/* O "CARD" BRANCO DO FORMULÁRIO:
+  Agora ele só cuida do fundo branco, padding e sombra.
+*/
+.form-container {
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+}
+
+/* --- SEÇÕES DO FORMULÁRIO (H4) --- */
+.form-section h4 {
+    font-size: 1.1em;
+    color: #333;
+    margin-top: 0; /* Removido o margin-top da primeira seção */
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+/* Adiciona margem para as seções seguintes */
+.form-section + .form-section h4 {
+     margin-top: 30px;
+}
+
+/* --- O LAYOUT DE GRADE (2 COLUNAS) --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+/* --- CAMPOS DO FORMULÁRIO --- */
+.form-field {
+    margin-bottom: 0;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #444;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.form-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-field .errorlist {
+    list-style-type: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+    color: #dc3545;
+}
+
+/* --- BOTÕES DE AÇÃO --- */
+.form-actions {
+    margin-top: 40px;
+    text-align: right;
+}
+
+.button {
+    padding: 12px 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9em;
+    font-weight: 600;
+                   
+    text-align: center;           /* Centraliza o texto dentro do botão */
+    box-sizing: border-box;
+    font-family: inherit;     /* Força o <button> a usar a mesma fonte que o <a> */
+    line-height: 1.5;         /* Define uma altura de linha consistente para ambos */
+    margin: 0;
+}
+
+.button-save {
+    background-color: #28a745;
+    color: white;
+}
+.button-save:hover {
+    background-color: #218838;
+}
+
+.button-cancel {
+    background-color: #ffffff;
+    color: #555;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+.button-cancel:hover {
+    background-color: #f8f8f8;
+}

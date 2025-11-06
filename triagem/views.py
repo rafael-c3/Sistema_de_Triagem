@@ -121,32 +121,42 @@ def index_view(request):
     return render(request, 'site/index.html', context)
 
 @pode_realizar_triagem_required 
-@login_required
+@login_required 
 def create_view(request):
-    unidade_atual = request.user.unidade_saude    
+    unidade_atual = request.user.unidade_saude
 
-    if request.method == 'GET':
+    if request.method == 'POST':
+        form = PacienteForm(request.POST)
+        if form.is_valid():
+            paciente = form.save(commit=False)
+
+            print(f"USUÁRIO LOGADO: {request.user}")
+            print(f"UNIDADE DO USUÁRIO: {unidade_atual}")
+
+            paciente.atendente = request.user 
+            paciente.unidade_saude = unidade_atual
+
+            paciente.save()
+
+            return redirect('hosp:listar')
+        else:
+            print("Erros de validação:", form.errors)
+            # Se der erro, mantemos na mesma página
+            context = {
+                'form': form,
+                'pagina_ativa': 'triagem',
+            }
+            return render(request, 'site/criar.html', context)
+
+    # Se for GET (primeiro acesso à página)
+    else:
         form = PacienteForm()
         context = {
             'form': form,
             'pagina_ativa': 'triagem',
         }
         return render(request, 'site/criar.html', context)
-    if request.method == 'POST':
-        form = PacienteForm(request.POST)
-        if form.is_valid():
-            paciente = form.save(commit=False)
-            paciente.atendente = request.user 
-            form.save()
-            return redirect('hosp:listar')
-        else:
-            print("Erros de validação:", form.errors)
-            # ADICIONADO: 'pagina_ativa' para o POST com erro
-            context = {
-                'form': form,
-                'pagina_ativa': 'triagem',
-            }
-            return render(request, 'site/criar.html', context)
+    
 
 @login_required        
 def list_view(request):
@@ -233,8 +243,7 @@ def predict_view(request):
     pred, probs = predict_from_dict(data)
     return JsonResponse({'classificacao': pred, 'probs': probs})
 
-def registro_view(request):
-    unidade_atual = request.user.unidade_saude 
+def registro_view(request): 
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -259,15 +268,30 @@ def perfil_view(request):
     
     # Lógica para o formulário de upload de foto
     if request.method == 'POST':
-        # Passamos request.FILES para lidar com o upload do arquivo
-        form_foto = ProfilePictureForm(request.POST, request.FILES, instance=usuario_logado)
-        if form_foto.is_valid():
-            form_foto.save()
-            messages.success(request, 'Sua foto de perfil foi atualizada com sucesso!')
-            return redirect('hosp:perfil') # Redireciona para limpar o POST
-    else:
-        form_foto = ProfilePictureForm(instance=usuario_logado)
-    context['form_foto'] = form_foto # NOVO: Adiciona ao context logo após a lógica
+        # Verifica se é uma requisição AJAX (o JS vai enviar isso)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            form_foto = ProfilePictureForm(request.POST, request.FILES, instance=usuario_logado)
+            if form_foto.is_valid():
+                user_atualizado = form_foto.save()
+                # Retorna um JSON com sucesso e a URL da nova foto
+                return JsonResponse({
+                    'success': True,
+                    'new_photo_url': user_atualizado.foto_perfil.url
+                })
+            else:
+                # Retorna um JSON com o erro
+                return JsonResponse({'success': False, 'error': form_foto.errors.as_json()})
+        
+        # Se for um POST normal (sem AJAX), recarrega a página. 
+        # (Isso é um fallback, mas nossa lógica JS não vai usar isso)
+        return redirect('hosp:perfil')
+
+    # --- Lógica GET (Carregamento da Página - Sem alteração) ---
+    form_foto = ProfilePictureForm(instance=usuario_logado)
+    context = {
+        'form_foto': form_foto,
+        'perfil_usuario': usuario_logado, # Adicionado para consistência
+    }
 
     # 1. VERIFICA O TIPO DE USUÁRIO E BUSCA O HISTÓRICO CORRESPONDENTE
     historico_pacientes_qs = None # Inicializa como None
@@ -302,6 +326,22 @@ def perfil_view(request):
 
     # 2. RENDERIZA O TEMPLATE COM O CONTEXTO ATUALIZADO
     return render(request, 'site/perfil.html', context)
+
+# Adicione esta nova view
+@login_required
+@require_POST
+def clear_profile_picture_ajax_view(request):
+    user = request.user
+    default_photo_path = 'fotos_perfil/default.jpg' # Confirme este caminho
+
+    if user.foto_perfil and user.foto_perfil.name != default_photo_path:
+        user.foto_perfil.delete(save=False)
+        user.foto_perfil = default_photo_path
+        user.save()
+        # Retorna a URL da nova foto (a padrão)
+        return JsonResponse({'success': True, 'new_photo_url': user.foto_perfil.url})
+    else:
+        return JsonResponse({'success': False, 'error': 'Nenhuma foto customizada para remover.'})
 
 @medico_required
 @require_POST # Garante que esta view só aceite requisições POST
@@ -583,9 +623,32 @@ def partial_patient_list_view(request):
 @tecnico_enfermagem_required
 def validacao_triagem_view(request):
     unidade_atual = request.user.unidade_saude 
+
     pacientes_pendentes = Paciente.objects.filter(status='Pendente', unidade_saude=unidade_atual).order_by('hora_chegada')
+    
+    # 2. Query base para pacientes validados
+    validados_query = Paciente.objects.filter(
+        status='Aguardando',  # O status que você define ao validar
+        unidade_saude=unidade_atual
+    )
+
+    # 3. Pega o número total de validados
+    total_validados = validados_query.count()
+
+    # 4. Pega os 10 mais recentes para exibir na lista
+    #    (Usamos '-hora_chegada' para mostrar os mais novos primeiro)
+    pacientes_validados_lista = validados_query.order_by('-hora_chegada')[:10]
+    # --- INÍCIO DA MUDANÇA ---
+    # Precisamos de uma instância VAZIA do formulário
+    # para o template poder renderizar o formulário escondido.
+    form = ValidacaoTriagemForm()
+    # --- FIM DA MUDANÇA ---
+
     context = {
-        'pacientes_pendentes': pacientes_pendentes
+        'pacientes_pendentes': pacientes_pendentes,
+        'pacientes_validados_lista': pacientes_validados_lista,
+        'total_validados': total_validados,
+        'form': form  # <--- ADICIONE ESTA LINHA
     }
     return render(request, 'site/validacao_triagem.html', context)
 

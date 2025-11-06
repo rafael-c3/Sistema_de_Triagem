@@ -1,126 +1,257 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Ajuda - Sistema MedTriagem</title>
-</head>
-<body>
+{% extends 'site/headerBase.html' %}
+{% load static %}
 
-    <h1>Guia de Funcionalidades - MedTriagem</h1>
-    <p>Bem-vindo(a) ao guia do sistema. Abaixo você encontra uma descrição das principais telas e suas funcionalidades.</p>
-    <hr>
+{% block title %}Ajuda - MedTriagem{% endblock %}
 
-    <h2>1. Tela Inicial (Home / Painel de Controle)</h2>
-    <p>Esta é a tela principal após o login. Ela serve como seu centro de operações:</p>
-    <ul>
-        <li><strong>Resumo da Situação:</strong> Exibe cards com estatísticas importantes do dia (pacientes aguardando, em atendimento, concluídos hoje, tempo médio de espera, etc.).</li>
-        <li><strong>Fila de Atendimento:</strong> Mostra a lista de pacientes que estão aguardando atendimento **hoje**, ordenados por prioridade de risco (Vermelho primeiro) e depois por hora de chegada.</li>
-        <li><strong>Ações Rápidas (Médicos):</strong> Médicos podem clicar no botão "Atender" diretamente na fila para iniciar o atendimento e serem redirecionados ao prontuário.</li>
-        <li><strong>Atualização Automática:</strong> A Fila de Atendimento se atualiza automaticamente para refletir novas chegadas ou mudanças de status. Há também um botão para atualização manual.</li>
-    </ul>
+{% block styles %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'front/css/ajuda.css' %}?v=1">
+{% endblock %}
 
-    <h2>2. Triagem (Adicionar Paciente)</h2>
-    <p>Tela utilizada por <strong>Atendentes</strong> e <strong>Técnicos de Enfermagem</strong> para registrar novos pacientes no sistema.</p>
-    <ul>
-        <li>Coleta de dados pessoais, informações do responsável (se houver), sinais vitais, queixa principal e observações iniciais.</li>
-        <li>O campo "Hora da Chegada" é preenchido automaticamente, mas pode ser editado.</li>
-        <li>Ao salvar, o sistema utiliza a <strong>Inteligência Artificial</strong> para sugerir uma classificação de risco.</li>
-        <li>O paciente é salvo com o status <strong>"Pendente de Validação"</strong> e aguarda a confirmação de um Técnico de Enfermagem.</li>
-    </ul>
+{% block content %}   
+<div class="container-ajuda">
+    <h1 class="titulo-principal">
+        <i class="bi bi-question-circle-fill"></i>
+        Guia de Funcionalidades - MedTriagem
+    </h1>
 
-    <h2>3. Validar Triagens</h2>
-    <p>Tela exclusiva para <strong>Técnicos de Enfermagem</strong>.</p>
-    <ul>
-        <li>Mostra a lista de todos os pacientes com status "Pendente de Validação".</li>
-        <li>Exibe a classificação de risco sugerida pela IA para cada paciente.</li>
-        <li>Ao clicar em "Validar", o técnico é levado a uma tela de confirmação onde pode:
-            <ul>
-                <li>Confirmar a classificação da IA.</li>
-                <li>Selecionar uma classificação diferente, se discordar.</li>
-            </ul>
-        </li>
-        <li>Após a confirmação, o status do paciente muda para <strong>"Aguardando Atendimento"</strong> e ele se torna visível na Fila de Atendimento da Home.</li>
-    </ul>
+    <p class="subtitulo-principal">Bem-vindo(a) ao guia do sistema. Abaixo você encontra uma descrição das principais telas e suas funcionalidades.</p>
+    
+    <div class="caixa-dica">
+        <i class="bi bi-lightbulb-fill"></i>
+        <div>
+            <strong>Dica:</strong> Clique em qualquer seção abaixo para expandir e ver mais detalhes.
+        </div>
+    </div>
 
-    <h2>4. Pacientes (Lista Geral)</h2>
-    <p>Acessível por <strong>Médicos</strong> e <strong>Atendentes</strong>. Mostra uma lista de todos os pacientes que já foram validados (status Aguardando, Em Atendimento ou Concluído).</p>
-    <ul>
-        <li>Permite ter uma visão geral dos pacientes, além da fila do dia.</li>
-        <li>Possui paginação para facilitar a navegação.</li>
-        <li>Permite clicar no nome para acessar o prontuário.</li>
-    </ul>
+    <hr class="divisor">
 
-    <h2>5. Prontuário do Paciente</h2>
-    <p>Tela central para visualização e gerenciamento do atendimento de um paciente específico.</p>
-    <ul>
-        <li>Exibe todos os dados cadastrais, informações da triagem (incluindo observações do atendente e nome do técnico validador), sinais vitais e classificação de risco.</li>
-        <li>Mostra a "Linha do Tempo" com hora de chegada, início e fim do atendimento, e calcula o tempo de espera e de atendimento.</li>
-        <li><strong>Histórico do Prontuário (Médicos):</strong> Exibe todas as observações clínicas adicionadas pelos médicos em ordem cronológica. Médicos podem adicionar novas observações através de um link nesta seção.</li>
-        <li><strong>Anexos (Médicos):</strong> Permite que médicos anexem arquivos (exames, laudos) e lista os arquivos já anexados para download.</li>
-        <li><strong>Ações (Médicos):</strong> Botões para "Iniciar Atendimento" e "Finalizar Atendimento" (apenas o médico responsável pode finalizar).</li>
-        <li><strong>Ações (Admin):</strong> Botão para "Editar Prontuário (Admin)" (leva a uma tela de edição completa) e botão para "Remover Paciente" (com confirmação).</li>
-        <li>Botão "Voltar" que retorna à página anterior.</li>
-    </ul>
+    <div class="accordion-container">
 
-     <h2>6. Adicionar Observação</h2>
-    <p>Tela exclusiva para <strong>Médicos</strong>.</p>
-    <ul>
-        <li>Acessada a partir do prontuário do paciente.</li>
-        <li>Permite que o médico digite e salve uma nova entrada no histórico clínico do paciente.</li>
-        <li>Após salvar, o médico é redirecionado de volta ao prontuário.</li>
-    </ul>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="true">
+                <span>
+                    <i class="bi bi-house-door-fill"></i>
+                    <strong>1. Tela Inicial (Home / Painel de Controle)</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Esta é a tela principal após o login. Ela serve como seu centro de operações:</p>
+                <ul>
+                    <li><strong>Resumo da Situação:</strong> Exibe cards com estatísticas importantes do dia (pacientes aguardando, em atendimento, concluídos hoje, tempo médio de espera, etc.).</li>
+                    <li><strong>Fila de Atendimento:</strong> Mostra a lista de pacientes que estão aguardando atendimento **hoje**, ordenados por prioridade de risco (Vermelho primeiro) e depois por hora de chegada.</li>
+                    <li><strong>Ações Rápidas (Médicos):</strong> Médicos podem clicar no botão "Atender" diretamente na fila para iniciar o atendimento e serem redirecionados ao prontuário.</li>
+                    <li><strong>Atualização Automática:</strong> A Fila de Atendimento se atualiza automaticamente para refletir novas chegadas ou mudanças de status. Há também um botão para atualização manual.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-clipboard2-plus-fill"></i>
+                    <strong>2. Triagem (Adicionar Paciente)</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Tela utilizada por <strong>Atendentes</strong> e <strong>Técnicos de Enfermagem</strong> para registrar novos pacientes no sistema.</p>
+                <ul>
+                    <li>Coleta de dados pessoais, informações do responsável (se houver), sinais vitais, queixa principal e observações iniciais.</li>
+                    <li>O campo "Hora da Chegada" é preenchido automaticamente, mas pode ser editado.</li>
+                    <li>Ao salvar, o sistema utiliza a <strong>Inteligência Artificial</strong> para sugerir uma classificação de risco.</li>
+                    <li>O paciente é salvo com o status <strong>"Pendente de Validação"</strong> e aguarda a confirmação de um Técnico de Enfermagem.</li>
+                </ul>
+            </div>
+        </div>
 
-    <h2>7. Dar Feedback</h2>
-    <p>Acessível por <strong>Médicos</strong> e <strong>Atendentes</strong> a partir da lista de pacientes.</p>
-    <ul>
-        <li>Exibe um resumo clínico do paciente e a classificação de risco original sugerida pela IA.</li>
-        <li>Permite que o profissional avalie se a classificação foi correta.</li>
-        <li>Se a classificação for considerada incorreta, o profissional deve indicar qual seria a classificação correta e o motivo.</li>
-        <li>Cada profissional pode enviar apenas um feedback por paciente.</li>
-    </ul>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-patch-check-fill"></i>
+                    <strong>3. Validar Triagens</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Tela exclusiva para <strong>Técnicos de Enfermagem</strong>.</p>
+                <ul>
+                    <li>Mostra a lista de todos os pacientes com status "Pendente de Validação".</li>
+                    <li>Exibe a classificação de risco sugerida pela IA para cada paciente.</li>
+                    <li>Ao clicar em "Validar", o técnico é levado a uma tela de confirmação onde pode:
+                        <ul>
+                            <li>Confirmar a classificação da IA.</li>
+                            <li>Selecionar uma classificação diferente, se discordar.</li>
+                        </ul>
+                    </li>
+                    <li>Após a confirmação, o status do paciente muda para <strong>"Aguardando Atendimento"</strong> e ele se torna visível na Fila de Atendimento da Home.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-people-fill"></i>
+                    <strong>4. Pacientes (Lista Geral)</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Acessível por <strong>Médicos</strong> e <strong>Atendentes</strong>. Mostra uma lista de todos os pacientes que já foram validados (status Aguardando, Em Atendimento ou Concluído).</p>
+                <ul>
+                    <li>Permite ter uma visão geral dos pacientes, além da fila do dia.</li>
+                    <li>Possui paginação para facilitar a navegação.</li>
+                    <li>Permite clicar no nome para acessar o prontuário.</li>
+                </ul>
+            </div>
+        </div>
 
-    <h2>8. Feedbacks (Lista Geral)</h2>
-    <p>Acessível por todos os usuários logados.</p>
-    <ul>
-        <li>Mostra uma tabela com todos los feedbacks enviados por todos os profissionais.</li>
-        <li>Exibe o paciente, a classificação original, a avaliação do profissional, quem avaliou e o status atual do feedback (Em Análise, Acatado, Não Acatado).</li>
-        <li>Possui paginação.</li>
-        <li>O status do feedback pode ser alterado por um administrador na interface /admin.</li>
-    </ul>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-file-earmark-medical-fill"></i>
+                    <strong>5. Prontuário do Paciente</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Tela central para visualização e gerenciamento do atendimento de um paciente específico.</p>
+                <ul>
+                    <li>Exibe todos os dados cadastrais, informações da triagem (incluindo observações do atendente e nome do técnico validador), sinais vitais e classificação de risco.</li>
+                    <li>Mostra a "Linha do Tempo" com hora de chegada, início e fim do atendimento, e calcula o tempo de espera e de atendimento.</li>
+                    <li><strong>Histórico do Prontuário (Médicos):</strong> Exibe todas as observações clínicas adicionadas pelos médicos em ordem cronológica. Médicos podem adicionar novas observações através de um link nesta seção.</li>
+                    <li><strong>Anexos (Médicos):</strong> Permite que médicos anexem arquivos (exames, laudos) e lista os arquivos já anexados para download.</li>
+                    <li><strong>Ações (Médicos):</strong> Botões para "Iniciar Atendimento" e "Finalizar Atendimento" (apenas o médico responsável pode finalizar).</li>
+                    <li><strong>Ações (Admin):</strong> Botão para "Editar Prontuário (Admin)" (leva a uma tela de edição completa) e botão para "Remover Paciente" (com confirmação).</li>
+                    <li>Botão "Voltar" que retorna à página anterior.</li>
+                </ul>
+            </div>
+        </div>
 
-    <h2>9. Painel de Gestão</h2>
-    <p>Tela exclusiva para <strong>Administradores</strong>.</p>
-    <ul>
-        <li>Exibe estatísticas gerais do sistema (pacientes cadastrados hoje/semana, totais de profissionais).</li>
-        <li>Mostra tabelas completas de todos os Pacientes, Médicos, Técnicos de Enfermagem e Atendentes cadastrados.</li>
-        <li>Permite visualizar o perfil de qualquer usuário.</li>
-        <li>Permite remover pacientes e usuários (com confirmação).</li>
-        <li>Mostra uma lista de usuários online (ativos nos últimos 5 minutos).</li>
-        <li>Possui paginação nas tabelas.</li>
-    </ul>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-journal-plus"></i>
+                    <strong>6. Adicionar Observação</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Tela exclusiva para <strong>Médicos</strong>.</p>
+                <ul>
+                    <li>Acessada a partir do prontuário do paciente.</li>
+                    <li>Permite que o médico digite e salve uma nova entrada no histórico clínico do paciente.</li>
+                    <li>Após salvar, o médico é redirecionado de volta ao prontuário.</li>
+                </ul>
+            </div>
+        </div>
 
-    <h2>10. Meu Perfil</h2>
-    <p>Acessível por todos os usuários logados.</p>
-    <ul>
-        <li>Exibe os dados cadastrais do usuário (nome, username, email, CPF, tipo de conta, registro profissional formatado, data de criação).</li>
-        <li>Mostra a foto de perfil e permite alterá-la.</li>
-        <li>Exibe o histórico de pacientes vinculados ao usuário (atendidos por Médicos, registrados por Atendentes), com paginação.</li>
-        <li>Exibe o histórico de feedbacks enviados pelo usuário, com paginação.</li>
-        <li>Mostra um indicador de status (Ativo / Fora do Sistema).</li>
-        <li>Permite fazer Logout (com confirmação).</li>
-        <li><strong>Para Admins:</strong> Se estiver vendo o perfil de outro usuário, exibe botões para "Desativar Conta" ou "Reativar Conta".</li>
-    </ul>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-chat-left-text-fill"></i>
+                    <strong>7. Dar Feedback</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Acessível por <strong>Médicos</strong> e <strong>Atendentes</strong> a partir da lista de pacientes.</p>
+                <ul>
+                    <li>Exibe um resumo clínico do paciente e a classificação de risco original sugerida pela IA.</li>
+                    <li>Permite que o profissional avalie se a classificação foi correta.</li>
+                    <li>Se a classificação for considerada incorreta, o profissional deve indicar qual seria a classificação correta e o motivo.</li>
+                    <li>Cada profissional pode enviar apenas um feedback por paciente.</li>
+                </ul>
+            </div>
+        </div>
 
-    <h2>11. Registro / Login / Redefinir Senha</h2>
-    <p>Telas padrão para criação de conta, acesso ao sistema e recuperação de senha via e-mail.</p>
-    <ul>
-        <li>O formulário de registro se adapta ao tipo de usuário, solicitando CRM/COREN/Especialização quando necessário.</li>
-        <li>A senha exige no mínimo 8 caracteres, não pode ser comum, puramente numérica ou similar aos dados do usuário.</li>
-        <li>O login pode ser feito com nome de usuário ou e-mail.</li>
-    </ul>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-table"></i>
+                    <strong>8. Feedbacks (Lista Geral)</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Acessível por todos os usuários logados.</p>
+                <ul>
+                    <li>Mostra uma tabela com todos los feedbacks enviados por todos os profissionais.</li>
+                    <li>Exibe o paciente, a classificação original, a avaliação do profissional, quem avaliou e o status atual do feedback (Em Análise, Acatado, Não Acatado).</li>
+                    <li>Possui paginação.</li>
+                    <li>O status do feedback pode ser alterado por um administrador na interface /admin.</li>
+                </ul>
+            </div>
+        </div>
 
-    <hr>
-    <p>Se tiver dúvidas adicionais, contate o administrador do sistema.</p>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-gear-fill"></i>
+                    <strong>9. Painel de Gestão</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Tela exclusiva para <strong>Administradores</strong>.</p>
+                <ul>
+                    <li>Exibe estatísticas gerais do sistema (pacientes cadastrados hoje/semana, totais de profissionais).</li>
+                    <li>Mostra tabelas completas de todos os Pacientes, Médicos, Técnicos de Enfermagem e Atendentes cadastrados.</li>
+                    <li>Permite visualizar o perfil de qualquer usuário.</li>
+                    <li>Permite remover pacientes e usuários (com confirmação).</li>
+                    <li>Mostra uma lista de usuários online (ativos nos últimos 5 minutos).</li>
+                    <li>Possui paginação nas tabelas.</li>
+                </ul>
+            </div>
+        </div>
 
-</body>
-</html>
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-person-circle"></i>
+                    <strong>10. Meu Perfil</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Acessível por todos os usuários logados.</p>
+                <ul>
+                    <li>Exibe os dados cadastrais do usuário (nome, username, email, CPF, tipo de conta, registro profissional formatado, data de criação).</li>
+                    <li>Mostra a foto de perfil e permite alterá-la.</li>
+                    <li>Exibe o histórico de pacientes vinculados ao usuário (atendidos por Médicos, registrados por Atendentes), com paginação.</li>
+                    <li>Exibe o histórico de feedbacks enviados pelo usuário, com paginação.</li>
+                    <li>Mostra um indicador de status (Ativo / Fora do Sistema).</li>
+                    <li>Permite fazer Logout (com confirmação).</li>
+                    <li><strong>Para Admins:</strong> Se estiver vendo o perfil de outro usuário, exibe botões para "Desativar Conta" ou "Reativar Conta".</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+                <span>
+                    <i class="bi bi-lock-fill"></i>
+                    <strong>11. Registro / Login / Redefinir Senha</strong>
+                </span>
+                <i class="bi bi-chevron-down icon-seta"></i>
+            </button>
+            <div class="accordion-content">
+                <p>Telas padrão para criação de conta, acesso ao sistema e recuperação de senha via e-mail.</p>
+                <ul>
+                    <li>O formulário de registro se adapta ao tipo de usuário, solicitando CRM/COREN/Especialização quando necessário.</li>
+                    <li>A senha exige no mínimo 8 caracteres, não pode ser comum, puramente numérica ou similar aos dados do usuário.</li>
+                    <li>O login pode ser feito com nome de usuário ou e-mail.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr class="divisor">
+    <div class="caixa-rodape">
+        Se tiver dúvidas adicionais, contate o administrador do sistema.
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'front/js/ajuda.js' %}"></script>
+{% endblock %}  
