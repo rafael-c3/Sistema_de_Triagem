@@ -139,7 +139,7 @@ class Paciente(models.Model):
     convenio = models.CharField(choices=Convenios, max_length=50)
 
     nome_responsavel = models.CharField(max_length=100, blank=True, null=True, verbose_name="Nome do Responsável")
-    cpf_responsavel = models.CharField(max_length=11, blank=True, null=True, verbose_name="CPF do Responsável")
+    cpf_responsavel = models.CharField(max_length=14, blank=True, null=True, verbose_name="CPF do Responsável")
 
     temperatura = models.FloatField(max_length=3)
     pressao_sistolica = models.CharField(max_length=3) # Valor maior
@@ -156,7 +156,7 @@ class Paciente(models.Model):
     observacoes = models.CharField(blank=True, null=True, max_length=1000)
 
     classificacao = models.CharField(choices=Risco, max_length=50,blank=True, null=True)
-    justificativa = models.CharField(blank=True, null=True)
+    justificativa = models.CharField(max_length=255, blank=True, null=True)
     encaminhamento = models.CharField(choices=Profissionais, max_length=50,blank=True, null=True)
 
     status = models.CharField(max_length=30, choices=Status, default='Pendente',blank=True, null=True)

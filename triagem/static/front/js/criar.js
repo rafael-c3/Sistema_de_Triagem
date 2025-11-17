@@ -19,6 +19,26 @@ document.addEventListener('DOMContentLoaded', () => {
             cpfInput.value = value;
         });
     }
+    // --- 1.5. MÁSCARA AUTOMÁTICA PARA O CAMPO CPF (RESPONSÁVEL) ---
+    // AQUI ESTÁ A PARTE NOVA QUE VOCÊ PEDIU
+    const cpfRespInput = document.getElementById('id_cpf_responsavel');
+
+    if (cpfRespInput) {
+        cpfRespInput.addEventListener('input', () => {
+            // Remove tudo que não for dígito
+            let value = cpfRespInput.value.replace(/\D/g, '');
+            
+            // Limita o tamanho para 11 dígitos
+            value = value.substring(0, 11);
+
+            // Aplica a formatação do CPF (###.###.###-##)
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            
+            cpfRespInput.value = value;
+        });
+    }
 
 
     // Encontra os elementos do slider

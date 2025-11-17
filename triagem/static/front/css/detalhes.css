@@ -341,14 +341,6 @@ body{
     color: #6c757d;
     font-weight: 500;
 }
-
-
-
-
-
-
-
-
 .sinais-vitais-grid-boxed{
     display: grid;
     gap: 1rem; /* Espaçamento entre as caixas */
@@ -371,8 +363,6 @@ body{
 .vital-glicemia   { grid-area: glicemia; }
 .vital-respiratoria{ grid-area: respiratoria; }
 .vital-dor        { grid-area: dor; }
-
-
 
 .vital-item-box {
     background-color: #f9fafb;
@@ -422,8 +412,6 @@ body{
     gap: 1.75rem; /* Espaço vertical entre os itens de cada coluna */
 }
 
-
-
 .coluna-triagem h4,
 .coluna-classificacao h4 {
     font-size: 1.1rem;
@@ -458,9 +446,6 @@ body{
     color: #111;
     font-size: 0.95rem;
 }
-
-
-
 
 .classificacao-risco {
     display: flex;
@@ -579,12 +564,6 @@ body{
 .status-tag.aguardando { color:#664d03; background-color: #FFD700;}
 .status-tag.em-atendimento { color:#072997; background-color: #cff4fc;}
 .status-tag.concluido { color: #14532d; background-color: #d1fae5; }
-
-
-
-
-
-
 .secao-observacoes{
     padding: 1.5rem 0;
     margin: 1.5rem 0;
@@ -709,8 +688,6 @@ body{
     border-color: #80bdff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
-
-
 /* Estilo para o BOTÃO "Salvar Observação" */
 .btn-adicionar-prontuario {
     align-self: flex-end;
@@ -737,12 +714,247 @@ body{
     flex-direction: column;
     
 }
-
-
-
-
 .tag.Vermelho{ 
     color: #991b1b; 
     background-color: #fee2e2; 
 }
 /* ... (adicione as outras cores se necessário) ... */
+
+/* --- CORREÇÃO PARA ALINHAR BOTÕES DA SIDEBAR --- */
+
+/* 1. Força os containers (links <a> e <form>) a ocuparem 100% */
+.sidebar-actions > a,
+.sidebar-actions > form {
+    display: block;
+    width: 100%;
+    /* O !important é necessário para sobrescrever o "margin-left: 10px" 
+       que está direto no seu HTML */
+    margin: 0 !important; 
+}
+
+/* 2. Padroniza a aparência de TODOS os botões e links */
+.sidebar-actions .btn,           /* Botão 'Iniciar Atendimento' */
+.sidebar-actions .btn-feedback,   /* Link 'Dar Feedback' */
+.sidebar-actions .button-delete,  /* Botão 'Remover' */
+.sidebar-actions .button-editar { /* Link 'Editar' */
+    
+    display: block;  /* Garante que ocupem a linha inteira */
+    width: 100%;     /* Ocupa 100% da largura */
+    box-sizing: border-box; /* Faz o padding ficar "para dentro" */
+    
+    /* Vamos usar o seu padding de 0.8rem que já estava bom */
+    padding: 0.8rem 1rem; 
+    margin-bottom: 0; /* Remove margens extras */
+
+    /* Deixa o texto e bordas consistentes */
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 6px; /* Borda um pouco mais sutil que 10px */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* 3. Ajusta as cores (algumas já estão no seu CSS, outras no HTML) */
+
+/* Botão Deletar (do seu HTML) */
+.sidebar-actions .button-delete {
+    background-color: #e74c3c;
+    color: white;
+    font-size: inherit; /* Garante que a fonte seja igual aos outros */
+}
+.sidebar-actions .button-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Botão Editar (do seu HTML) */
+.sidebar-actions .button-editar {
+    background-color: #ffc107;
+    color: #333;
+}
+.sidebar-actions .button-editar:hover {
+    background-color: #e0a800;
+}
+
+/* --- ESTILOS DA SEÇÃO DE ANEXOS --- */
+
+.secao-anexos {
+    
+    padding: 0 2rem 1.5rem 2rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 1rem;
+}
+
+/* Caixa cinza onde faz o upload */
+.anexar-box {
+    background-color: #f8f9fa; /* Mesmo cinza do seu body */
+    border: 1px dashed #ced4da;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+
+.anexo-subtitle {
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+.form-anexos {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Input de texto da descrição */
+.form-group-anexo {
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+.input-padrao {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box; /* Importante para não quebrar o layout */
+}
+
+.input-padrao:focus {
+    border-color: #0d6efd;
+}
+
+/* --- Botão de Escolher Arquivo (O segredo do design) --- */
+.input-file-hidden {
+    display: none; /* Esconde o input feio nativo */
+}
+
+.btn-escolher-arquivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    color: #495057;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-escolher-arquivo:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+/* Nome do arquivo que aparece embaixo do form */
+.file-name-display {
+    font-size: 0.85rem;
+    color: #0d6efd;
+    margin-top: 0.5rem;
+    font-weight: 500;
+    min-height: 1.2em;
+}
+
+/* Botão Adicionar (Azul) */
+.btn-enviar-anexo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #0d6efd; /* Seu azul padrão */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-enviar-anexo:hover {
+    background-color: #0b5ed7;
+}
+
+/* --- Lista de Anexos Já Enviados --- */
+.lista-anexos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.anexo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb; /* Borda suave */
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.anexo-item:hover {
+    border-color: #b6d4fe; /* Leve azul na borda ao passar o mouse */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.anexo-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.anexo-icone {
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+}
+
+.anexo-detalhes {
+    display: flex;
+    flex-direction: column;
+}
+
+.anexo-detalhes strong {
+    font-size: 0.95rem;
+    color: #212529;
+}
+
+.anexo-meta {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.btn-download-anexo {
+    color: #6c757d;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.btn-download-anexo:hover {
+    background-color: #e9ecef;
+    color: #0d6efd;
+}
+
+.secao-anexos .timeline-header h4 {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}

@@ -166,7 +166,8 @@ def list_view(request):
     status_contagem = Counter(p.status for p in pacientes)
     return render(request, 'site/listar.html', {
         'pacientes': pacientes,
-        'status_contagem': status_contagem
+        'status_contagem': status_contagem,
+        'pagina_ativa': 'pacientes'
     })
 
 @login_required
@@ -648,7 +649,8 @@ def validacao_triagem_view(request):
         'pacientes_pendentes': pacientes_pendentes,
         'pacientes_validados_lista': pacientes_validados_lista,
         'total_validados': total_validados,
-        'form': form  # <--- ADICIONE ESTA LINHA
+        'form': form,  # <--- ADICIONE ESTA LINHA
+        'pagina_ativa': 'validacao'
     }
     return render(request, 'site/validacao_triagem.html', context)
 

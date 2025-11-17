@@ -115,6 +115,7 @@ main {
     width: 220px;
     z-index: 1000;
     border: 1px solid #f0f0f0;
+    overflow: hidden;
 }
 
 .dropdown-menu.show {
@@ -146,6 +147,7 @@ main {
     background-color: transparent;
     border: none;
     font-size: 0.9em;
+    box-sizing: border-box;
 }
 
 .dropdown-item:hover {
