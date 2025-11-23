@@ -26,7 +26,13 @@
             <div class="profile-card">
 
                 <div class="avatar-upload-container">
-                    <img src="{{ usuario.foto_perfil.url }}" alt="Foto de Perfil de {{ usuario.nome_completo }}" id="profile-pic-display">
+                    {# 1. Verificação se existe foto_perfil. Se existir, usa a URL da foto. #}
+                    {% if usuario.foto_perfil %}
+                        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de Perfil de {{ usuario.nome_completo }}" id="profile-pic-display">
+                    {# 2. Se não existir, usa uma imagem padrão (placeholder). #}
+                    {% else %}
+                        <img src="{% static 'front/img/avatar_default.png' %}" alt="Avatar Padrão" id="profile-pic-display">
+                    {% endif %}
 
                     {% if usuario == user %}
                     <div class="avatar-overlay">

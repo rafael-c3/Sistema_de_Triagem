@@ -359,15 +359,21 @@ input[type="password"]:focus {
 
 /* 1. Esconde a seção de campos do médico por padrão */
 #medico-fields-wrapper {
-    display: none;
+    /* Usamos max-height e visibility para permitir animação */
+    max-height: 0;
     opacity: 0;
-    transition: opacity 0.4s ease-in-out; /* Efeito suave de transição */
+    visibility: hidden;
+    overflow: hidden; /* Importante para não vazar conteúdo enquanto fechado */
+    transition: all 0.4s ease-in-out;
 }
 
 /* 2. Mostra a seção quando o JavaScript adicionar a classe .visible */
 #medico-fields-wrapper.visible {
-    display: block;
+    /* Um valor alto o suficiente para caber o conteúdo */
+    max-height: 200px; 
     opacity: 1;
+    visibility: visible;
+    margin-top: 15px; /* Um espaçamento extra quando abrir */
 }
 
 /* --- Ajustes de Estilo para a Biblioteca Choices.js --- */
@@ -394,9 +400,10 @@ input[type="password"]:focus {
 }
 
 /* A MÁGICA ACONTECE AQUI: Estilo da lista de opções */
+/* A MÁGICA ACONTECE AQUI: Estilo da lista de opções */
 .choices__list--dropdown {
   border-radius: 8px !important;
-  border: 1px solid #dde observaciones !important;
+  border: 1px solid #ced4da !important; /* Corrigido aqui */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
