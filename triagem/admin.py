@@ -16,16 +16,16 @@ class CustomUserAdmin(UserAdmin):
     # Organizando-os em seções (fieldsets)
     fieldsets = UserAdmin.fieldsets + (
         ('Informações Pessoais', {'fields': ('nome_completo', 'cpf')}),
-        ('Perfil Profissional', {'fields': ('tipo_usuario', 'especializacao')}),
+        ('Perfil Profissional', {'fields': ('tipo_usuario', 'especializacao', 'unidade_saude')}),
     )
     
     # Adiciona campos customizados à página de criação de um novo usuário
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('nome_completo', 'email', 'cpf', 'tipo_usuario', 'crm', 'coren', 'uf_registro', 'especializacao')}),
+        (None, {'fields': ('nome_completo', 'email', 'cpf', 'tipo_usuario', 'unidade_saude', 'crm', 'coren', 'uf_registro', 'especializacao')}),
     )
 
     # Define as colunas que aparecerão na lista de usuários
-    list_display = ('username', 'nome_completo', 'tipo_usuario', 'unidade_saude', 'is_active', 'is_staff')
+    list_display = ('username', 'nome_completo', 'tipo_usuario', 'is_active', 'is_staff')
     
     # Adiciona uma barra de filtros à direita
     list_filter = ('tipo_usuario', 'is_staff', 'is_superuser', 'especializacao')
@@ -43,7 +43,7 @@ class PacienteAdmin(admin.ModelAdmin):
     """
     # Define as colunas que aparecerão na lista de pacientes
     list_display = ('nome', 'cpf', 'idade', 'classificacao', 'status', 'hora_chegada_formatada', 'medico_responsavel', 'unidade_saude')
-    
+        
     # Adiciona uma barra de filtros à direita
     list_filter = ('status', 'classificacao', 'convenio')
     
@@ -57,7 +57,7 @@ class PacienteAdmin(admin.ModelAdmin):
     # Organiza a página de edição do paciente em seções lógicas
     fieldsets = (
         ('Informações do Atendimento', {
-            'fields': ('status', 'atendente', 'medico_responsavel')
+            'fields': ('status', 'atendente', 'medico_responsavel', 'unidade_saude')
         }),
         ('Linha do Tempo', {
             'fields': ('hora_chegada', 'hora_inicio_atendimento', 'hora_fim_atendimento', 

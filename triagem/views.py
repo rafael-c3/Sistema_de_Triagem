@@ -244,7 +244,7 @@ def predict_view(request):
     pred, probs = predict_from_dict(data)
     return JsonResponse({'classificacao': pred, 'probs': probs})
 
-def registro_view(request): 
+def registro_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
