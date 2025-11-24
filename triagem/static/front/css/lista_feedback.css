@@ -293,3 +293,58 @@ body{
 #detalhe-incorreto {
     margin-top: 1rem;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    
+}
+
+.step-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    color: #4e73df; /* Azul do tema de Gestão */
+    border: 1px solid #e3e6f0;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.step-links a:hover {
+    background-color: #4e73df;
+    color: #fff;
+    border-color: #4e73df;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(78, 115, 223, 0.25);
+}
+
+.step-links a i {
+    font-size: 14px;
+}
+
+.step-links .current {
+    font-size: 0.9rem;
+    color: #6e707e;
+    font-weight: 600;
+    background-color: #f8f9fc;
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid #eaecf4;
+    margin: 0 5px;
+}

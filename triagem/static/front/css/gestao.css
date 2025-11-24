@@ -308,3 +308,65 @@ tbody tr:last-child td { border-bottom: none; }
     padding-bottom: 1rem; /* Adiciona um respiro entre o texto e a nova borda */
     margin-bottom: 1rem;  /* Garante o espaço entre a borda e o conteúdo abaixo */
 }
+
+
+
+/* Container da Paginação */
+/* Container da Paginação - FORÇANDO LARGURA TOTAL */
+.pagination {
+    display: flex; /* Define como flexbox */
+    justify-content: center; /* Centraliza os itens horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    
+    width: 100%; /* OBRIGATÓRIO: Ocupa toda a largura do pai */
+    display: block; /* Garante que pule linha caso o flex falhe (fallback) */
+    display: flex; /* Redefine como flex */
+    
+    margin-top: 10px; /* Espaço acima */
+    padding-top: 30px; /* Espaço interno extra */
+    border-top: 1px solid #e3e6f0; /* Uma linha cinza para separar visualmente da tabela */
+}
+
+/* Container dos links (removemos o fundo branco daqui) */
+.step-links {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre os elementos */
+}
+
+/* Estilo dos Botões (Setas) */
+.step-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;  /* Largura fixa */
+    height: 40px; /* Altura fixa */
+    background-color: #fff;
+    color: #4e73df; /* Cor azul do tema */
+    border: 1px solid #e3e6f0;
+    border-radius: 50%; /* Deixa redondinho */
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+/* Hover dos Botões */
+.step-links a:hover {
+    background-color: #4e73df;
+    color: #fff;
+    border-color: #4e73df;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(78, 115, 223, 0.25);
+}
+
+/* Estilo do Texto Central (Página X de Y) */
+.step-links .current {
+    font-size: 0.9rem;
+    color: #6e707e;
+    font-weight: 600;
+    background-color: #f8f9fc;
+    padding: 8px 20px;
+    border-radius: 20px; /* Borda arredondada no texto */
+    border: 1px solid #eaecf4;
+    margin: 0 5px;
+}

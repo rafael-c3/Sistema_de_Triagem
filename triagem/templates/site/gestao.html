@@ -54,9 +54,9 @@
                 <div class="professional-item enfermeiros">
                     <div class="professional-info">
                         <i class="fas fa-user-nurse"></i>
-                        <span>Enfermeiros</span>
+                        <span>Téc. de Enfermagem</span>
                     </div>
-                    <span class="professional-count">{{ total_enfermeiros }}</span>
+                    <span class="professional-count">{{ total_tecnicos }}</span>
                 </div>
                 <div class="professional-item atendentes">
                     <div class="professional-info">
@@ -204,23 +204,32 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div class="pagination" style="margin-top: 20px; text-align: center;">
+                <div class="pagination">
                     <span class="step-links">
-                        {# Botão "Anterior" #}
+                        
+                        {# Botões de Voltar #}
                         {% if page_obj.has_previous %}
-                            <a href="?page=1">&laquo; primeira</a>
-                            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+                            <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" title="Primeira Página">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" title="Anterior">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
                         {% endif %}
 
-                        {# Mostra a página atual e o total de páginas #}
+                        {# Texto Central #}
                         <span class="current">
-                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
                         </span>
 
-                        {# Botão "Próxima" #}
+                        {# Botões de Avançar #}
                         {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}">próxima</a>
-                            <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+                            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" title="Próxima">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" title="Última">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
                         {% endif %}
                     </span>
                 </div>
@@ -253,7 +262,7 @@
                             <td>{{ medico.cpf }}</td>
                             <td>{{ medico.email }}</td>
                             <td>{{ medico.registro_formatado|default:"-" }}</td>
-                            <td>Cardiologia</td> <td class="actions">
+                            <td>{{ medico.get_especializacao_display|default:"Não informada" }}</td> <td class="actions">
                                 <a href="{% url 'hosp:ver_perfil_usuario' pk=medico.pk %}" class="action-icon" title="Ver Perfil"><i class="fas fa-eye"></i></a>
                                 <form action="{% url 'hosp:remover_usuario' pk=medico.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o médico \'{{ medico.nome_completo|addslashes }}\'?');">
                                     {% csrf_token %}
@@ -298,7 +307,7 @@
                             <td>{{ tecnico.registro_formatado|default:"-" }}</td>
                             <td class="actions">
                                 <a href="{% url 'hosp:ver_perfil_usuario' pk=tecnico.pk %}" class="action-icon" title="Editar"><i class="fas fa-eye"></i></a>
-                                    <form action="{% url 'hosp:remover_usuario' pk=tecnico.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o atendente \'{{ atendente.nome_completo|addslashes }}\'?');">
+                                <form action="{% url 'hosp:remover_usuario' pk=tecnico.pk %}" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja remover o técnico \'{{ tecnico.nome_completo|addslashes }}\'?');">
                                     {% csrf_token %}
                                     <button type="submit" class="action-icon-delete" title="Remover">
                                         <i class="fas fa-trash-alt"></i>
@@ -360,5 +369,3 @@
 {% block scripts %}
     <script src="{% static 'front/js/gestao.js' %}?v=5"></script>
 {% endblock %}
-</body>
-</html>

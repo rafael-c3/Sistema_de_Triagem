@@ -89,7 +89,6 @@
                     <h2>Validar Triagem</h2>
                     <p class="patient-id-display card-header-subtitle">ID do Paciente: <span id="detalhe-id-paciente">...</span></p>
 
-                    
                     <h3 class="form-section-title">Dados do Paciente</h3>
                     <div class="patient-data-box">
                         <div class="data-item">
@@ -108,19 +107,43 @@
                         <span id="detalhe-sugestao-ia" class="classificacao-badge">Carregando...</span>
                     </div>
 
-                    <h3 class="form-section-title">{{ form.classificacao.label_tag }}</h3>
-                    <div class="form-group radio-group-wrapper">
-                        {% for radio in form.classificacao %}
-                        <div class="custom-radio-item">
-                            {{ radio.tag }}
+                    <div class="validacao-toggle-container" style="margin-top: 2rem;">
+                        <h3 class="form-section-title" style="margin-bottom: 1rem;">
+                            A classificação sugerida está correta?
+                        </h3>
+                        
+                        <div style="display: flex; gap: 1rem;">
+                            <label class="btn-toggle-option">
+                                <input type="radio" name="confirma_ia_radio" value="sim" id="radio-sim" checked>
+                                <span class="btn-toggle-visual success">
+                                    <span class="icon">✓</span> Sim, manter
+                                </span>
+                            </label>
 
-                            <label for="{{ radio.id_for_label }}">
-                                {{ radio.choice_label }}
+                            <label class="btn-toggle-option">
+                                <input type="radio" name="confirma_ia_radio" value="nao" id="radio-nao">
+                                <span class="btn-toggle-visual danger">
+                                    <span class="icon">✕</span> Não, alterar
+                                </span>
                             </label>
                         </div>
-                        {% endfor %}
                     </div>
-                    
+
+                    <div id="container-reclassificacao" style="display: none; margin-top: 1.5rem; padding-left: 1rem; border-left: 3px solid #dc3545;">
+                        <h3 class="form-section-title" style="margin-top: 0; color: #dc3545; font-size: 1.1rem;">Selecione a correta:</h3>
+                        
+                        <div class="form-group radio-group-wrapper">
+                            {% for radio in form.classificacao %}
+                            <div class="custom-radio-item">
+                                {{ radio.tag }}
+                                <label for="{{ radio.id_for_label }}">
+                                    {{ radio.choice_label }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
                     <h3 class="form-section-title">{{ form.justificativa.label }}</h3>
                     <div class="form-group">
                         {{ form.justificativa }}

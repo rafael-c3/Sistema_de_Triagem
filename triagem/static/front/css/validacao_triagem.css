@@ -447,3 +447,66 @@
     border-color: #0d6efd;
     outline: 0;
 }
+
+
+/* =========================================================
+   NOVOS ESTILOS - TOGGLE SIM/NÃO
+   ========================================================= */
+
+/* Esconde o radio button original do toggle */
+.btn-toggle-option input[type="radio"] {
+    display: none;
+}
+
+/* O botão visual */
+.btn-toggle-visual {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #6c757d;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    width: 140px; /* Largura fixa para ficarem iguais */
+    justify-content: center;
+}
+
+.btn-toggle-visual .icon {
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+/* Efeito Hover */
+.btn-toggle-option:hover .btn-toggle-visual {
+    background-color: #f8f9fa;
+    border-color: #b0b8c4;
+}
+
+/* --- ESTADO SELECIONADO (SIM) --- */
+.btn-toggle-option input[value="sim"]:checked + .btn-toggle-visual {
+    background-color: #d1e7dd;
+    border-color: #198754;
+    color: #0f5132;
+    box-shadow: 0 0 0 1px #198754;
+}
+
+/* --- ESTADO SELECIONADO (NÃO) --- */
+.btn-toggle-option input[value="nao"]:checked + .btn-toggle-visual {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #842029;
+    box-shadow: 0 0 0 1px #dc3545;
+}
+
+/* Animação suave para o container de reclassificação */
+#container-reclassificacao {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

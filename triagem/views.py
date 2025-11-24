@@ -469,7 +469,7 @@ def gestao_view(request):
     hoje = timezone.now().date()
 
     # --- Lógica de Estatísticas de Pacientes (já feita) ---
-    total_pacientes = Paciente.objects.count()
+    total_pacientes = Paciente.objects.filter(unidade_saude=unidade_atual).count()
     pacientes_hoje_count = Paciente.objects.filter(hora_chegada__date=hoje, unidade_saude=unidade_atual).count()
     inicio_semana = hoje - datetime.timedelta(days=hoje.weekday())
     pacientes_esta_semana = Paciente.objects.filter(hora_chegada__date__gte=inicio_semana, unidade_saude=unidade_atual).count()
