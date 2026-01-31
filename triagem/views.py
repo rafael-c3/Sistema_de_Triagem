@@ -276,6 +276,11 @@ def registro_view(request):
         if form.is_valid():
             user = form.save(commit=False)
             
+            cpf_limpo = user.cpf.replace('.', '').replace('-', '')
+            
+            # Definimos que o username É o CPF
+            user.username = cpf_limpo
+
             # 1. Gera e Define a Senha Aleatória
             senha_gerada = gerar_senha_aleatoria()
             user.set_password(senha_gerada)
@@ -289,12 +294,12 @@ def registro_view(request):
             # 3. Feedback visual com botão de copiar
             dados_criados = {
                 'nome': user.nome_completo,
-                'usuario': user.username,
+                'usuario': cpf_limpo,
                 'email': user.email,
                 'senha': senha_gerada,
             }
             
-            messages.success(request, f'Usuário {user.username} validado e criado com sucesso!')
+            messages.success(request, f'Usuário criado! Login será pelo CPF: {cpf_limpo}')
             
             # Reseta o form
             form = CadastroPeloAdminForm()

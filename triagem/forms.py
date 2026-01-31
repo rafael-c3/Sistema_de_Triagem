@@ -173,7 +173,7 @@ class CadastroPeloAdminForm(CustomUserCreationForm):
     class Meta(CustomUserCreationForm.Meta):
         # Mantemos os mesmos campos, mas adicionamos 'telefone' se ele existir no model
         # Se der erro de 'Unknown field telefone', apague a string 'telefone' da lista abaixo
-        fields = ('username', 'nome_completo', 'email', 'cpf', 'tipo_usuario', 
+        fields = ('nome_completo', 'email', 'cpf', 'tipo_usuario', 
                   'crm', 'coren', 'uf_registro', 'especializacao', 'telefone') 
 
     # Sobrescrevemos o save para evitar erro de hash de senha vazia
