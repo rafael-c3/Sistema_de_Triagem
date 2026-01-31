@@ -103,6 +103,67 @@
 
     </form>
 </div>
+
+<div class="container mt-4">
+    
+    {% if dados_criados %}
+    <div class="card border-success mb-4 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">✅ Usuário Criado com Sucesso!</h5>
+        </div>
+        <div class="card-body bg-light">
+            <p>Copie os dados abaixo e envie para o funcionário:</p>
+            
+            <div class="alert alert-secondary" id="credenciais-box">
+                <strong>Nome:</strong> {{ dados_criados.nome }}<br>
+                <strong>Usuário:</strong> <span id="copy-user">{{ dados_criados.usuario }}</span><br>
+                <strong>E-mail:</strong> {{ dados_criados.email }}<br>
+                <strong>Senha Temporária:</strong> <span id="copy-pass" class="text-danger fw-bold">{{ dados_criados.senha }}</span>
+            </div>
+
+            <button onclick="copiarDados()" class="btn btn-outline-dark btn-sm">
+                📋 Copiar Tudo para Área de Transferência
+            </button>
+            
+            <hr>
+            <p class="small text-muted mb-0">
+                Aviso: O usuário deverá trocar essa senha no primeiro acesso.
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Cadastrar Novo Funcionário</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary w-100">Criar Usuário</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function copiarDados() {
+    // Pega os dados
+    var user = document.getElementById("copy-user").innerText;
+    var pass = document.getElementById("copy-pass").innerText;
+    
+    // Monta o texto
+    var texto = `Olá! Seu acesso ao sistema foi criado.\n\nUsuário: ${user}\nSenha Temporária: ${pass}\n\nAcesse e troque sua senha imediatamente.`;
+    
+    // Copia para o clipboard
+    navigator.clipboard.writeText(texto).then(function() {
+        alert("Dados copiados! Agora é só colar no WhatsApp ou E-mail.");
+    }, function(err) {
+        console.error('Erro ao copiar: ', err);
+    });
+}
+</script>
 {% endblock %}
 
 {% block scripts %}

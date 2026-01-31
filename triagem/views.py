@@ -1,22 +1,23 @@
 from urllib import request
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente, LogAcao, UnidadeSaude
-from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm, PacienteAdminEditForm
+from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm, PacienteAdminEditForm, CadastroPeloAdminForm
 from collections import Counter
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-import json
 from .ml.predict import predict_from_dict
-from django.contrib.auth.decorators import login_required
-from .decorators import admin_required, medico_required, atendente_required, tecnico_enfermagem_required, pode_realizar_triagem_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .decorators import admin_required, medico_required, atendente_required, enfermeiro_required, pode_realizar_triagem_required
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField, Count
 from django.urls import reverse
-import datetime
 from django.core.paginator import Paginator
-
+import datetime
+import json
+import secrets
+import string
 
 @login_required
 def index_view(request):
@@ -196,6 +197,10 @@ def detail_view(request, pk):
                 nova_entrada.save()
                 messages.success(request, 'Nova observação adicionada ao prontuário.')
                 return redirect('hosp:mostrar', pk=paciente.pk)
+            else:
+                print("ERRO NO FORMULÁRIO:", form_prontuario.errors)
+                # Opcional: mostrar erro na tela
+                messages.error(request, f"Erro ao adicionar observação: {form_prontuario.errors}")
 
         # NOVO: Adicionamos a lógica para o formulário de anexo
         elif 'submit_anexo' in request.POST:
@@ -244,16 +249,65 @@ def predict_view(request):
     pred, probs = predict_from_dict(data)
     return JsonResponse({'classificacao': pred, 'probs': probs})
 
+def is_admin(user):
+    return user.is_authenticated and (user.is_superuser or user.tipo_usuario == 'ADMIN') # Ajuste conforme seu model
+
+def gerar_senha_aleatoria(tamanho=8):
+    caracteres = string.ascii_letters + string.digits + "!@#$"
+    senha = ''.join(secrets.choice(caracteres) for i in range(tamanho))
+    return senha
+
+@login_required
+@user_passes_test(is_admin)
 def registro_view(request):
+    unidade_atual = request.user.unidade_saude
+    dados_criados = None 
+    
+    if not unidade_atual and not request.user.is_superuser:
+        messages.error(request, 'Você não está vinculado a nenhuma unidade de saúde.')
+        return redirect('hosp:home')
+
+    dados_criados = None
+
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        # Usamos o form que herda suas validações
+        form = CadastroPeloAdminForm(request.POST)
+        
         if form.is_valid():
-            user = form.save()
-            messages.success(request, 'Conta criada com sucesso! Por favor, faça o login.')
-            return redirect('hosp:login')
+            user = form.save(commit=False)
+            
+            # 1. Gera e Define a Senha Aleatória
+            senha_gerada = gerar_senha_aleatoria()
+            user.set_password(senha_gerada)
+            
+            # 2. Define configurações padrão
+            user.unidade_saude = unidade_atual
+            user.precisa_mudar_senha = True 
+            
+            user.save()
+            
+            # 3. Feedback visual com botão de copiar
+            dados_criados = {
+                'nome': user.nome_completo,
+                'usuario': user.username,
+                'email': user.email,
+                'senha': senha_gerada,
+            }
+            
+            messages.success(request, f'Usuário {user.username} validado e criado com sucesso!')
+            
+            # Reseta o form
+            form = CadastroPeloAdminForm()
+            
     else:
-        form = CustomUserCreationForm()
-    return render(request, 'site/registro.html', {'form': form})
+        form = CadastroPeloAdminForm()
+
+    context = {
+        'form': form,
+        'dados_criados': dados_criados,
+        'pagina_ativa': 'gestao'
+    }
+    return render(request, 'site/registro.html', context)
 
 @login_required # Garante que apenas usuários logados possam ver esta página
 def perfil_view(request):
@@ -349,7 +403,6 @@ def clear_profile_picture_ajax_view(request):
 @login_required
 # @medico_required # Use seu decorador aqui
 def mudar_status_view(request, pk):
-    unidade_atual = request.user.unidade_saude 
     # Encontra o paciente ou retorna erro 404
     paciente = get_object_or_404(Paciente, pk=pk)
 
@@ -362,6 +415,10 @@ def mudar_status_view(request, pk):
         # Vincula o médico logado ao paciente
         paciente.medico_responsavel = request.user
         paciente.hora_inicio_atendimento = timezone.now() 
+
+        mudanca_realizada = True  # <--- VOCÊ PRECISAVA ADICIONAR ISSO
+        
+        messages.success(request, f'Atendimento de {paciente.nome} iniciado!')
     
     elif paciente.status == 'Em atendimento':
         if request.user == paciente.medico_responsavel or request.user.is_superuser:
@@ -480,8 +537,6 @@ def gestao_view(request):
     total_medicos = todos_medicos.count()
     todos_enfermeiros = CustomUser.objects.filter(tipo_usuario='ENFERMEIRO', unidade_saude=unidade_atual).order_by('nome_completo')
     total_enfermeiros = todos_enfermeiros.count()
-    todos_tecnicos = CustomUser.objects.filter(tipo_usuario='TECNICO_ENFERMAGEM', unidade_saude=unidade_atual).order_by('nome_completo')
-    total_tecnicos = todos_tecnicos.count()
     todos_atendentes = CustomUser.objects.filter(tipo_usuario='ATENDENTE', unidade_saude=unidade_atual).order_by('nome_completo')
     total_atendentes = todos_atendentes.count()
 
@@ -523,14 +578,14 @@ def gestao_view(request):
         'pacientes': todos_pacientes_para_tabela,
         'medicos': todos_medicos,
         'enfermeiros': todos_enfermeiros,
-        'tecnicos': todos_tecnicos,
+ 
         'atendentes': todos_atendentes,
         'total_pacientes_hoje': pacientes_hoje_count,
         'pacientes_esta_semana': pacientes_esta_semana,
         'total_pacientes': total_pacientes,
         'total_medicos': total_medicos,
         'total_enfermeiros': total_enfermeiros,
-        'total_tecnicos': total_tecnicos,
+  
         'total_atendentes': total_atendentes,
         'page_obj': page_obj, # <-- ADICIONE ESTA LINHA EM SEU LUGAR
 
@@ -621,7 +676,7 @@ def partial_patient_list_view(request):
     return render(request, 'site/partials/_patient_list_partial.html', context)
 
 @login_required
-@tecnico_enfermagem_required
+@enfermeiro_required
 def validacao_triagem_view(request):
     unidade_atual = request.user.unidade_saude 
 
@@ -655,7 +710,7 @@ def validacao_triagem_view(request):
     return render(request, 'site/validacao_triagem.html', context)
 
 @login_required
-@tecnico_enfermagem_required
+@enfermeiro_required
 def confirmar_triagem_view(request, pk):
     unidade_atual = request.user.unidade_saude 
     paciente = get_object_or_404(Paciente, pk=pk)

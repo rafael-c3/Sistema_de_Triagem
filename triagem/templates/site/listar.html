@@ -93,22 +93,22 @@
                 <div class="saturacao"><b>Saturação</b><br>{{ paciente.saturacao }}%</div>
             </div>
 
+            {% if user.tipo_usuario != 'MEDICO' %}
             <div class="status-atendimento-container">
-                {% if user.tipo_usuario == 'ATENDENTE' %}
-                    <div class="atendido-por">
-                        {% if paciente.status == 'Aguardando' %}
-                            <span class="status-info">Aguardando na fila...</span>
-                        {% elif paciente.status == 'Em atendimento' or paciente.status == 'Concluido' %}
-                            {% if paciente.medico_responsavel %}
-                                <span class="status-info">Atendido por:</span>
-                                <span class="medico">{{ paciente.medico_responsavel.username }}</span> 
-                            {% else %}
-                                <span class="status-info">{{ paciente.get_status_display }}</span>
-                            {% endif %}
+                <div class="atendido-por">
+                    {% if paciente.status == 'Aguardando' %}
+                        <span class="status-info">Aguardando na fila...</span>
+                    {% elif paciente.status == 'Em atendimento' or paciente.status == 'Concluido' %}
+                        {% if paciente.medico_responsavel %}
+                            <span class="status-info">Atendido por:</span>
+                            <span class="medico">{{ paciente.medico_responsavel.username }}</span> 
+                        {% else %}
+                            <span class="status-info">{{ paciente.get_status_display }}</span>
                         {% endif %}
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
+            {% endif %}
 
             <div class="card-actions">
                 <div class="acoes-botoes"> 

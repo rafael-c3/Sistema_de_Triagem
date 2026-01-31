@@ -140,7 +140,7 @@ class CustomUserCreationForm(UserCreationForm):
             if not especializacao:
                 self.add_error('especializacao', 'A especialização é obrigatória para médicos.')
         
-        elif tipo_usuario == CustomUser.TipoUsuario.TECNICO_ENFERMAGEM:
+        elif tipo_usuario == CustomUser.TipoUsuario.ENFERMEIRO:
             coren = cleaned_data.get('coren')
             uf = cleaned_data.get('uf_registro')
 
@@ -158,6 +158,31 @@ class CustomUserCreationForm(UserCreationForm):
             if not cpf_validator.validate(cpf_value):
                 raise forms.ValidationError("O CPF informado não é válido.")
         return cpf_value
+
+class CadastroPeloAdminForm(CustomUserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Removemos os campos que o Admin não deve preencher
+        # (Senha será gerada automaticamente e Termos não se aplicam ao admin)
+        campos_para_remover = ['password1', 'password2', 'terms_agreement']
+        for campo in campos_para_remover:
+            if campo in self.fields:
+                del self.fields[campo]
+
+    class Meta(CustomUserCreationForm.Meta):
+        # Mantemos os mesmos campos, mas adicionamos 'telefone' se ele existir no model
+        # Se der erro de 'Unknown field telefone', apague a string 'telefone' da lista abaixo
+        fields = ('username', 'nome_completo', 'email', 'cpf', 'tipo_usuario', 
+                  'crm', 'coren', 'uf_registro', 'especializacao', 'telefone') 
+
+    # Sobrescrevemos o save para evitar erro de hash de senha vazia
+    def save(self, commit=True):
+        # Chamamos o save do ModelForm (o 'avô'), pulando a validação de senha do UserCreationForm
+        user = super(forms.ModelForm, self).save(commit=False)
+        if commit:
+            user.save()
+        return user
 
 class FeedbackTriagemForm(forms.ModelForm):
     class Meta:
@@ -294,3 +319,4 @@ class PacienteAdminEditForm(forms.ModelForm):
             if not cpf_validator.validate(cpf_value):
                 raise forms.ValidationError("O CPF informado não é válido.")
         return cpf_value
+    

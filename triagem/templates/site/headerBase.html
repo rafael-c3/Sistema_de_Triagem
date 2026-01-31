@@ -28,7 +28,7 @@
             <a href="{% url 'hosp:listar' %}" class="{% if pagina_ativa == 'pacientes' %}active{% endif %}">
                 Pacientes
             </a>
-            {% if user.tipo_usuario == 'TECNICO_ENFERMAGEM' %}
+            {% if user.tipo_usuario == 'ENFERMEIRO' %}
                 <a href="{% url 'hosp:validacao_triagem' %}" class="{% if pagina_ativa == 'validacao' %}active{% endif %}">
                     Validar Triagens
                 </a>

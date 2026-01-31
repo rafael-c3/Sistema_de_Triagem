@@ -19,7 +19,8 @@ class CustomUser(AbstractUser):
     class TipoUsuario(models.TextChoices):
         ATENDENTE = 'ATENDENTE', 'Atendente'
         MEDICO = 'MEDICO', 'Médico'
-        TECNICO_ENFERMAGEM = 'TECNICO_ENFERMAGEM', 'Téc. de Enfermagem' # <-- NOVO TIPO
+        ENFERMEIRO = 'ENFERMEIRO', 'Enfermeiro'
+        # TECNICO_ENFERMAGEM = 'TECNICO_ENFERMAGEM', 'Téc. de Enfermagem' # <-- NOVO TIPO
         ADMIN = 'ADMIN', 'Admin'
 
     UF_CHOICES = [
@@ -43,6 +44,7 @@ class CustomUser(AbstractUser):
     nome_completo = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     cpf = models.CharField(max_length=14, unique=True)
+    telefone = models.CharField(max_length=20, blank=True, null=True)
     tipo_usuario = models.CharField(max_length=20, choices=TipoUsuario.choices, default=TipoUsuario.ATENDENTE)
 
     crm = models.CharField(max_length=20, blank=True, null=True, verbose_name="CRM (Apenas para Médicos)")    
@@ -59,7 +61,7 @@ class CustomUser(AbstractUser):
         """Retorna o registro profissional (CRM ou COREN) formatado com a UF."""
         if self.tipo_usuario == self.TipoUsuario.MEDICO and self.crm and self.uf_registro:
             return f"CRM-{self.uf_registro} {self.crm}"
-        elif self.tipo_usuario == self.TipoUsuario.TECNICO_ENFERMAGEM and self.coren and self.uf_registro:
+        elif self.tipo_usuario == self.TipoUsuario.ENFERMEIRO and self.coren and self.uf_registro:
             return f"COREN-{self.uf_registro} {self.coren}"
         return "-" # Retorna um traço se não houver registro aplicável
     

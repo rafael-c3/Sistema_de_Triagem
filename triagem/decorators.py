@@ -42,14 +42,14 @@ def atendente_required(view_func):
         raise PermissionDenied
     return _wrapped_view
 
-def tecnico_enfermagem_required(view_func):
+def enfermeiro_required(view_func):
     """
-    Decorator que verifica se o usuário é Téc. de Enfermagem ou superusuário.
+    Decorator que verifica se o usuário é Enfermeiro ou superusuário.
     """
     def _wrapped_view(request, *args, **kwargs):
         if request.user.is_superuser:
             return view_func(request, *args, **kwargs)
-        if request.user.is_authenticated and request.user.tipo_usuario == 'TECNICO_ENFERMAGEM':
+        if request.user.is_authenticated and request.user.tipo_usuario == 'ENFERMEIRO':
             return view_func(request, *args, **kwargs)
         raise PermissionDenied
     return _wrapped_view
@@ -63,7 +63,7 @@ def pode_realizar_triagem_required(view_func):
         if request.user.is_superuser:
             return view_func(request, *args, **kwargs)
             
-        if request.user.is_authenticated and request.user.tipo_usuario in ['ATENDENTE', 'TECNICO_ENFERMAGEM']:
+        if request.user.is_authenticated and request.user.tipo_usuario in ['ATENDENTE', 'ENFERMEIRO']:
             return view_func(request, *args, **kwargs)
             
         raise PermissionDenied
