@@ -35,4 +35,5 @@ urlpatterns = [
     path('perfil/limpar-foto/ajax/', views.clear_profile_picture_ajax_view, name='clear_profile_picture_ajax'),
     
     path('perfil/seguranca/', views.alterar_senha_view, name='alterar_senha'),
+    path('paciente/<int:paciente_id>/imprimir/', views.render_pdf_view, name='gerar_pdf'),
 ]

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Paciente, FeedbackTriagem, CustomUser, EntradaProntuario, AnexoPaciente, LogAcao, UnidadeSaude
 from .forms import PacienteForm, CustomUserCreationForm, FeedbackTriagemForm, EntradaProntuarioForm, ValidacaoTriagemForm, ProfilePictureForm, AnexoPacienteForm, PacienteAdminEditForm, CadastroPeloAdminForm
 from collections import Counter
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .ml.predict import predict_from_dict
@@ -16,11 +16,12 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 import datetime
 import json
 import secrets
 import string
-
 
 @login_required
 def index_view(request):
@@ -879,3 +880,30 @@ def alterar_senha_view(request):
         'pagina_ativa': 'perfil' # Para manter o menu lateral ativo se tiver
     }
     return render(request, 'site/alterar_senha.html', context)
+
+def render_pdf_view(request, paciente_id):
+    # 1. Busca o paciente no banco
+    paciente = get_object_or_404(Paciente, pk=paciente_id)
+    
+    # 2. Define o template e o contexto
+    template_path = 'site/ficha_pdf.html'
+    context = {'paciente': paciente}
+    
+    # 3. Cria a resposta do tipo PDF
+    response = HttpResponse(content_type='application/pdf')
+    # Se quiser que baixe automaticamente, mude para 'attachment'. 
+    # 'inline' abre no navegador.
+    response['Content-Disposition'] = f'inline; filename="ficha_{paciente.nome}.pdf"'
+    
+    # 4. A mágica da conversão
+    template = get_template(template_path)
+    html = template.render(context)
+    
+    pisa_status = pisa.CreatePDF(
+       html, dest=response
+    )
+    
+    if pisa_status.err:
+       return HttpResponse('Tivemos alguns erros <pre>' + html + '</pre>')
+       
+    return response
