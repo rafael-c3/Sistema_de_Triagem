@@ -14,10 +14,13 @@ from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField, Count
 from django.urls import reverse
 from django.core.paginator import Paginator
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 import datetime
 import json
 import secrets
 import string
+
 
 @login_required
 def index_view(request):
@@ -314,77 +317,109 @@ def registro_view(request):
     }
     return render(request, 'site/registro.html', context)
 
-@login_required # Garante que apenas usuários logados possam ver esta página
+@login_required
 def perfil_view(request):
     """
     Exibe as informações do usuário logado e seu histórico de pacientes.
     """
-    unidade_atual = request.user.unidade_saude 
-    # Prepara um dicionário de contexto para enviar ao template
-    context = {}
+    usuario_logado = request.user  # Padronizei o nome da variável
+    unidade_atual = usuario_logado.unidade_saude 
     
-    # Pega o usuário logado
-    usuario_logado = request.user
-    
-    # Lógica para o formulário de upload de foto
+    # --- CORREÇÃO 1: Inicializar os formulários AQUI (para existirem no GET) ---
+    # Estado inicial: Carrega os dados atuais do usuário
+    form_dados = ProfilePictureForm(instance=usuario_logado) 
+    form_senha = PasswordChangeForm(usuario_logado)
+    form_foto = ProfilePictureForm(instance=usuario_logado)
+    # --------------------------------------------------------------------------
+
     if request.method == 'POST':
-        # Verifica se é uma requisição AJAX (o JS vai enviar isso)
+        # Verifica se é uma requisição AJAX (upload de foto)
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             form_foto = ProfilePictureForm(request.POST, request.FILES, instance=usuario_logado)
             if form_foto.is_valid():
                 user_atualizado = form_foto.save()
-                # Retorna um JSON com sucesso e a URL da nova foto
                 return JsonResponse({
                     'success': True,
                     'new_photo_url': user_atualizado.foto_perfil.url
                 })
             else:
-                # Retorna um JSON com o erro
                 return JsonResponse({'success': False, 'error': form_foto.errors.as_json()})
         
-        # Se for um POST normal (sem AJAX), recarrega a página. 
-        # (Isso é um fallback, mas nossa lógica JS não vai usar isso)
-        return redirect('hosp:perfil')
+        # --- Lógica de Salvar Dados Pessoais ---
+        if 'btn_dados_pessoais' in request.POST:
+            # Aqui sobrescrevemos a variável form_dados com o que veio do POST
+            # ATENÇÃO: Troquei 'user' por 'usuario_logado' para corrigir o outro erro
+            form_dados = ProfilePictureForm(request.POST, request.FILES, instance=usuario_logado)
+            
+            if form_dados.is_valid():
+                form_dados.save()
+                messages.success(request, 'Dados atualizados com sucesso!')
+                return redirect('hosp:perfil')
+            
+        # --- Lógica de Mudar Senha ---
+        elif 'btn_mudar_senha' in request.POST:
+            # Aqui sobrescrevemos a variável form_senha com o que veio do POST
+            form_senha = PasswordChangeForm(usuario_logado, request.POST)
+            
+            if form_senha.is_valid():
+                user = form_senha.save()
+                update_session_auth_hash(request, user) # Mantém logado
+                messages.success(request, 'Senha alterada com sucesso!')
+                return redirect('hosp:perfil')
+            else:
+                messages.error(request, 'Erro ao mudar senha. Verifique os campos.')
+        
+        elif 'btn_remover_foto' in request.POST:
+            # Verifica se existe foto para não dar erro
+            if usuario_logado.foto_perfil:
+                # Deleta o arquivo físico (opcional, mas recomendado para não encher o disco)
+                usuario_logado.foto_perfil.delete(save=False)
+                
+                # Limpa o campo no banco
+                usuario_logado.foto_perfil = None
+                usuario_logado.save()
+                
+                messages.success(request, 'Foto de perfil removida com sucesso!')
+            return redirect('hosp:perfil')
 
-    # --- Lógica GET (Carregamento da Página - Sem alteração) ---
-    form_foto = ProfilePictureForm(instance=usuario_logado)
-    context = {
-        'form_foto': form_foto,
-        'perfil_usuario': usuario_logado, # Adicionado para consistência
-    }
-
+    # --- Lógica GET (Histórico e Paginação) ---
+    
     # 1. VERIFICA O TIPO DE USUÁRIO E BUSCA O HISTÓRICO CORRESPONDENTE
-    historico_pacientes_qs = None # Inicializa como None
+    historico_pacientes_qs = None 
+    titulo_historico = 'Histórico' # Valor padrão
+
     if usuario_logado.tipo_usuario == 'MEDICO':
         historico_pacientes_qs = usuario_logado.pacientes_atendidos.all().order_by('-id')
-        context['titulo_historico'] = 'Histórico de Pacientes Atendidos'
+        titulo_historico = 'Histórico de Pacientes Atendidos'
     elif usuario_logado.tipo_usuario == 'ATENDENTE':
         historico_pacientes_qs = usuario_logado.pacientes_criados.all().order_by('-id')
-        context['titulo_historico'] = 'Pacientes Registrados na Triagem'
-    else:
-        context['titulo_historico'] = 'Histórico'
+        titulo_historico = 'Pacientes Registrados na Triagem'
 
-    if historico_pacientes_qs: # Só pagina se a QuerySet existir
-        paginator = Paginator(historico_pacientes_qs, 20) # 20 por página
+    # Paginação do Histórico
+    page_obj_historico = None
+    if historico_pacientes_qs:
+        paginator = Paginator(historico_pacientes_qs, 20)
         page_number = request.GET.get('page')
         page_obj_historico = paginator.get_page(page_number)
-        context['page_obj_historico'] = page_obj_historico # Envia o objeto da página
-    else:
-        context['page_obj_historico'] = None
         
+    # Paginação dos Feedbacks
     feedbacks_do_usuario_qs = FeedbackTriagem.objects.filter(usuario=usuario_logado, unidade_saude=unidade_atual).order_by('-data_criacao')
-    
-    # 2. Pagina a lista
-    paginator_feedbacks = Paginator(feedbacks_do_usuario_qs, 20) # 20 feedbacks por página
-    
-    # 3. Pega o número da página usando o parâmetro 'fpage'
+    paginator_feedbacks = Paginator(feedbacks_do_usuario_qs, 20)
     feedback_page_number = request.GET.get('fpage') 
     page_obj_feedbacks = paginator_feedbacks.get_page(feedback_page_number)
-    
-    # Adiciona o objeto da página de feedbacks ao contexto
-    context['page_obj_feedbacks'] = page_obj_feedbacks    
 
-    # 2. RENDERIZA O TEMPLATE COM O CONTEXTO ATUALIZADO
+    # --- CORREÇÃO 2: O Contexto agora usa as variáveis que foram criadas lá no topo ---
+    context = {
+        'form_foto': form_foto,
+        'perfil_usuario': usuario_logado,
+        'form_dados': form_dados, # Agora essa variável sempre existe!
+        'form_senha': form_senha, # Essa também!
+        'pagina_ativa': 'perfil',
+        'titulo_historico': titulo_historico,
+        'page_obj_historico': page_obj_historico,
+        'page_obj_feedbacks': page_obj_feedbacks
+    }
+
     return render(request, 'site/perfil.html', context)
 
 # Adicione esta nova view
@@ -817,3 +852,30 @@ def log_auditoria_view(request):
         'pagina_ativa': 'gestao', # Ou crie um 'log' se quiser
     }
     return render(request, 'site/log_auditoria.html', context)
+
+@login_required
+def alterar_senha_view(request):
+    if request.method == 'POST':
+        # O PasswordChangeForm exige o usuário como primeiro argumento
+        form = PasswordChangeForm(request.user, request.POST)
+        
+        if form.is_valid():
+            user = form.save()
+            
+            # --- O PULO DO GATO ---
+            # Isso mantém o usuário logado após trocar a senha.
+            # Se não usar isso, ele será deslogado automaticamente.
+            update_session_auth_hash(request, user) 
+            
+            messages.success(request, 'Sua senha foi alterada com sucesso!')
+            return redirect('hosp:perfil') # Redireciona de volta para o perfil
+        else:
+            messages.error(request, 'Por favor, corrija os erros abaixo.')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    context = {
+        'form': form,
+        'pagina_ativa': 'perfil' # Para manter o menu lateral ativo se tiver
+    }
+    return render(request, 'site/alterar_senha.html', context)

@@ -33,6 +33,7 @@
                     {% else %}
                         <img src="{% static 'front/img/avatar_default.png' %}" alt="Avatar Padrão" id="profile-pic-display">
                     {% endif %}
+                    
 
                     {% if usuario == user %}
                     <div class="avatar-overlay">
@@ -47,6 +48,20 @@
                         {{ form_foto.foto_perfil }} </form>
                     {% endif %}
                 </div>
+
+                {% if perfil_usuario.foto_perfil %}
+                <form method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            name="btn_remover_foto" 
+                            class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle"
+                            style="right: -10px;"
+                            title="Remover foto atual"
+                            onclick="return confirm('Tem certeza que deseja remover sua foto?');">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+                {% endif %}
 
                 <h3>Dr. {{ usuario.nome_completo }}</h3>
                 <p class="username">@{{ usuario.username }}</p>
@@ -146,6 +161,13 @@
                         <span class="icon">→</span> Sair (Logout)
                     </button>
                 </form>
+
+                <hr>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'hosp:alterar_senha' %}" class="btn btn-outline-danger">
+                        <i class="fas fa-key"></i> Redefinir Minha Senha
+                    </a>
+                </div>
                 {% endif %}
             </div>
         </aside>
@@ -270,6 +292,37 @@
             </div>
         </section>
     </div>
+    <div class="container">
+    
+    <div class="card mb-4">
+        <div class="card-header">Meus Dados</div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form_dados.as_p }}
+                
+                <button type="submit" name="btn_dados_pessoais" class="btn btn-primary">
+                    Salvar Dados
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">Segurança</div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form_senha.as_p }}
+                
+                <button type="submit" name="btn_mudar_senha" class="btn btn-danger">
+                    Atualizar Senha
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
 </div>
 {% endwith %}
 

@@ -34,5 +34,5 @@ urlpatterns = [
     path('gestao/log-auditoria/', log_auditoria_view, name='log_auditoria'),
     path('perfil/limpar-foto/ajax/', views.clear_profile_picture_ajax_view, name='clear_profile_picture_ajax'),
     
-    
+    path('perfil/seguranca/', views.alterar_senha_view, name='alterar_senha'),
 ]
