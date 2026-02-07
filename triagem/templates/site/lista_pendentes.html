@@ -1,0 +1,15 @@
+{% for p in pacientes %}
+<tr>
+    <td>{{ p.id }}</td>
+    <td><span class="badge bg-danger">Sem Identificação</span></td>
+    <td>{{ p.data_chegada }}</td>
+    <td>
+        <span class="badge">{{ p.classificacao }}</span>
+    </td>
+    <td>
+        <a href="{% url 'hosp:editar_paciente' p.id %}" class="btn btn-warning btn-sm">
+            <i class="fas fa-user-edit"></i> Completar Cadastro
+        </a>
+    </td>
+</tr>
+{% endfor %}

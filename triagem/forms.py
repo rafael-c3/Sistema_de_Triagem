@@ -16,6 +16,12 @@ class PacienteForm(forms.ModelForm):
             'cpf': 'CPF',
             'convenio': 'Convenio',
             'hora_chegada': 'Hora de Chegada',
+            'cep': 'CEP',
+            'endereco': 'Endereço',
+            'numero': 'Número',
+            'bairro': 'Bairro',
+            'cidade': 'Cidade',
+            'uf': 'UF',
 
             'nome_responsavel': 'Nome do Responsável',
             'cpf_responsavel': 'CPF do Responsável',
@@ -47,6 +53,7 @@ class PacienteForm(forms.ModelForm):
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'convenio': forms.Select(attrs={'class': 'form-control'}),
             'hora_chegada': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
+            'cep': forms.TextInput(attrs={'class': 'form-control'}),
 
             'nome_responsavel': forms.TextInput(attrs={'class': 'form-control'}),
             'cpf_responsavel': forms.TextInput(attrs={'class': 'form-control'}),

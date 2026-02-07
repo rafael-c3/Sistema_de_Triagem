@@ -79,10 +79,12 @@ class Paciente(models.Model):
 
     Convenios = [
         ('SUS', 'SUS'),
+        ('Particular', 'Particular'),
         ('Unimed', 'Unimed'),
-        ('Hapvida', 'Hapvida'),
-        ('Amil', 'Amil'),
         ('Bradesco Saude', 'Bradesco Saude'),
+        ('Amil', 'Amil'),
+        ('SulAmérica', 'SulAmérica'),
+        ('Hapvida', 'Hapvida'),
     ]
 
     Status = [
@@ -135,10 +137,17 @@ class Paciente(models.Model):
 
     nome = models.CharField(max_length=100)
     # idade = models.CharField(max_length=3)
-    data_nascimento = models.DateField(verbose_name="Data de Nascimento")
+    data_nascimento = models.DateField(verbose_name="Data de Nascimento", null=True, blank=True)
     sexo = models.CharField(choices=Sexualidade, max_length=50)
     cpf = models.CharField(unique=True, max_length=14)
     convenio = models.CharField(choices=Convenios, max_length=50)
+    
+    cep = models.CharField(max_length=9, blank=True, null=True)
+    endereco = models.CharField(max_length=255, blank=True, null=True)
+    numero = models.CharField(max_length=10, blank=True, null=True)
+    bairro = models.CharField(max_length=100, blank=True, null=True)
+    cidade = models.CharField(max_length=100, blank=True, null=True)
+    uf = models.CharField(max_length=2, blank=True, null=True)
 
     nome_responsavel = models.CharField(max_length=100, blank=True, null=True, verbose_name="Nome do Responsável")
     cpf_responsavel = models.CharField(max_length=14, blank=True, null=True, verbose_name="CPF do Responsável")

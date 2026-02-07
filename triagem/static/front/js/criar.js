@@ -76,6 +76,72 @@ document.addEventListener('DOMContentLoaded', () => {
             updateSliderLook(event.target.value);
         });
     }
+
+    const campoCep = document.getElementById('id_cep');
+
+        // Se o campo não existir (ex: está em outra aba), o script para aqui pra não dar erro
+        if (!campoCep) return;
+
+        // 2. Adiciona o evento "blur" (quando o usuário clica fora do campo)
+        campoCep.addEventListener('blur', function() {
+            
+            // Remove tudo que não é número para validar
+            let cep = this.value.replace(/\D/g, '');
+
+            // Verifica se o CEP tem tamanho válido (8 dígitos)
+            if (cep.length === 8) {
+                
+                // Mostra pro usuário que está carregando (opcional, mas elegante)
+                document.getElementById('id_logradouro').value = "...";
+                document.getElementById('id_bairro').value = "...";
+                document.getElementById('id_cidade').value = "...";
+
+                // 3. Chama a API do ViaCEP
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.erro) {
+                            // 4. Preenche os campos automaticamente
+                            // AJUSTE OS IDs ABAIXO SE OS SEUS FOREM DIFERENTES
+                            if(document.getElementById('id_endereco')) 
+                                document.getElementById('id_endereco').value = data.logradouro;
+                            
+                            if(document.getElementById('id_bairro')) 
+                                document.getElementById('id_bairro').value = data.bairro;
+                            
+                            if(document.getElementById('id_cidade')) 
+                                document.getElementById('id_cidade').value = data.localidade;
+                            
+                            if(document.getElementById('id_uf')) 
+                                document.getElementById('id_uf').value = data.uf;
+                            
+                            // Foca no campo de número para agilizar
+                            if(document.getElementById('id_numero'))
+                                document.getElementById('id_numero').focus();
+
+                        } else {
+                            alert("CEP não encontrado.");
+                            limparFormularioCep();
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erro na requisição ViaCEP:", error);
+                        alert("Erro ao buscar CEP. Verifique sua conexão.");
+                        limparFormularioCep();
+                    });
+            } else {
+                // Se o CEP for inválido, limpa
+                limparFormularioCep();
+            }
+        });
+
+        function limparFormularioCep() {
+            // Função auxiliar para limpar se der erro
+            if(document.getElementById('id_logradouro')) document.getElementById('id_logradouro').value = "";
+            if(document.getElementById('id_bairro')) document.getElementById('id_bairro').value = "";
+            if(document.getElementById('id_cidade')) document.getElementById('id_cidade').value = "";
+            if(document.getElementById('id_uf')) document.getElementById('id_uf').value = "";
+        }
     
 
 });
