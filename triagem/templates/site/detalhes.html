@@ -54,6 +54,17 @@
                 </div>
 
                 <div class="info-bloco">
+                    <p class="Pessoais"><strong>Informações de Contato</strong></p>
+                    <p><strong>Telefone:</strong>{{ paciente.telefone }}</p>
+                    <p><strong>CEP:</strong>{{ paciente.cep }}</p>
+                    <p><strong>Endereço:</strong>{{ paciente.endereco }}</p>
+                    <p><strong>Número:</strong>{{ paciente.numero }}</p>
+                    <p><strong>Bairro:</strong>{{ paciente.bairro }}</p>
+                    <p><strong>Cidade:</strong>{{ paciente.cidade }}</p>
+                    <p><strong>UF:</strong>{{ paciente.uf }}</p>
+                </div>
+
+                <div class="info-bloco">
                     <p class="Pessoais"><strong>Contato</strong></p>
                     <p><strong>Telefone:</strong> (XX) XXXXX-XXXX</p>
                     <p><strong>Email:</strong> email@paciente.com</p>
@@ -90,9 +101,9 @@
                     </form>
                 {% endif %}
 
-                {% if user.is_superuser or user.tipo_usuario == 'ADMIN' %}
+                {% if user.is_superuser or user.tipo_usuario == 'ADMIN' or user.tipo_usuario == 'ATENDENTE' %}
                     <a href="{% url 'hosp:editar_prontuario_admin' pk=paciente.pk %}" class="button-editar">
-                        Editar Prontuário (Admin)
+                        Editar Prontuário
                     </a>
                 {% endif %}
             </div>

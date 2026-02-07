@@ -16,6 +16,8 @@ class PacienteForm(forms.ModelForm):
             'cpf': 'CPF',
             'convenio': 'Convenio',
             'hora_chegada': 'Hora de Chegada',
+
+            'telefone': 'Telefone',
             'cep': 'CEP',
             'endereco': 'Endereço',
             'numero': 'Número',
@@ -53,7 +55,14 @@ class PacienteForm(forms.ModelForm):
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'convenio': forms.Select(attrs={'class': 'form-control'}),
             'hora_chegada': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
-            'cep': forms.TextInput(attrs={'class': 'form-control'}),
+
+            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
+            'cep': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_cep'}), # ID forçado para o script
+            'endereco': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_endereco'}),
+            'numero': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_numero'}),
+            'bairro': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_bairro'}),
+            'cidade': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_cidade'}),
+            'uf': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_uf'}),
 
             'nome_responsavel': forms.TextInput(attrs={'class': 'form-control'}),
             'cpf_responsavel': forms.TextInput(attrs={'class': 'form-control'}),
@@ -96,7 +105,6 @@ class PacienteForm(forms.ModelForm):
         return cpf_value
     
 class CustomUserCreationForm(UserCreationForm):
-
     terms_agreement = forms.BooleanField(
         required=True,
         label="Eu li e concordo com os Termos de Uso e Política de Privacidade"
@@ -284,6 +292,14 @@ class PacienteAdminEditForm(forms.ModelForm):
             'cpf', 
             'convenio',
             # Campos do Responsável
+            'telefone',
+            'cep',
+            'endereco',
+            'numero',
+            'bairro',
+            'cidade',
+            'uf',
+
             'nome_responsavel',
             'cpf_responsavel',
             # Talvez a observação inicial da triagem? (Opcional)

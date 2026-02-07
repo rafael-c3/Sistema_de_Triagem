@@ -142,6 +142,7 @@ class Paciente(models.Model):
     cpf = models.CharField(unique=True, max_length=14)
     convenio = models.CharField(choices=Convenios, max_length=50)
     
+    telefone = models.CharField(max_length=20, blank=True, null=True)
     cep = models.CharField(max_length=9, blank=True, null=True)
     endereco = models.CharField(max_length=255, blank=True, null=True)
     numero = models.CharField(max_length=10, blank=True, null=True)

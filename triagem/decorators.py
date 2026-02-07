@@ -68,3 +68,8 @@ def pode_realizar_triagem_required(view_func):
             
         raise PermissionDenied
     return _wrapped_view
+
+# 1. Crie esta função de verificação (pode ser logo acima da view)
+def pode_editar_cadastro(user):
+    # Verifica se está logado E se o tipo é um dos permitidos
+    return user.is_authenticated and (user.tipo_usuario == 'ADMIN' or user.tipo_usuario == 'ATENDENTE')

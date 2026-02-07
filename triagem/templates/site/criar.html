@@ -37,6 +37,10 @@
 
                 <div class="row g-3">
                     <div class="col-md-3">
+                        <label for="{{ form.telefone.id_for_label }}" class="form-label">Telefone</label>
+                        {{ form.telefone }} <div class="invalid-feedback">{{ form.telefone.errors }}</div>
+                    </div>
+                    <div class="col-md-3">
                         <label for="{{ form.cep.id_for_label }}" class="form-label">CEP</label>
                         {{ form.cep }} <div class="invalid-feedback">{{ form.cep.errors }}</div>
                     </div>

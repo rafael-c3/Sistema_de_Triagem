@@ -60,7 +60,49 @@
             </div>
 
             <div class="form-section">
-                <h4>Informações do Responsável (Opcional)</h4>
+                <h4>Informações de Endereço</h4>
+                
+                <div class="form-grid">
+                    <div class="form-field">
+                        {{ form.telefone.label_tag }}
+                        {{ form.telefone }}
+                        {{ form.telefone.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.cep.label_tag }}
+                        {{ form.cep }}
+                        {{ form.cep.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.endereco.label_tag }}
+                        {{ form.endereco }}
+                        {{ form.endereco.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.numero.label_tag }}
+                        {{ form.numero }}
+                        {{ form.numero.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.bairro.label_tag }}
+                        {{ form.bairro }}
+                        {{ form.bairro.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.cidade.label_tag }}
+                        {{ form.cidade }}
+                        {{ form.cidade.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.uf.label_tag }}
+                        {{ form.uf }}
+                        {{ form.uf.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h4>Informações do Responsável</h4>
                 
                 <div class="form-grid">
                     <div class="form-field">

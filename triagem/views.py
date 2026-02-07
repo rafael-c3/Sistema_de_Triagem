@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .ml.predict import predict_from_dict
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .decorators import admin_required, medico_required, atendente_required, enfermeiro_required, pode_realizar_triagem_required
+from .decorators import admin_required, medico_required, atendente_required, enfermeiro_required, pode_editar_cadastro, pode_realizar_triagem_required
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Avg, F, DurationField, Count
@@ -808,7 +808,7 @@ def reativar_usuario_view(request, pk):
     return redirect('hosp:ver_perfil_usuario', pk=pk)
 
 @login_required
-@admin_required
+@user_passes_test(pode_editar_cadastro)
 def edit_prontuario_admin_view(request, pk):
     unidade_atual = request.user.unidade_saude 
     paciente = get_object_or_404(Paciente, pk=pk)
