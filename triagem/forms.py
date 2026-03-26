@@ -174,30 +174,58 @@ class CustomUserCreationForm(UserCreationForm):
                 raise forms.ValidationError("O CPF informado não é válido.")
         return cpf_value
 
-class CadastroPeloAdminForm(CustomUserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        # Removemos os campos que o Admin não deve preencher
-        # (Senha será gerada automaticamente e Termos não se aplicam ao admin)
-        campos_para_remover = ['password1', 'password2', 'terms_agreement']
-        for campo in campos_para_remover:
-            if campo in self.fields:
-                del self.fields[campo]
+class CadastroPeloAdminForm(forms.ModelForm): # <--- MUDANÇA PRINCIPAL AQUI
 
-    class Meta(CustomUserCreationForm.Meta):
-        # Mantemos os mesmos campos, mas adicionamos 'telefone' se ele existir no model
-        # Se der erro de 'Unknown field telefone', apague a string 'telefone' da lista abaixo
-        fields = ('nome_completo', 'email', 'cpf', 'tipo_usuario', 
-                  'crm', 'coren', 'uf_registro', 'especializacao', 'telefone') 
+    class Meta:
+        model = CustomUser
+        fields = [
+            'nome_completo', 'email', 'cpf', 'telefone',
+            'tipo_usuario', 'crm', 'especializacao', 'coren', 'uf_registro', 'foto_perfil'
+        ]
+        widgets = {
+            'nome_completo': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
+            'tipo_usuario': forms.Select(attrs={'class': 'form-control', 'id': 'id_tipo_usuario'}),
+            
+            'crm': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_crm'}),
+            'especializacao': forms.Select(attrs={'class': 'form-control', 'id': 'id_especializacao'}),
+            'coren': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_coren'}),
+            'uf_registro': forms.Select(attrs={'class': 'form-control', 'id': 'id_uf_registro'}),
+            'foto_perfil': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
-    # Sobrescrevemos o save para evitar erro de hash de senha vazia
-    def save(self, commit=True):
-        # Chamamos o save do ModelForm (o 'avô'), pulando a validação de senha do UserCreationForm
-        user = super(forms.ModelForm, self).save(commit=False)
-        if commit:
-            user.save()
-        return user
+    def clean(self):
+        """Auditoria de dados para garantir que a regra de negócios seja respeitada"""
+        cleaned_data = super().clean()
+        tipo = cleaned_data.get('tipo_usuario')
+        crm = cleaned_data.get('crm')
+        coren = cleaned_data.get('coren')
+        uf = cleaned_data.get('uf_registro')
+
+        if tipo == CustomUser.TipoUsuario.MEDICO:
+            if not crm:
+                self.add_error('crm', 'O CRM é obrigatório para Médicos.')
+            if not uf:
+                self.add_error('uf_registro', 'A UF do registro é obrigatória.')
+            cleaned_data['coren'] = None 
+
+        elif tipo == CustomUser.TipoUsuario.ENFERMEIRO:
+            if not coren:
+                self.add_error('coren', 'O COREN é obrigatório para Enfermeiros.')
+            if not uf:
+                self.add_error('uf_registro', 'A UF do registro é obrigatória.')
+            cleaned_data['crm'] = None 
+            cleaned_data['especializacao'] = None 
+
+        elif tipo in [CustomUser.TipoUsuario.ATENDENTE, CustomUser.TipoUsuario.ADMIN]:
+            cleaned_data['crm'] = None
+            cleaned_data['coren'] = None
+            cleaned_data['uf_registro'] = None
+            cleaned_data['especializacao'] = None
+
+        return cleaned_data
 
 class FeedbackTriagemForm(forms.ModelForm):
     class Meta:

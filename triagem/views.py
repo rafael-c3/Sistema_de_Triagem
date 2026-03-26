@@ -307,9 +307,14 @@ def registro_view(request):
             
             # Reseta o form
             form = CadastroPeloAdminForm()
+
+        else:
+            print("ERROS REAIS DO FORMULÁRIO:", form.errors)
+            messages.error(request, 'Erro ao criar usuário. Verifique os campos.')
             
     else:
         form = CadastroPeloAdminForm()
+        
 
     context = {
         'form': form,

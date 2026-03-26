@@ -51,7 +51,6 @@ class CustomUser(AbstractUser):
     especializacao = models.CharField(max_length=50, choices=Especializacoes,blank=True,null=True)
 
     coren = models.CharField(max_length=20, blank=True, null=True, verbose_name="COREN (Apenas para Téc. de Enfermagem)")
-
     uf_registro = models.CharField(max_length=2, choices=UF_CHOICES, blank=True, null=True, verbose_name="UF do Registro Profissional")
 
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', default='fotos_perfil/default.jpg', null=True,blank=True,verbose_name="Foto de Perfil")
