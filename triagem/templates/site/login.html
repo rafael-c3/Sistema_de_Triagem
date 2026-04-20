@@ -28,7 +28,13 @@
 
         <div class="form-group">
             <label for="{{ form.password.id_for_label }}">Senha</label>
-            {{ form.password }}
+
+            <div class="password-wrapper">
+                {{ form.password }}
+                <span class="toggle-password" onclick="togglePasswordVisibility('{{ form.password.id_for_label }}', this)">
+                    <i class="far fa-eye"></i>
+                </span>
+            </div>
             {% if form.password.errors %}<div class="error-text">{{ form.password.errors.as_text }}</div>{% endif %}
         </div>
         
@@ -49,5 +55,25 @@
 
 
 
+
 </div>
+
+<script>
+    function togglePasswordVisibility(inputId, iconSpan) {
+        const input = document.getElementById(inputId);
+        const icon = iconSpan.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+
+
 {% endblock %}

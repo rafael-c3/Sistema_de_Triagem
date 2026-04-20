@@ -98,7 +98,7 @@
     color: #dc3545; /* Texto vermelho */
     border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     transition: all 0.2s ease;
     margin-top: 10px;
@@ -183,7 +183,8 @@
 .logout-btn {
     width: 100%;
     padding: 12px;
-    border: none;
+    border: 1px solid transparent;
+    line-height: 1;
     background-color: #e53935;
     color: #fff;
     font-size: 16px;
@@ -336,3 +337,47 @@ td a:hover{
 .avaliacao.incorreta { color: #dc2626; }
 .avaliacao-wrapper { display: flex; flex-direction: column; }
 .avaliacao-wrapper small { color: #6c757d; font-size: 12px; margin-top: 4px;}
+
+.profile-actions{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+
+}
+
+.profile-actions .action-divider {
+    margin: 8px 0;
+    border: 0;
+    border-top: 1px solid #e5e7eb; /* Usa o mesmo cinza das bordas da sua tabela */
+}
+
+.btn-outline{
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background-color: transparent;
+    color: #3498db; /* Azul padronizado com as tabs do sistema */
+    border: 1px solid #3498db;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+.profile-actions .logout-btn {
+    width: 100%;
+    margin-top: 0; /* Garante que o botão vermelho não tenha margens sobrando */
+}

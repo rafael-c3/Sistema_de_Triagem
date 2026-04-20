@@ -4,105 +4,122 @@
 {% block title %}Triagem - MedTriagem{% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=3">
+<link rel="stylesheet" href="{% static 'front/css/criar.css' %}?v=11">
 {% endblock %}
 
 {% block content %}
 {% if user.tipo_usuario != 'MEDICO' %}
 <main class="triagem-container">
     <h2>Avaliação de Triagem</h2>
-    <form class="form-triagem" action="{% url 'hosp:criar' %}" method="post">
+    <form class="form-triagem" action="{% url 'hosp:criar' %}" method="post" novalidate>
         {% csrf_token %}
         <div class="form-section-wrapper">
             <section class="form-box">
                 <h2>Dados do Paciente</h2>
-                <label for="{{ form.nome.id_for_label }}">Nome:</label>
-                {{ form.nome }}
-                <div class="form-row">
-                    <div>
-                        <label for="{{ form.data_nascimento.id_for_label }}">Data de Nascimento:</label>
-                        {{ form.data_nascimento }}
-                    </div>
-                    <div>
-                        <label for="{{ form.sexo.id_for_label }}">Gênero:</label>
-                        {{ form.sexo }}
-                    </div>
+                <div class="tabs">
+                    <button type="button" class="tab-button-paciente active" onclick="openTabPaciente(event, 'dados-pessoais')">Dados
+                        Pessoais</button>
+                    <button type="button" class="tab-button-paciente" onclick="openTabPaciente(event, 'endereco')">Contato e
+                        Endereço</button>
                 </div>
-                <label for="{{ form.cpf.id_for_label }}">CPF:</label>
-                {{ form.cpf }}
-                <label for="{{ form.convenio.id_for_label }}">Convênio:</label>
-                {{ form.convenio }}
-
-                <h5 class="mt-4 mb-3 border-bottom pb-2">Endereço</h5>
-
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label for="{{ form.telefone.id_for_label }}" class="form-label">Telefone</label>
-                        {{ form.telefone }} <div class="invalid-feedback">{{ form.telefone.errors }}</div>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.cep.id_for_label }}" class="form-label">CEP</label>
-                        {{ form.cep }} <div class="invalid-feedback">{{ form.cep.errors }}</div>
+                <section class="tab-content-paciente active" id="dados-pessoais">
+                    <label for="{{ form.nome.id_for_label }}">Nome:</label>
+                    {{ form.nome }}
+                    
+                    <div class="form-row">
+                        <div>
+                            <label for="{{ form.data_nascimento.id_for_label }}">Data de Nascimento:</label>
+                            {{ form.data_nascimento }}
+                        </div>
+                        <div>
+                            <label for="{{ form.sexo.id_for_label }}">Gênero:</label>
+                            {{ form.sexo }}
+                        </div>
                     </div>
 
-                    <div class="col-md-7">
-                        <label for="{{ form.cidade.id_for_label }}" class="form-label">Cidade</label>
-                        {{ form.cidade }}
+                    <div class="form-row">
+                        <div>
+                            <label for="{{ form.cpf.id_for_label }}">CPF:</label>
+                            {{ form.cpf }}
+                        </div>
+                        <div>
+                            <label for="{{ form.convenio.id_for_label }}">Convênio:</label>
+                            {{ form.convenio }}
+                        </div>
                     </div>
 
-                    <div class="col-md-2">
-                        <label for="{{ form.uf.id_for_label }}" class="form-label">Estado</label>
-                        {{ form.uf }}
+                    <label for="{{ form.nome_responsavel.id_for_label }}">Nome do Responsável (opcional):</label>
+                    {{ form.nome_responsavel }}
+
+                    <label for="{{ form.cpf_responsavel.id_for_label }}">CPF do Responsável (opcional):</label>
+                    {{ form.cpf_responsavel }}
+                </section>
+
+                <section class="tab-content-paciente" id="endereco">
+                    <div class="form-row">
+                        <div style="flex: 1;"> 
+                            <label for="{{ form.telefone.id_for_label }}">Telefone:</label>
+                            {{ form.telefone }}
+                        </div>
+                        <div style="flex: 1;"> 
+                            <label for="{{ form.cep.id_for_label }}">CEP:</label>
+                            {{ form.cep }}
+                        </div>
                     </div>
 
-                    <div class="col-md-10">
-                        <label for="{{ form.endereco.id_for_label }}" class="form-label">Endereço</label>
-                        {{ form.endereco }}
+                    <div class="form-row">
+                        <div style="flex: 2;"> <label for="{{ form.cidade.id_for_label }}">Cidade:</label>
+                            {{ form.cidade }}
+                        </div>
+                        <div style="flex: 1;"> <label for="{{ form.uf.id_for_label }}">Estado:</label>
+                            {{ form.uf }}
+                        </div>
                     </div>
 
-                    <div class="col-md-2">
-                        <label for="{{ form.numero.id_for_label }}" class="form-label">Número</label>
-                        {{ form.numero }}
+                    <div class="form-row">
+                        <div style="flex: 3;"> <label for="{{ form.endereco.id_for_label }}">Endereço (Rua):</label>
+                            {{ form.endereco }}
+                        </div>
+                        <div style="flex: 1;"> <label for="{{ form.numero.id_for_label }}">Número:</label>
+                            {{ form.numero }}
+                        </div>
                     </div>
-
-                    <div class="col-md-5">
-                        <label for="{{ form.bairro.id_for_label }}" class="form-label">Bairro</label>
+                    
+                    <div>
+                        <label for="{{ form.bairro.id_for_label }}">Bairro:</label>
                         {{ form.bairro }}
                     </div>
-                </div>
-                <label for="{{ form.nome_responsavel.id_for_label }}">Nome do Responsável (opcional):</label>
-                {{ form.nome_responsavel }}
-                <label for="{{ form.cpf_responsavel.id_for_label }}">CPF do Responsável (opcional):</label>
-                {{ form.cpf_responsavel }}
-                <!--<label for="{{ form.hora_chegada.id_for_label }}">Horário de Chegada:</label>
-                {{ form.hora_chegada }}-->
+                </section>
+                
                 {% if form.errors %}
-                    <div class="form-errors-container">
-                        <h3>Por favor, corrija os erros abaixo:</h3>
-                        <ul>
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                            
-                            {% for error in form.non_field_errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                <div class="form-errors-container">
+                    <h3>Por favor, corrija os erros abaixo:</h3>
+                    <ul>
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+
+                        {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 {% endif %}
             </section>
             <section class="form-box">
                 <h2>Avaliação Clínica</h2>
 
                 <div class="tabs">
-                    <button type="button" class="tab-button active" id="tab-btn-sinais" onclick="openTab(event, 'sinais')">Sinais Vitais</button>
-                    <button type="button" class="tab-button" id="tab-btn-queixa" onclick="openTab(event, 'queixa')">Queixa Principal</button>
+                    <button type="button" class="tab-button active" id="tab-btn-sinais"
+                        onclick="openTab(event, 'sinais')">Sinais Vitais</button>
+                    <button type="button" class="tab-button" id="tab-btn-queixa"
+                        onclick="openTab(event, 'queixa')">Queixa Principal</button>
                     <!-- <button type="button" class="tab-button" onclick="openTab(event, 'avaliacao')">Avaliação</button> -->
                 </div>
 
-                
+
                 <section class="tab-content active" id="sinais">
                     <div class="form-row">
                         <div>
@@ -136,22 +153,16 @@
                         <div class="form-group-slider">
                             <label for="id_dor">Dor:</label>
                             <div class="slider-container">
-                                <input type="range" 
-                                    id="id_dor" 
-                                    name="dor" 
-                                    min="1" 
-                                    max="10" 
-                                    value="5" 
-                                    class="pain-slider"
-                                    oninput="updatePainValue(this.value)">
+                                <input type="range" id="id_dor" name="dor" min="1" max="10" value="5"
+                                    class="pain-slider" oninput="updatePainValue(this.value)">
                                 <span id="pain-value" class="pain-value-display">5 / 10</span>
                             </div>
                         </div>
-                        
+
                     </div>
                 </section>
 
-                
+
                 <section class="tab-content" id="queixa">
                     <label for="{{ form.queixa.id_for_label }}">Queixa:</label>
                     {{ form.queixa }}
@@ -161,12 +172,12 @@
 
                     <label for="{{ form.inicio_sintomas.id_for_label }}">Início dos Sintomas:</label>
                     {{ form.inicio_sintomas }}
-                    
+
                     <label for="{{ form.observacoes.id_for_label }}">Observações:</label>
                     {{ form.observacoes }}
                 </section>
 
-                
+
                 <!--<section class="tab-content" id="avaliacao">
                     <label for="{{ form.justificativa.id_for_label }}">Justificativa:</label>
                     {{ form.justificativa }}
@@ -187,12 +198,12 @@
                 </section>-->
             </section>
 
-            
+
         </div>
 
         <div class="botoes">
-            <button type="button" id="btn-proximo" class="btn-enviar">Próximo</button>
-            <button type="submit" id="btn-finalizar" class="btn-enviar">Finalizar Triagem</button>
+            <button type="button" id="btn-proximo" class="btn-enviar" disabled>Próximo</button>
+            <button type="submit" id="btn-finalizar" class="btn-enviar hidden" disabled>Finalizar Triagem</button>
         </div>
     </form>
 </main>
@@ -200,53 +211,63 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'front/js/criar.js' %}?v=4"></script>
-    <script>
+<script src="{% static 'front/js/criar.js' %}?v=7"></script>
+<script>
     // Seleciona os botões que vamos manipular
-    const btnProximo = document.getElementById('btn-proximo');
     const btnFinalizar = document.getElementById('btn-finalizar');
     const tabQueixaBtn = document.getElementById('tab-btn-queixa');
     const tabSinaisBtn = document.getElementById('tab-btn-sinais'); // <-- Adicionamos o botão da primeira aba
 
-    // Adiciona a funcionalidade ao botão "Próximo"
-    if (btnProximo && tabQueixaBtn) {
-        btnProximo.addEventListener('click', () => {
-            // Simula um clique na aba "Queixa Principal"
-            tabQueixaBtn.click();
-        });
+
+    function openTabPaciente(evt, tabId) {
+        // BLINDA A ABA DE ENDEREÇO: Se tentar ir pra lá e faltar dados, bloqueia!
+        if (tabId === 'endereco' && !window.validarCampos(false)) {
+            return;
+        }
+
+        const tabs = document.querySelectorAll('.tab-content-paciente');
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        const buttons = document.querySelectorAll('.tab-button-paciente');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        document.getElementById(tabId).classList.add('active');
+        evt.currentTarget.classList.add('active');
     }
 
-    // Função openTab ATUALIZADA
+
+    // --- LÓGICA PARA AS ABAS CLÍNICAS (Lado Direito) ---
     function openTab(evt, tabId) {
-        // Esconde todas as seções de conteúdo
+        // BLINDA A ABA DE QUEIXA: Se tentar ir pra lá e faltar dados, bloqueia!
+        if (tabId === 'queixa' && !window.validarCampos(false)) {
+            return; 
+        }
+
         const tabs = document.querySelectorAll('.tab-content');
         tabs.forEach(tab => tab.classList.remove('active'));
 
-        // Desativa todos os botões de aba
         const buttons = document.querySelectorAll('.tab-button');
         buttons.forEach(btn => btn.classList.remove('active'));
 
-        // Ativa a aba e o botão clicados
         document.getElementById(tabId).classList.add('active');
         evt.currentTarget.classList.add('active');
 
-        // --- LÓGICA PARA CONTROLAR OS BOTÕES ---
+        const botaoProximo = document.getElementById('btn-proximo');
+        const botaoFinalizar = document.getElementById('btn-finalizar');
+
         if (tabId === 'sinais') {
-            btnProximo.classList.remove('hidden');
-            btnFinalizar.classList.add('hidden');
+            if(botaoProximo) botaoProximo.classList.remove('hidden');
+            if(botaoFinalizar) botaoFinalizar.classList.add('hidden');
         } else {
-            btnProximo.classList.add('hidden');
-            btnFinalizar.classList.remove('hidden');
+            if(botaoProximo) botaoProximo.classList.add('hidden');
+            if(botaoFinalizar) botaoFinalizar.classList.remove('hidden');
         }
     }
 
-    // --- LINHA MÁGICA ADICIONADA AQUI ---
-    // Simula um clique na aba inicial assim que a página carrega para definir o estado correto dos botões
-    if (tabSinaisBtn) {
-        tabSinaisBtn.click();
-    }
-    </script>
+    
+</script>
 {% endblock %}
 
 </body>
+
 </html>

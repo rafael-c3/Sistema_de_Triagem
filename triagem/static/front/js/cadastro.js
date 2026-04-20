@@ -2,63 +2,86 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. Seletores
     const tipoUsuarioSelect = document.querySelector('#id_tipo_usuario');
     const medicoFieldsWrapper = document.querySelector('#medico-fields-wrapper');
-    // Seletor para a Label do campo de registro (busca pelo atributo 'for')
-    const labelRegistro = document.querySelector('label[for="id_registro_profissional"]');
     const cpfElement = document.querySelector('#id_cpf');
+    
+    // Seletores dos campos específicos dentro do wrapper
+    const campoCrm = document.querySelector('#id_crm')?.closest('.form-group');
+    const campoCoren = document.querySelector('#id_coren')?.closest('.form-group');
+    const campoEspecializacao = document.querySelector('#id_especializacao')?.closest('.form-group');
 
-    // 2. Inicialização do Choices.js
+    // Seletores para os dropdowns
+    const selectUF = document.querySelector('#id_uf_registro');
+    const selectEsp = document.querySelector('#id_especializacao');
+
+    // 2. Inicialização Única do Choices.js
+    // Tipo de Usuário
     if (tipoUsuarioSelect) {
-        const choices = new Choices(tipoUsuarioSelect, {
+        new Choices(tipoUsuarioSelect, {
             searchEnabled: false,
             itemSelectText: 'Pressionar para selecionar',
             shouldSort: false,
-            allowHTML: true
+            allowHTML: true,
+            position: 'auto'
         });
     }
 
-    // 3. Função Principal de Lógica
+    // Registro Profissional (UF)
+    if (selectUF) {
+        new Choices(selectUF, {
+            searchEnabled: true,
+            itemSelectText: '',
+            shouldSort: false,
+            allowHTML: true,
+            position: 'auto'
+        });
+    }
+
+    // Especialização
+    if (selectEsp) {
+        new Choices(selectEsp, {
+            searchEnabled: true,
+            itemSelectText: '',
+            allowHTML: true,
+            position: 'bottom', // Força abrir para baixo agora que a lista é pequena
+            shouldSort: false, // Evita que o menu seja cortado no fundo da tela
+        });
+    }
+
+    // 3. Função de Lógica de Exibição
     function toggleCamposProfissional() {
         if (!tipoUsuarioSelect || !medicoFieldsWrapper) return;
 
-        const valor = tipoUsuarioSelect.value;
-
-        // VERIFIQUE SE OS VALORES ABAIXO BATEM COM SEU MODELS.PY
-        if (valor === 'MEDICO') {
-            // Mostra o campo
-            medicoFieldsWrapper.classList.add('visible'); 
-            // Muda o texto para CRM
-            if (labelRegistro) labelRegistro.textContent = 'CRM'; 
-
-        } else if (valor === 'ENFERMEIRO' || valor === 'TEC_ENFERMEIRO') {
-            // Mostra o campo
-            medicoFieldsWrapper.classList.add('visible'); 
-            // Muda o texto para COREN
-            if (labelRegistro) labelRegistro.textContent = 'COREN';
-
+        const valor = tipoUsuarioSelect.value.toUpperCase();
+        
+        // Controla a animação do container pai
+        if (valor === 'MEDICO' || valor === 'ENFERMEIRO' || valor === 'TEC_ENFERMEIRO') {
+            medicoFieldsWrapper.classList.add('visible');
         } else {
-            // Esconde o campo para outros tipos
             medicoFieldsWrapper.classList.remove('visible');
         }
+
+        // Reseta os campos internos
+        if (campoCrm) campoCrm.style.display = 'none';
+        if (campoCoren) campoCoren.style.display = 'none';
+        if (campoEspecializacao) campoEspecializacao.style.display = 'none';
+
+        // Mostra o campo correto baseado no Models.py
+        if (valor === 'MEDICO') { 
+            if (campoCrm) campoCrm.style.display = 'block';
+            if (campoEspecializacao) campoEspecializacao.style.display = 'block'; 
+        } else if (valor === 'ENFERMEIRO' || valor === 'TEC_ENFERMEIRO') {
+            if (campoCoren) campoCoren.style.display = 'block';
+        } 
     }
 
-    // 4. Listeners (Ouvintes de eventos)
+    // 4. Listeners
     if (tipoUsuarioSelect) {
-        // O Choices.js geralmente propaga o evento 'change' para o select original
         tipoUsuarioSelect.addEventListener('change', toggleCamposProfissional);
-        
-        // Executa ao carregar a página (caso venha de um erro de validação)
-        toggleCamposProfissional();
+        toggleCamposProfissional(); // Executa ao carregar
     }
 
     // 5. Máscara de CPF
     if (cpfElement) {
-        const cpfMaskOptions = {
-            mask: '000.000.000-00'
-        };
-        const mask = IMask(cpfElement, cpfMaskOptions);
+        IMask(cpfElement, { mask: '000.000.000-00' });
     }
 });
-
-    
-
-   

@@ -1,56 +1,98 @@
 {% extends 'site/headerBase.html' %}
+{% load static %}
+
+{% block title %}Alterar Senha - MedTriagem{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'front/css/alterar_senha.css' %}?v=2">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">🔒 Alterar Senha de Acesso</h5>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-info">
-                        Por segurança, você precisa informar sua senha atual antes de definir uma nova.
-                    </div>
+<div class="auth-container">
 
-                    <form method="POST">
-                        {% csrf_token %}
-                        
-                        {% for field in form %}
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">{{ field.label }}</label>
-                            
-                            <input 
-                                type="{{ field.field.widget.input_type }}" 
-                                name="{{ field.name }}" 
-                                id="{{ field.id_for_label }}" 
-                                class="form-control {% if field.errors %}is-invalid{% endif %}"
-                            >
-                            
-                            {% if field.errors %}
-                            <div class="invalid-feedback">
-                                {{ field.errors|striptags }}
-                            </div>
-                            {% endif %}
-                            
-                            {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text|safe }}</small>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
+    <a href="{% url 'hosp:perfil' %}" class="btn-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar para o Perfil
+    </a>
 
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{% url 'hosp:perfil' %}" class="btn btn-outline-secondary">
-                                Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save"></i> Salvar Nova Senha
-                            </button>
-                        </div>
-                    </form>
-                </div>
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="icon-wrapper">
+                <i class="fas fa-lock"></i>
             </div>
+            <h2>Alterar Senha</h2>
+            <p>Por segurança, informe sua senha atual antes de definir uma nova.</p>
         </div>
+
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+
+            <div class="django-form-wrapper">
+                {% for field in form %}
+                <div class="form-group">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    
+                    <div class="password-wrapper">
+                        <input 
+                            type="{{ field.field.widget.input_type }}" 
+                            name="{{ field.name }}" 
+                            id="{{ field.id_for_label }}" 
+                            class="custom-input {% if field.errors %}input-error{% endif %}">
+
+                        {# Adiciona o ícone do olho apenas para campos de senha #}
+                        {% if field.field.widget.input_type == 'password' %}
+                        <span class="toggle-password" onclick="togglePasswordVisibility('{{ field.id_for_label }}', this)">
+                            <i class="far fa-eye"></i>
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+
+                    {% if field.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> {{ field.errors|striptags }}
+                    </div>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                    <div class="help-text-box">
+                        {{ field.help_text|safe }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary w-100">
+                    <i class="fas fa-save"></i> Salvar Nova Senha
+                </button>
+                <a href="{% url 'hosp:perfil' %}" class="btn-ghost-cancel">Cancelar</a>
+            </div>
+        </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    /**
+     * Alterna a visibilidade da senha entre 'password' e 'text'
+     * @param {string} inputId - O ID do campo de input
+     * @param {HTMLElement} iconSpan - O elemento span que contém o ícone
+     */
+    function togglePasswordVisibility(inputId, iconSpan) {
+        const input = document.getElementById(inputId);
+        const icon = iconSpan.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
 {% endblock %}

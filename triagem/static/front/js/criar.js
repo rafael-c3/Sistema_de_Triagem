@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cpfInput.addEventListener('input', () => {
             // Remove tudo que não for dígito
             let value = cpfInput.value.replace(/\D/g, '');
-            
+
             // Limita o tamanho para 11 dígitos
             value = value.substring(0, 11);
 
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             value = value.replace(/(\d{3})(\d)/, '$1.$2');
             value = value.replace(/(\d{3})(\d)/, '$1.$2');
             value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            
+
             cpfInput.value = value;
         });
     }
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cpfRespInput.addEventListener('input', () => {
             // Remove tudo que não for dígito
             let value = cpfRespInput.value.replace(/\D/g, '');
-            
+
             // Limita o tamanho para 11 dígitos
             value = value.substring(0, 11);
 
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             value = value.replace(/(\d{3})(\d)/, '$1.$2');
             value = value.replace(/(\d{3})(\d)/, '$1.$2');
             value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            
+
             cpfRespInput.value = value;
         });
     }
@@ -77,48 +77,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const telInput = document.getElementById('id_telefone');
+    if (telInput) {
+        telInput.addEventListener('input', function() {
+            // Remove tudo que não for dígito
+            let value = this.value.replace(/\D/g, '');
+            
+            // Limita a 11 caracteres (DDD + 9 dígitos)
+            value = value.substring(0, 11);
+
+            // Aplica a formatação (##) #####-#### ou (##) ####-####
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+            } else if (value.length > 0) {
+                value = value.replace(/^(\d*)/, '($1');
+            }
+            this.value = value;
+        });
+    }
+
+
+
+
+   // =========================================
+    // MÁSCARA E BUSCA AUTOMÁTICA DE CEP
+    // =========================================
     const campoCep = document.getElementById('id_cep');
 
-        // Se o campo não existir (ex: está em outra aba), o script para aqui pra não dar erro
-        if (!campoCep) return;
+    if (campoCep) {
 
-        // 2. Adiciona o evento "blur" (quando o usuário clica fora do campo)
-        campoCep.addEventListener('blur', function() {
-            
-            // Remove tudo que não é número para validar
+        // 1. A MÁSCARA (Formata XXXXX-XXX enquanto o usuário digita)
+        campoCep.addEventListener('input', function () {
+            let value = this.value.replace(/\D/g, '');
+            value = value.substring(0, 8);
+            if (value.length > 5) {
+                value = value.replace(/^(\d{5})(\d{1,3}).*/, '$1-$2');
+            }
+            this.value = value;
+        });
+
+        // 2. A BUSCA NA API (Puxa os dados quando ele clica fora do campo)
+        campoCep.addEventListener('blur', function () {
             let cep = this.value.replace(/\D/g, '');
 
-            // Verifica se o CEP tem tamanho válido (8 dígitos)
             if (cep.length === 8) {
-                
-                // Mostra pro usuário que está carregando (opcional, mas elegante)
-                document.getElementById('id_logradouro').value = "...";
-                document.getElementById('id_bairro').value = "...";
-                document.getElementById('id_cidade').value = "...";
+                document.getElementById('id_logradouro') && (document.getElementById('id_logradouro').value = "...");
+                document.getElementById('id_bairro') && (document.getElementById('id_bairro').value = "...");
+                document.getElementById('id_cidade') && (document.getElementById('id_cidade').value = "...");
 
-                // 3. Chama a API do ViaCEP
                 fetch(`https://viacep.com.br/ws/${cep}/json/`)
                     .then(response => response.json())
                     .then(data => {
                         if (!data.erro) {
-                            // 4. Preenche os campos automaticamente
-                            // AJUSTE OS IDs ABAIXO SE OS SEUS FOREM DIFERENTES
-                            if(document.getElementById('id_endereco')) 
-                                document.getElementById('id_endereco').value = data.logradouro;
-                            
-                            if(document.getElementById('id_bairro')) 
-                                document.getElementById('id_bairro').value = data.bairro;
-                            
-                            if(document.getElementById('id_cidade')) 
-                                document.getElementById('id_cidade').value = data.localidade;
-                            
-                            if(document.getElementById('id_uf')) 
-                                document.getElementById('id_uf').value = data.uf;
-                            
-                            // Foca no campo de número para agilizar
-                            if(document.getElementById('id_numero'))
-                                document.getElementById('id_numero').focus();
-
+                            if (document.getElementById('id_endereco')) document.getElementById('id_endereco').value = data.logradouro;
+                            if (document.getElementById('id_bairro')) document.getElementById('id_bairro').value = data.bairro;
+                            if (document.getElementById('id_cidade')) document.getElementById('id_cidade').value = data.localidade;
+                            if (document.getElementById('id_uf')) document.getElementById('id_uf').value = data.uf;
+                            if (document.getElementById('id_numero')) document.getElementById('id_numero').focus();
                         } else {
                             alert("CEP não encontrado.");
                             limparFormularioCep();
@@ -130,18 +149,109 @@ document.addEventListener('DOMContentLoaded', () => {
                         limparFormularioCep();
                     });
             } else {
-                // Se o CEP for inválido, limpa
                 limparFormularioCep();
             }
         });
+    }
 
-        function limparFormularioCep() {
-            // Função auxiliar para limpar se der erro
-            if(document.getElementById('id_logradouro')) document.getElementById('id_logradouro').value = "";
-            if(document.getElementById('id_bairro')) document.getElementById('id_bairro').value = "";
-            if(document.getElementById('id_cidade')) document.getElementById('id_cidade').value = "";
-            if(document.getElementById('id_uf')) document.getElementById('id_uf').value = "";
+    function limparFormularioCep() {
+        if (document.getElementById('id_logradouro')) document.getElementById('id_logradouro').value = "";
+        if (document.getElementById('id_bairro')) document.getElementById('id_bairro').value = "";
+        if (document.getElementById('id_cidade')) document.getElementById('id_cidade').value = "";
+        if (document.getElementById('id_uf')) document.getElementById('id_uf').value = "";
+    }
+
+    // =========================================
+    // CONTROLE DINÂMICO DOS BOTÕES E VALIDAÇÃO
+    // =========================================
+
+    const camposObrigatoriosProximo = [
+        'id_nome', 'id_data_nascimento', 'id_sexo', 'id_cpf',
+        'id_temperatura', 'id_pressao_sistolica', 'id_pressao_diastolica',
+        'id_pulso', 'id_frequenciaRespiratoria', 'id_saturacao'
+    ];
+
+    const camposObrigatoriosFinalizar = [
+        ...camposObrigatoriosProximo,
+        'id_telefone', 'id_cep', 'id_cidade', 'id_uf',
+        'id_endereco', 'id_numero', 'id_bairro', 'id_queixa'
+    ];
+
+    window.validarCampos = function (validarTudo = false) {
+        let formularioValido = true;
+        const campos = validarTudo ? camposObrigatoriosFinalizar : camposObrigatoriosProximo;
+
+        campos.forEach(id => {
+            const campo = document.getElementById(id);
+            if (campo) {
+                if (!campo.value.trim()) {
+                    formularioValido = false;
+                    campo.classList.add('error');
+
+                    const removerErro = function () { this.classList.remove('error'); };
+                    campo.addEventListener('input', removerErro, { once: true });
+                    campo.addEventListener('change', removerErro, { once: true });
+                }
+            }
+        });
+
+        if (!formularioValido) {
+            const msg = validarTudo
+                ? "⚠️ Por favor, preencha todos os campos obrigatórios (incluindo Endereço e Queixa) para finalizar."
+                : "⚠️ Por favor, preencha os Dados Pessoais e Sinais Vitais antes de prosseguir.";
+            alert(msg);
         }
-    
+        return formularioValido;
+    };
 
+    function verificarPreenchimento() {
+        const botaoProximo = document.getElementById('btn-proximo');
+        const botaoFinalizar = document.getElementById('btn-finalizar');
+
+        const step1Ok = camposObrigatoriosProximo.every(id => {
+            const campo = document.getElementById(id);
+            return campo && campo.value.trim() !== "";
+        });
+
+        const step2Ok = camposObrigatoriosFinalizar.every(id => {
+            const campo = document.getElementById(id);
+            return campo && campo.value.trim() !== "";
+        });
+
+        if (botaoProximo) botaoProximo.disabled = !step1Ok;
+        if (botaoFinalizar) botaoFinalizar.disabled = !step2Ok;
+    }
+
+    // --- LÓGICA DO BOTÃO PRÓXIMO ---
+    const botaoProximoEl = document.getElementById('btn-proximo');
+    if (botaoProximoEl) {
+        botaoProximoEl.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.validarCampos(false)) {
+                const tabEndereco = document.querySelector('.tab-button-paciente[onclick*="endereco"]');
+                const tabQueixaBtn = document.getElementById('tab-btn-queixa');
+                if (tabEndereco) tabEndereco.click();
+                if (tabQueixaBtn) tabQueixaBtn.click();
+            }
+        });
+    }
+
+    // --- BLOQUEIO FINAL DO FORMULÁRIO E VERIFICAÇÃO AO DIGITAR ---
+    const formTriagem = document.querySelector('.form-triagem');
+    if (formTriagem) {
+        formTriagem.addEventListener('submit', (e) => {
+            if (!window.validarCampos(true)) {
+                e.preventDefault();
+            }
+        });
+
+        // Essas duas linhas fazem a mágica de observar o usuário digitando
+        formTriagem.addEventListener('input', verificarPreenchimento);
+        formTriagem.addEventListener('change', verificarPreenchimento);
+
+        // Roda uma vez quando a página abre para deixar o botão cinza de cara
+        verificarPreenchimento();
+    }
+
+    
 });

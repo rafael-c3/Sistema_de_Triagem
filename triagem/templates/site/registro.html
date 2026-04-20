@@ -6,156 +6,149 @@
 {% block title %}Cadastro de Usuário{% endblock %}
 
 {% block form_content %}
-<div class="form-container registration-form">
-    <h2 class="text-center">Criar Nova Conta</h2>
-    <a href="{% url 'hosp:painel_gestao' %}" class="btn btn-secondary">Voltar para Gestão de Usuários</a>
-    <p class="subtitle text-center">Preencha os dados abaixo para se registrar no sistema</p>
+    
+    {% if dados_criados %}
+    <div class="form-container success-card">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Usuário Criado!</h2>
+        <p class="subtitle text-center">Copie os dados abaixo e envie para o novo funcionário.</p>
+        
+        <div class="credentials-box">
+            <div class="cred-row">
+                <span>Nome:</span> <strong>{{ dados_criados.nome }}</strong>
+            </div>
+            <div class="cred-row">
+                <span>Usuário:</span> <strong id="copy-user">{{ dados_criados.usuario }}</strong>
+            </div>
+            <div class="cred-row">
+                <span>Senha Temp:</span> <strong id="copy-pass" class="highlight-pass">{{ dados_criados.senha }}</strong>
+            </div>
+        </div>
 
-    <form method="POST" novalidate>
-        {% csrf_token %}
+        <button onclick="copiarDados()" class="btn-copy">
+            <i class="fas fa-copy"></i> Copiar Tudo para Área de Transferência
+        </button>
 
-        <div class="form-section">
-            <h3><i class="fas fa-user"></i> Informações Pessoais</h3>
-            <div class="form-row">
-                <div class="form-group col">
+        <div class="warning-box">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>Aviso: O usuário deverá trocar essa senha no primeiro acesso.</p>
+        </div>
+
+        <div class="success-actions">
+            <a href="{% url 'hosp:painel_gestao' %}" class="btn-outline">Voltar para gestão</a>
+            <a href="{% url 'hosp:registro' %}" class="btn-login text-center" style="text-decoration: none; display: flex; color: white; justify-content: center;">Cadastrar Outro</a>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="form-container registration-form">
+        
+        <a href="{% url 'hosp:painel_gestao' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Voltar para Gestão de Usuários
+        </a>
+        
+        <h2 class="text-center">Criar Nova Conta</h2>
+        <p class="subtitle text-center">Preencha os dados abaixo para se registrar no sistema</p>
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <div class="form-section">
+                <h3><i class="fas fa-user"></i> Informações Pessoais</h3>
+                
+                <div class="form-group">
                     {{ form.nome_completo.label_tag }}
                     {{ form.nome_completo }}
                     {% for error in form.nome_completo.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
                 </div>
-                <div class="form-group col">
-                    {{ form.username.label_tag }}
-                    {{ form.username }}
-                    {% for error in form.username.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        {% for error in form.email.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-group col">
+                        {{ form.cpf.label_tag }}
+                        {{ form.cpf }}
+                        {% for error in form.cpf.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+                    </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group col">
-                    {{ form.email.label_tag }}
-                    {{ form.email }}
-                    {% for error in form.email.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-                </div>
-                <div class="form-group col">
-                    {{ form.cpf.label_tag }}
-                    {{ form.cpf }}
-                    {% for error in form.cpf.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="form-section">
-            <h3><i class="fas fa-shield-alt"></i> Tipo de Conta</h3>
-            <div class="form-group">
-                {{ form.tipo_usuario.label_tag }}
-                {{ form.tipo_usuario }}
-                {% for error in form.tipo_usuario.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-            </div>
-        </div> <div id="medico-fields-wrapper">
-            <div class="form-row">
-                <div class="form-group col">
-                    {{ form.crm.label_tag }}
-                    {{ form.crm }}
-                    {% for error in form.crm.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-                </div>
-                <div class="form-group col">
-                    {{ form.coren.label_tag }}
-                    {{ form.coren }}
-                    {% for error in form.coren.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-                </div>
-                <div class="form-group col">
-                    {{ form.uf_registro.label_tag }}
-                    {{ form.uf_registro }}
-                    {% for error in form.uf_registro.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-                </div>
-                <div class="form-group col">
-                    {{ form.especializacao.label_tag }}
-                    {{ form.especializacao }}
-                    {% for error in form.especializacao.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group agreement-checkbox">
-            {{ form.terms_agreement }}
-            {{ form.terms_agreement.label_tag }}
-            {% for error in form.terms_agreement.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
-        </div>
-
-        <button type="submit" class="btn-login">Criar Conta</button>
-
-        <p class="text-center">
-            Qualquer dúvida contate a equipe de suporte técnico
-        </p>
-
-    </form>
-</div>
-
-<div class="container mt-4">
-    
-    {% if dados_criados %}
-    <div class="card border-success mb-4 shadow-sm">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">✅ Usuário Criado com Sucesso!</h5>
-        </div>
-        <div class="card-body bg-light">
-            <p>Copie os dados abaixo e envie para o funcionário:</p>
             
-            <div class="alert alert-secondary" id="credenciais-box">
-                <strong>Nome:</strong> {{ dados_criados.nome }}<br>
-                <strong>Usuário:</strong> <span id="copy-user">{{ dados_criados.usuario }}</span><br>
-                <strong>E-mail:</strong> {{ dados_criados.email }}<br>
-                <strong>Senha Temporária:</strong> <span id="copy-pass" class="text-danger fw-bold">{{ dados_criados.senha }}</span>
+            <div class="form-section">
+                <h3><i class="fas fa-shield-alt"></i> Tipo de Conta</h3>
+                <div class="form-group">
+                    {{ form.tipo_usuario.label_tag }}
+                    {{ form.tipo_usuario }}
+                    {% for error in form.tipo_usuario.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+                </div>
+            </div> 
+            
+            <div id="medico-fields-wrapper">
+                <div class="form-row">
+                    <div class="form-group col" id="container-crm">
+                        {{ form.crm.label_tag }}
+                        {{ form.crm }}
+                        {% for error in form.crm.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-group col" id="container-coren">
+                        {{ form.coren.label_tag }}
+                        {{ form.coren }}
+                        {% for error in form.coren.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-group col">
+                        {{ form.uf_registro.label_tag }}
+                        {{ form.uf_registro }}
+                        {% for error in form.uf_registro.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+                    </div>
+                </div>
+                <div class="form-row" id="container-especializacao">
+                    <div class="form-group col">
+                        {{ form.especializacao.label_tag }}
+                        {{ form.especializacao }}
+                        {% for error in form.especializacao.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+                    </div>
+                </div>
             </div>
 
-            <button onclick="copiarDados()" class="btn btn-outline-dark btn-sm">
-                📋 Copiar Tudo para Área de Transferência
-            </button>
-            
-            <hr>
-            <p class="small text-muted mb-0">
-                Aviso: O usuário deverá trocar essa senha no primeiro acesso.
+            <div class="form-group agreement-checkbox">
+                {{ form.terms_agreement }}
+                {{ form.terms_agreement.label_tag }}
+                {% for error in form.terms_agreement.errors %}<div class="error-text">{{ error }}</div>{% endfor %}
+            </div>
+
+            <button type="submit" class="btn-login">Criar Conta</button>
+
+            <p class="text-center" style="margin-top: 20px;">
+                Qualquer dúvida contate a equipe de suporte técnico
             </p>
-            <a href="{% url 'hosp:painel_gestao' %}" class="btn btn-secondary">Voltar para Gestão de Usuários</a>
-            <a href="{% url 'hosp:registro' %}" class="btn btn-primary">Cadastrar novo usuário</a>
-        </div>
+
+        </form>
     </div>
     {% endif %}
 
-    <div class="card">
-        <div class="card-header">
-            <h3>Cadastrar Novo Funcionário</h3>
-        </div>
-        <div class="card-body">
-            <form method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary w-100">Criar Usuário</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-function copiarDados() {
-    // Pega os dados
-    var user = document.getElementById("copy-user").innerText;
-    var pass = document.getElementById("copy-pass").innerText;
-    
-    // Monta o texto
-    var texto = `Olá! Seu acesso ao sistema foi criado.\n\nUsuário: ${user}\nSenha Temporária: ${pass}\n\nAcesse e troque sua senha imediatamente.`;
-    
-    // Copia para o clipboard
-    navigator.clipboard.writeText(texto).then(function() {
-        alert("Dados copiados! Agora é só colar no WhatsApp ou E-mail.");
-    }, function(err) {
-        console.error('Erro ao copiar: ', err);
-    });
-}
-</script>
+    <script>
+    function copiarDados() {
+        // Pega os dados
+        var user = document.getElementById("copy-user").innerText;
+        var pass = document.getElementById("copy-pass").innerText;
+        
+        // Monta o texto
+        var texto = `Olá! Seu acesso ao sistema foi criado.\n\nUsuário: ${user}\nSenha Temporária: ${pass}\n\nAcesse e troque sua senha imediatamente.`;
+        
+        // Copia para o clipboard
+        navigator.clipboard.writeText(texto).then(function() {
+            alert("Dados copiados! Agora é só colar no WhatsApp ou E-mail.");
+        }, function(err) {
+            console.error('Erro ao copiar: ', err);
+        });
+    }
+    </script>
 {% endblock %}
 
 {% block scripts %}
 <script src="{% static 'front/js/cadastro.js' %}"></script>
 {% endblock %}
-
-
-    
-
-    

@@ -18,7 +18,7 @@ body, html{
 .login-container{
     display: flex;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background: linear-gradient(to right, #0d47a1, #06204a);
     
     
@@ -98,6 +98,7 @@ body, html{
     border: 1px solid #e9ecef;
     border-radius: 16px;
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    overflow: visible !important;
 }
 
 .form-container h2{
@@ -259,11 +260,14 @@ input[type="password"]:focus {
 
 .error-text {
     color: #dc3545;
-    font-size: 0.8rem;
-    margin-top: 4px;
+    font-size: 0.75rem;
+    margin-top: 2px;
+    display: block;
 }
 
-
+.right-panel {
+    overflow: visible !important;
+} 
 .registration-form{
     max-width: 600px;
     margin: 40px 0;
@@ -370,9 +374,10 @@ input[type="password"]:focus {
 /* 2. Mostra a seção quando o JavaScript adicionar a classe .visible */
 #medico-fields-wrapper.visible {
     /* Um valor alto o suficiente para caber o conteúdo */
-    max-height: 200px; 
+    max-height: 1000px; 
     opacity: 1;
     visibility: visible;
+    overflow: visible !important;
     margin-top: 15px; /* Um espaçamento extra quando abrir */
 }
 
@@ -380,6 +385,12 @@ input[type="password"]:focus {
 
 .choices {
   margin-bottom: 0;
+  z-index: 10;
+
+}
+
+.choices.is-open {
+    z-index: 9999 !important;
 }
 
 /* Estilo do campo principal (container) */
@@ -405,6 +416,7 @@ input[type="password"]:focus {
   border-radius: 8px !important;
   border: 1px solid #ced4da !important; /* Corrigido aqui */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  z-index: 100 !important;
 }
 
 /* A seta do dropdown */
@@ -420,3 +432,219 @@ input[type="password"]:focus {
     margin-top: -3px;
 }
 
+#container-crm, #container-coren{
+    flex: 2;
+}
+
+#medico-fields-wrapper .col{
+    flex: 1;
+    min-width: 120px;
+}
+
+select#id_uf_registro, 
+select#id_especializacao{
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    background-color: white;
+    height: 50px;
+}
+
+
+.choices__list--dropdown .choices__list {
+    max-height: 180px !important; /* Altura ideal para ~4 opções */
+    overflow-y: auto !important;  /* Força a barra de rolagem vertical */
+}
+
+/* Garante que o item da lista tenha uma altura previsível */
+.choices__list--dropdown .choices__item {
+    padding: 10px 15px !important;
+    font-size: 0.9rem !important;
+}
+
+/* Estiliza a barra de rolagem para ficar mais elegante (opcional) */
+.choices__list--dropdown .choices__list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.choices__list--dropdown .choices__list::-webkit-scrollbar-thumb {
+    background-color: #0d47a1; /* O azul que você está usando no painel */
+    border-radius: 10px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: #6c757d; /* Cinza discreto */
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    top: -15px;
+    margin-bottom: 25px; /* Dá um respiro antes do título H2 */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.back-link:hover {
+    color: #0d47a1; /* Azul principal do sistema ao passar o mouse */
+    text-decoration: none;
+    transform: translateX(-3px); /* Pequena animação puxando para a esquerda */
+}
+
+.back-link i {
+    margin-right: 8px;
+}
+
+.success-card{
+    text-align: center;
+    padding: 50px 40px !important;
+}
+
+.success-icon{
+    font-size: 4rem;
+    color: #28a745;
+    margin-bottom: 20px;
+    animation: scaleIn 0.5s ease-out;  
+}
+
+.credentials-box{
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 25px 0;
+    text-align: left;
+}
+
+.cred-row{
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #dee2e6;
+    font-size: 1rem;
+}
+
+.cred-row:last-child{
+    border-bottom: none;
+}
+
+.cred-row span{
+    color: #6c757d;
+}
+
+.cred-row strong{
+    color: #333;
+}
+
+.highlight-pass{
+    color:#dc3545 !important;
+    background: #f8d7da;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+.btn-copy{
+    width: 100%;
+    padding: 15px;
+    background-color: #0d47a1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+}
+
+.btn-copy:hover {
+    background-color: #083378;
+}
+
+.warning-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.warning-box p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #856404;
+}
+
+.warning-box i {
+    color: #ffc107;
+    margin-top: 3px;
+}
+
+.success-actions {
+    display: flex;
+    gap: 12px;
+    flex-direction: column; /* Coloca um botão embaixo do outro */
+    margin-top: 10px;
+}
+
+.btn-outline {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffffff;
+    color: #0d47a1;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.btn-outline:hover {
+    background-color: #f8f9fa;
+    color: #0d47a1;
+    border-color: #0d47a1;
+    text-decoration: none;
+}
+@keyframes scaleIn {
+    0% { transform: scale(0); opacity: 0; }
+    80% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 40px !important; /* Garante que a senha não encoste no ícone */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.toggle-password:hover {
+    color: #0d47a1; /* O azul principal do ecrã de Login */
+}

@@ -49,19 +49,7 @@
                     {% endif %}
                 </div>
 
-                {% if perfil_usuario.foto_perfil %}
-                <form method="POST" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" 
-                            name="btn_remover_foto" 
-                            class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle"
-                            style="right: -10px;"
-                            title="Remover foto atual"
-                            onclick="return confirm('Tem certeza que deseja remover sua foto?');">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </form>
-                {% endif %}
+                
 
                 <h3>Dr. {{ usuario.nome_completo }}</h3>
                 <p class="username">@{{ usuario.username }}</p>
@@ -154,33 +142,28 @@
 
                 {% endif %}
 
-                {% if usuario == user %}
-                <form action="{% url 'hosp:logout' %}" method="post" onsubmit="return confirm('Tem certeza que deseja sair da sua conta?');">
-                    {% csrf_token %}
-                    <button type="submit" class="logout-btn">
-                        <span class="icon">→</span> Sair (Logout)
-                    </button>
-                </form>
+                <div class="profile-actions">
 
-                <hr>
-                <div class="d-grid gap-2">
-                    <a href="{% url 'hosp:alterar_senha' %}" class="btn btn-outline-danger">
-                        <i class="fas fa-key"></i> Redefinir Minha Senha
+                    <a href="{% url 'hosp:alterar_senha' %}" class="btn-outline">
+                        <i class="fas fa-key"></i>Redefinir Minha Senha
                     </a>
-                </div>
-                {% endif %}
-                {% if request.user.tipo_usuario == 'ADMIN' %} 
-                    <div class="mb-3">
-                        <a href="{% url 'hosp:registro' %}" class="btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill me-2" viewBox="0 0 16 16">
-                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-                            </svg>
-                            Cadastrar Novo Usuário
-                        </a>
-                    </div>
-                {% endif %}
 
+                    {% if request.user.tipo_usuario == 'ADMIN' %}
+                    <a href="{% url 'hosp:registro' %}" class="btn-outline">
+                        <i class="fas fa-user-plus"></i> Cadastrar Novo Usuário
+                    </a>
+                    {% endif %}
+
+                    <hr class="action-divider">
+
+                    <form action="{% url 'hosp:logout' %}" method="post"
+                        onsubmit="return confirm('Tem certeza que deseja sair da sua conta?');">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn full-width">
+                            <i class="fas fa-sign-out-alt"></i> Sair (Logout)
+                        </button>
+                    </form>
+                </div>
             </div>
         </aside>
 
@@ -302,37 +285,14 @@
                     </table>
                 </div>
             </div>
+            
         </section>
     </div>
     <div class="container">
     
-    <div class="card mb-4">
-        <div class="card-header">Meus Dados</div>
-        <div class="card-body">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form_dados.as_p }}
-                
-                <button type="submit" name="btn_dados_pessoais" class="btn btn-primary">
-                    Salvar Dados
-                </button>
-            </form>
-        </div>
-    </div>
+    
 
-    <div class="card border-danger">
-        <div class="card-header bg-danger text-white">Segurança</div>
-        <div class="card-body">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form_senha.as_p }}
-                
-                <button type="submit" name="btn_mudar_senha" class="btn btn-danger">
-                    Atualizar Senha
-                </button>
-            </form>
-        </div>
-    </div>
+    
 
     
 </div>

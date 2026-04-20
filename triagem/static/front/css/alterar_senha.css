@@ -1,0 +1,203 @@
+/* ========================================= */
+/* LAYOUT GERAL DO CARD                      */
+/* ========================================= */
+.auth-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: calc(100vh - 200px);
+}
+
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 24px;
+    transition: color 0.2s ease;
+}
+
+.btn-voltar:hover { color: #3498db; }
+
+.auth-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 40px;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-header .icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background-color: #e0e7ff;
+    color: #3498db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 16px;
+}
+
+.auth-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+    margin-top: 0;
+}
+
+.auth-header p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ========================================= */
+/* ESTILOS DOS CAMPOS (INPUTS E LABELS)      */
+/* ========================================= */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.custom-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #111827;
+    transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15);
+}
+
+/* ========================================= */
+/* ERROS E AJUDAS (A LISTA DA SENHA)         */
+/* ========================================= */
+.input-error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 6px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Transforma a lista do Django numa caixa de aviso bonita */
+.help-text-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 12px 16px 12px 32px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #475569;
+}
+
+.help-text-box ul {
+    margin: 0;
+    padding-left: 0;
+}
+
+.help-text-box li {
+    margin-bottom: 4px;
+}
+
+/* ========================================= */
+/* BOTÕES DE AÇÃO                            */
+/* ========================================= */
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover { background-color: #3730a3; }
+
+.btn-ghost-cancel {
+    text-align: center;
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-ghost-cancel:hover {
+    color: #111827;
+    background-color: #f3f4f6;
+}
+
+.password-wrapper{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper .custom-input{
+    padding-right: 40px;
+}
+
+.toggle-password{
+    position: absolute;
+    right: 12px;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.toggle-password:hover{
+    color: #4338ca;
+}
