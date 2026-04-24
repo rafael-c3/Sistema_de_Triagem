@@ -7,7 +7,7 @@
     
     <title>{% block title %}MedTriagem{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'front/css/base.css' %}?v=6">
 
     {% block styles %}{% endblock %}
 </head>
@@ -45,7 +45,11 @@
         </nav>
         <div class="user-profile">
             <div class="avatar" id="avatar-button">
+                {% if user.foto_perfil and user.foto_perfil.name != 'fotos_perfil/default.jpg' %} 
+                <img src="{{ user.foto_perfil.url }}" alt="Perfil" class="avatar-img">
+                {% else %}
                 <span id="user-initials"></span>
+                {% endif %}
             </div>
             <div class="dropdown-menu" id="dropdown-menu">
                 <div class="dropdown-header">

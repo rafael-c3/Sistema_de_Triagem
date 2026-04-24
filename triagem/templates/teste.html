@@ -1,12 +1,7 @@
-<div class="form-group">
-            <label for="{{ form.password.id_for_label }}">Senha</label>
-            
-            <div class="password-wrapper">
-                {{ form.password }}
-                <span class="toggle-password" onclick="togglePasswordVisibility('{{ form.password.id_for_label }}', this)">
-                    <i class="far fa-eye"></i>
-                </span>
+<div class="avatar" id="avatar-button">
+                {% if user.foto_perfil and user.foto_perfil.name != 'fotos_perfil/default.jpg' %} 
+                    <img src="{{ user.foto_perfil.url }}" alt="Perfil" class="avatar-img">
+                {% else %}
+                    <span id="user-initials"></span>
+                {% endif %}
             </div>
-            
-            {% if form.password.errors %}<div class="error-text">{{ form.password.errors.as_text }}</div>{% endif %}
-        </div>
